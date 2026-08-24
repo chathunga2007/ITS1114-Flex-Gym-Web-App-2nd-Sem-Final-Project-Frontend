@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flex Gym Sri Lanka — Elite Fitness & Gym Management Ecosystem</title>
+  <meta name="description" content="Flex Gym is Sri Lanka's leading smart fitness club network in Colombo, Kandy, and Galle. Powered by enterprise membership management, digital attendance, custom workout programming, and pro supplement store.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Landing Top Navigation -->
+  <header>
+    <nav class="landing-nav" aria-label="Main Navigation">
+      <a href="index.html" class="brand-logo" id="landingBrandLogo">
+        <div class="brand-badge">⚡</div>
+        <span>FLEX<span class="text-primary">GYM</span> <span class="badge badge-lk" style="font-size: 0.65rem; margin-left: 4px;">SRI LANKA</span></span>
+      </a>
+
+      <div class="landing-menu">
+        <a href="#features">Features</a>
+        <a href="#packages">Memberships</a>
+        <a href="#locations">Branches</a>
+        <a href="#trainers">Coaches</a>
+        <a href="#testimonials">Stories</a>
+        <a href="#faq">FAQ</a>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <a href="login.html" class="btn btn-secondary" id="navLoginBtn">Sign In</a>
+        <a href="signup.html" class="btn btn-primary" id="navSignupBtn">Join Now</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Hero Section -->
+  <main>
+    <section class="hero-section" id="hero">
+      <div class="hero-content">
+        <span class="section-tag">🇱🇰 Sri Lanka's #1 Smart Fitness Network</span>
+        <h1>Elevate Your Strength at <span class="gradient-text-fire">Flex Gym Sri Lanka</span></h1>
+        <p>
+          Experience premier fitness engineering across our flagship clubs in <strong>Colombo 07, Kandy, and Galle</strong>. Streamlined digital turnstile check-ins, custom workout plans designed by certified Sri Lankan coaches, smart lockers, and an authentic pro supplement store.
+        </p>
+
+        <div class="hero-cta-group">
+          <a href="signup.html" class="btn btn-primary btn-lg" id="heroPrimaryCta">
+            Register as Member ➔
+          </a>
+          <a href="#packages" class="btn btn-secondary btn-lg" id="heroSecondaryCta">
+            View LKR Pricing Plans
+          </a>
+        </div>
+
+        <div class="hero-stats-row">
+          <div class="hero-stat-item">
+            <h3 class="text-primary">3,200+</h3>
+            <p>Active LK Members</p>
+          </div>
+          <div class="hero-stat-item">
+            <h3 class="text-cyan">4 Branches</h3>
+            <p>Colombo, Kandy, Galle, Nugegoda</p>
+          </div>
+          <div class="hero-stat-item">
+            <h3 class="text-lime">05:30 AM</h3>
+            <p>To 10:30 PM Daily</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="floating-glass-badge floating-top-right">
+          <span class="status-pulse"></span>
+          <span>📍 Colombo 07 Club • Active</span>
+        </div>
+
+        <div class="hero-mockup-card">
+          <div class="card-header">
+            <div class="flex items-center gap-2">
+              <span class="status-pulse"></span>
+              <span class="font-bold text-main">Live Islandwide Terminal</span>
+            </div>
+            <span class="badge badge-active">SYSTEM OPERATIONAL</span>
+          </div>
+
+          <div class="grid-3 gap-2" style="margin-bottom: 1.5rem;">
+            <div class="stat-card" style="padding: 1rem;">
+              <span class="stat-label" style="font-size: 0.7rem;">Colombo Check-ins</span>
+              <span class="stat-value text-cyan" style="font-size: 1.5rem;">184</span>
+            </div>
+            <div class="stat-card" style="padding: 1rem;">
+              <span class="stat-label" style="font-size: 0.7rem;">Kandy Check-ins</span>
+              <span class="stat-value text-lime" style="font-size: 1.5rem;">92</span>
+            </div>
+            <div class="stat-card" style="padding: 1rem;">
+              <span class="stat-label" style="font-size: 0.7rem;">Free Lockers</span>
+              <span class="stat-value text-primary" style="font-size: 1.5rem;">24</span>
+            </div>
+          </div>
+
+          <div class="card" style="background: var(--bg-surface-elevated); padding: 1.25rem; border-left: 3px solid var(--primary);">
+            <div class="flex justify-between items-center" style="margin-bottom: 0.5rem;">
+              <span class="font-semibold text-main">Featured Routine: Lankan Power Split</span>
+              <span class="badge badge-advanced">ADVANCED</span>
+            </div>
+            <p class="text-muted" style="font-size: 0.85rem; margin-bottom: 1rem;">
+              Hypertrophy & Strength Split — 5 Sets Progressive Overload • Coached by Coach Kasun Wickramasinghe
+            </p>
+            <div class="flex justify-between items-center">
+              <span class="badge badge-gold">⭐ 4.9/5 Rating (85 Athletes)</span>
+              <a href="login.html" class="btn btn-outline-primary btn-sm">Join Program</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="floating-glass-badge floating-bottom-left">
+          <span>⚡</span>
+          <span>Instant QR Turnstile Check-In</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core Features Section -->
+    <section class="features-section" id="features">
+      <div class="section-header">
+        <span class="section-tag">System Architecture</span>
+        <h2>World-Class Gym Technology Built for Sri Lanka</h2>
+        <p>Engineered for fitness centers across Sri Lanka to eliminate queues, track member progress, and automate operations.</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="feature-card">
+          <div class="feature-icon-wrap">💪</div>
+          <h3>Custom Lankan Workout Plans</h3>
+          <p>Beginner, Intermediate, and Advanced bodybuilding & cricket conditioning programs crafted by certified local trainers.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-wrap">⏱️</div>
+          <h3>Digital Barcode / QR Check-In</h3>
+          <p>Instant attendance check-ins at turnstiles with automated subscription validity alerts and monthly logs for members.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-wrap">🔒</div>
+          <h3>Smart RFID Lockers</h3>
+          <p>Dedicated personal locker allocation with real-time occupancy monitoring across Colombo, Kandy, and Galle branch locker rooms.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-wrap">⚙️</div>
+          <h3>Equipment Health Diagnostics</h3>
+          <p>Inventory diagnostics tracking Olympic bars, cable machines, and commercial treadmills with scheduled maintenance tracking.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-wrap">🛍️</div>
+          <h3>Authentic Pro Supplement Shop</h3>
+          <p>100% genuine imported Whey proteins, Creatine, Pre-workouts, and gym gear with islandwide delivery in Sri Lanka.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-wrap">💳</div>
+          <h3>Transparent LKR Billing</h3>
+          <p>Manage membership fees and shop purchases in Sri Lankan Rupees (LKR) with detailed itemized invoices and receipts.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sri Lankan Branches / Locations Section -->
+    <section class="locations-section" id="locations" style="background: var(--bg-surface);">
+      <div class="section-header">
+        <span class="section-tag">Islandwide Network</span>
+        <h2>Our State-of-the-Art Sri Lankan Branches</h2>
+        <p>Train anywhere across our interconnected gym centers with a single Flex Gym membership pass.</p>
+      </div>
+
+      <div class="grid-4">
+        <!-- Branch 1: Colombo 07 -->
+        <div class="location-card">
+          <div class="location-badge">📍 Flagship Branch</div>
+          <h3 style="font-size: 1.4rem;">Colombo 07 Center</h3>
+          <p class="text-muted" style="font-size: 0.9rem;">
+            No. 45, Maitland Crescent, Colombo 07 (Cinnamon Gardens).
+          </p>
+          <div class="text-dim" style="font-size: 0.8rem;">
+            📞 +94 11 234 5678 • 3 Floors • Olympic Lifting Zone
+          </div>
+          <span class="badge badge-success" style="width: fit-content;">OPEN NOW • UNTIL 10:30 PM</span>
+        </div>
+
+        <!-- Branch 2: Kandy -->
+        <div class="location-card">
+          <div class="location-badge">📍 Hill Country Hub</div>
+          <h3 style="font-size: 1.4rem;">Kandy City Center</h3>
+          <p class="text-muted" style="font-size: 0.9rem;">
+            No. 112, Peradeniya Road, Kandy (Opposite KCC).
+          </p>
+          <div class="text-dim" style="font-size: 0.8rem;">
+            📞 +94 81 222 3456 • Sauna & Crossfit Arena
+          </div>
+          <span class="badge badge-success" style="width: fit-content;">OPEN NOW • UNTIL 10:30 PM</span>
+        </div>
+
+        <!-- Branch 3: Galle -->
+        <div class="location-card">
+          <div class="location-badge">📍 Southern Coast</div>
+          <h3 style="font-size: 1.4rem;">Galle Fort Arena</h3>
+          <p class="text-muted" style="font-size: 0.9rem;">
+            No. 78, Colombo Road, Galle (Near Fort Ramparts).
+          </p>
+          <div class="text-dim" style="font-size: 0.8rem;">
+            📞 +94 91 224 5678 • Ocean View Cardio Deck
+          </div>
+          <span class="badge badge-success" style="width: fit-content;">OPEN NOW • UNTIL 10:30 PM</span>
+        </div>
+
+        <!-- Branch 4: Nugegoda -->
+        <div class="location-card">
+          <div class="location-badge">📍 Suburban Express</div>
+          <h3 style="font-size: 1.4rem;">Nugegoda Super Center</h3>
+          <p class="text-muted" style="font-size: 0.9rem;">
+            No. 320, High-Level Road, Nugegoda.
+          </p>
+          <div class="text-dim" style="font-size: 0.8rem;">
+            📞 +94 11 282 9900 • 24/7 Access for VIP Members
+          </div>
+          <span class="badge badge-success" style="width: fit-content;">OPEN NOW • UNTIL 10:30 PM</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Packages Preview in LKR Section -->
+    <section class="packages-preview-section" id="packages">
+      <div class="section-header">
+        <span class="section-tag">Membership Tiers (LKR)</span>
+        <h2>Affordable Membership Plans for Sri Lankan Athletes</h2>
+        <p>No admission fees. Transparent monthly and annual packages with islandwide club access.</p>
+      </div>
+
+      <div class="grid-3">
+        <!-- Monthly Starter -->
+        <div class="package-card">
+          <div class="font-bold text-muted" style="text-transform: uppercase; letter-spacing: 0.05em;">Starter Plan</div>
+          <h3 style="font-size: 1.6rem; margin-top: 0.25rem;">Standard Monthly</h3>
+          <div class="package-price-wrap">
+            <span class="currency">Rs.</span>
+            <span class="amount">5,500</span>
+            <span class="duration">/ 1 Month</span>
+          </div>
+          <p class="text-muted" style="font-size: 0.9rem; margin-bottom: 1.5rem;">
+            Ideal for students and professionals looking for regular gym access and standard fitness facilities.
+          </p>
+          <ul style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 2rem; font-size: 0.9rem;">
+            <li class="flex items-center gap-1 text-main">✓ Full Gym Floor & Cardio Machine Access</li>
+            <li class="flex items-center gap-1 text-main">✓ Shower & Locker Room Access</li>
+            <li class="flex items-center gap-1 text-main">✓ Digital QR Attendance Logging</li>
+            <li class="flex items-center gap-1 text-dim">✗ Personal Coach Assignment</li>
+          </ul>
+          <a href="signup.html" class="btn btn-secondary btn-block">Enroll in Monthly</a>
+        </div>
+
+        <!-- Quarterly Pro (Featured) -->
+        <div class="package-card featured">
+          <div class="package-badge-top">MOST POPULAR IN SRI LANKA</div>
+          <div class="font-bold text-primary" style="text-transform: uppercase; letter-spacing: 0.05em;">Pro Athlete Tier</div>
+          <h3 style="font-size: 1.6rem; margin-top: 0.25rem;">Quarterly Elite Pass</h3>
+          <div class="package-price-wrap">
+            <span class="currency">Rs.</span>
+            <span class="amount">15,000</span>
+            <span class="duration">/ 3 Months</span>
+          </div>
+          <p class="text-muted" style="font-size: 0.9rem; margin-bottom: 1.5rem;">
+            Our top-rated transformation tier for dedicated athletes with coach oversight and locker allocation.
+          </p>
+          <ul style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 2rem; font-size: 0.9rem;">
+            <li class="flex items-center gap-1 text-main">✓ Multi-Branch Access (Colombo, Kandy, Galle)</li>
+            <li class="flex items-center gap-1 text-main">✓ Dedicated Personal Locker Included</li>
+            <li class="flex items-center gap-1 text-main">✓ Custom Workout Plan & Diet Schedule</li>
+            <li class="flex items-center gap-1 text-main">✓ Monthly Body Composition & BMI Check</li>
+            <li class="flex items-center gap-1 text-main">✓ 10% Discount on Pro Shop Supplements</li>
+          </ul>
+          <a href="signup.html" class="btn btn-primary btn-block">Get Quarterly Pass (Rs. 15,000)</a>
+        </div>
+
+        <!-- Annual Champion -->
+        <div class="package-card">
+          <div class="font-bold text-gold" style="text-transform: uppercase; letter-spacing: 0.05em;">VIP Elite Tier</div>
+          <h3 style="font-size: 1.6rem; margin-top: 0.25rem;">Annual VIP Champion</h3>
+          <div class="package-price-wrap">
+            <span class="currency">Rs.</span>
+            <span class="amount">48,000</span>
+            <span class="duration">/ 12 Months</span>
+          </div>
+          <p class="text-muted" style="font-size: 0.9rem; margin-bottom: 1.5rem;">
+            The ultimate year-round fitness experience with unlimited cross-branch perks and dedicated coach support.
+          </p>
+          <ul style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 2rem; font-size: 0.9rem;">
+            <li class="flex items-center gap-1 text-main">✓ 365 Days Unlimited Access to All Branches</li>
+            <li class="flex items-center gap-1 text-main">✓ VIP Smart Locker Reserved for Full Year</li>
+            <li class="flex items-center gap-1 text-main">✓ Dedicated Head Coach 1-on-1 Reviews</li>
+            <li class="flex items-center gap-1 text-main">✓ Free Flex Gym Colombo Athletic Jersey</li>
+            <li class="flex items-center gap-1 text-main">✓ 20% Discount on Pro Shop Orders</li>
+          </ul>
+          <a href="signup.html" class="btn btn-secondary btn-block">Enroll in Annual VIP</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Coaches Showcase Section -->
+    <section class="trainers-showcase-section" id="trainers" style="background: var(--bg-surface);">
+      <div class="section-header">
+        <span class="section-tag">Elite Sri Lankan Coaching Staff</span>
+        <h2>Learn From Champion Coaches</h2>
+        <p>Our nationally certified personal trainers and fitness experts are ready to guide your transformation.</p>
+      </div>
+
+      <div class="grid-4">
+        <div class="card" style="text-align: center; padding: 2rem 1.5rem;">
+          <div class="avatar" style="width: 76px; height: 76px; font-size: 1.75rem; margin: 0 auto 1.25rem; background: linear-gradient(135deg, #FF5E36, #FF9E80);">KW</div>
+          <h3 style="font-size: 1.25rem; margin-bottom: 0.25rem;">Kasun Wickramasinghe</h3>
+          <span class="badge badge-purple" style="margin-bottom: 0.75rem;">Head Coach • Colombo</span>
+          <p class="text-muted" style="font-size: 0.85rem;">National Powerlifting Champion • 10+ Yrs Strength Coaching Experience</p>
+        </div>
+
+        <div class="card" style="text-align: center; padding: 2rem 1.5rem;">
+          <div class="avatar" style="width: 76px; height: 76px; font-size: 1.75rem; margin: 0 auto 1.25rem; background: linear-gradient(135deg, #00E5FF, #7C4DFF);">CJ</div>
+          <h3 style="font-size: 1.25rem; margin-bottom: 0.25rem;">Chamari Jayawardena</h3>
+          <span class="badge badge-info" style="margin-bottom: 0.75rem;">CrossFit Lead • Kandy</span>
+          <p class="text-muted" style="font-size: 0.85rem;">High-Intensity & Mobility Specialist • Certified Sports Nutritionist</p>
+        </div>
+
+        <div class="card" style="text-align: center; padding: 2rem 1.5rem;">
+          <div class="avatar" style="width: 76px; height: 76px; font-size: 1.75rem; margin: 0 auto 1.25rem; background: linear-gradient(135deg, #00E676, #00B0FF);">DF</div>
+          <h3 style="font-size: 1.25rem; margin-bottom: 0.25rem;">Dilshan Fernando</h3>
+          <span class="badge badge-success" style="margin-bottom: 0.75rem;">Bodybuilding Coach • Galle</span>
+          <p class="text-muted" style="font-size: 0.85rem;">Mr. Sri Lanka Finalist • Specializing in Hypertrophy & Fat Loss</p>
+        </div>
+
+        <div class="card" style="text-align: center; padding: 2rem 1.5rem;">
+          <div class="avatar" style="width: 76px; height: 76px; font-size: 1.75rem; margin: 0 auto 1.25rem; background: linear-gradient(135deg, #FFD700, #FF5E36);">SD</div>
+          <h3 style="font-size: 1.25rem; margin-bottom: 0.25rem;">Sachini Dissanayake</h3>
+          <span class="badge badge-gold" style="margin-bottom: 0.75rem;">Functional Rehab • Colombo</span>
+          <p class="text-muted" style="font-size: 0.85rem;">Physiotherapy Consultant • Core Stability & Postural Correction</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sri Lankan Member Testimonials -->
+    <section class="testimonials-section" id="testimonials">
+      <div class="section-header">
+        <span class="section-tag">Success Stories</span>
+        <h2>Trusted by Over 3,200+ Sri Lankans</h2>
+        <p>Hear how Flex Gym is powering everyday athletes, cricketers, and fitness enthusiasts across the island.</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">
+            "Colombo 07 branch eke equipment quality eka super! Turnstile barcode scan eken attendance auto log wenawa. Coach Kasun ge workout plan eken mn 8kg lose kala 3 months walata."
+          </p>
+          <div class="testimonial-author">
+            <div class="avatar" style="width: 44px; height: 44px;">NP</div>
+            <div>
+              <div class="font-bold text-main">Nuwan Perera</div>
+              <div class="text-dim" style="font-size: 0.8rem;">Software Engineer • Colombo 07 Member</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">
+            "Kandy branch eke locker facility eka and clean gym environment eka nisa regular workouts karanna lesi. Flex Gym Pro Shop eken authentic Whey protein ganna puluwan."
+          </p>
+          <div class="testimonial-author">
+            <div class="avatar" style="width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));">DS</div>
+            <div>
+              <div class="font-bold text-main">Dinuka Samaraweera</div>
+              <div class="text-dim" style="font-size: 0.8rem;">Bank Officer • Kandy Branch</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">
+            "Best fitness center in Galle! Annual VIP package eka gatta. Colombo giyath Maitland Crescent branch eken gym yanna puluwan eka godak watinawa."
+          </p>
+          <div class="testimonial-author">
+            <div class="avatar" style="width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent-lime), #00B0FF);">TF</div>
+            <div>
+              <div class="font-bold text-main">Tharindu Fernando</div>
+              <div class="text-dim" style="font-size: 0.8rem;">Hotelier • Galle Fort Arena</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Accordion in Pure CSS -->
+    <section class="faq-section" id="faq" style="background: var(--bg-surface);">
+      <div class="section-header">
+        <span class="section-tag">Frequently Asked Questions</span>
+        <h2>Got Questions About Flex Gym?</h2>
+        <p>Everything you need to know about memberships, locations in Sri Lanka, and facility rules.</p>
+      </div>
+
+      <div style="max-width: 800px; margin: 0 auto;">
+        <div class="faq-item">
+          <input type="checkbox" id="faq1" class="faq-checkbox">
+          <label for="faq1" class="faq-title">What are the gym operating hours in Sri Lanka?</label>
+          <div class="faq-content">
+            All Flex Gym branches (Colombo 07, Kandy, Galle, Nugegoda) operate Monday to Sunday from <strong>05:30 AM to 10:30 PM</strong>. Nugegoda and Colombo 07 branches provide 24/7 keycard access for Annual VIP members.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <input type="checkbox" id="faq2" class="faq-checkbox">
+          <label for="faq2" class="faq-title">Can I workout at any branch with one membership?</label>
+          <div class="faq-content">
+            Yes! Our <strong>Quarterly Elite (Rs. 15,000)</strong> and <strong>Annual VIP Champion (Rs. 48,000)</strong> membership plans include seamless multi-branch access across all centers in Sri Lanka.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <input type="checkbox" id="faq3" class="faq-checkbox">
+          <label for="faq3" class="faq-title">How does digital attendance check-in work?</label>
+          <div class="faq-content">
+            Upon membership registration, you receive a digital barcode linked to your Member ID. You simply scan the code at the reception turnstile scanner to verify your subscription and register your daily attendance.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <input type="checkbox" id="faq4" class="faq-checkbox">
+          <label for="faq4" class="faq-title">Are supplements in the Pro Shop genuine and certified?</label>
+          <div class="faq-content">
+            100% of our supplements (Whey Isolate, Creatine, Pre-workouts) are directly imported from accredited global manufacturers with Sri Lankan NMRA import clearance certificates.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Call to Action Banner -->
+    <section class="cta-section" style="text-align: center;">
+      <div class="card" style="max-width: 920px; margin: 0 auto; padding: 4.5rem 2.5rem; background: linear-gradient(135deg, var(--bg-surface-elevated), var(--bg-surface)); border-color: var(--primary-glow);">
+        <span class="section-tag">Start Today in Sri Lanka</span>
+        <h2 style="font-size: 3rem; margin: 1rem 0;">Ready to Transform Your Physique?</h2>
+        <p class="text-muted" style="max-width: 620px; margin: 0 auto 2.5rem; font-size: 1.15rem;">
+          Join Flex Gym Sri Lanka today. Choose your nearest branch in Colombo, Kandy, or Galle and start training with top-tier equipment and coaches.
+        </p>
+        <div class="flex justify-center gap-2 flex-wrap">
+          <a href="signup.html" class="btn btn-primary btn-lg">Create Member Account (LKR)</a>
+          <a href="login.html" class="btn btn-secondary btn-lg">Sign In to Dashboard</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="landing-footer">
+    <div class="footer-top">
+      <div class="footer-col">
+        <div class="brand-logo" style="margin-bottom: 1rem;">
+          <div class="brand-badge">⚡</div>
+          <span>FLEX<span class="text-primary">GYM</span> <span class="badge badge-lk" style="font-size: 0.65rem;">LK</span></span>
+        </div>
+        <p class="text-muted" style="font-size: 0.925rem; line-height: 1.7; max-width: 340px;">
+          Sri Lanka's leading smart fitness club network and management suite. Built for AAD Module with Spring Boot 3.x backend.
+        </p>
+        <div style="margin-top: 1rem; color: var(--text-dim); font-size: 0.85rem;">
+          📍 Head Office: No. 45, Maitland Crescent, Colombo 07, Sri Lanka
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Our Gym Branches</h4>
+        <div class="footer-links">
+          <a href="#locations">Colombo 07 (Cinnamon Gardens)</a>
+          <a href="#locations">Kandy (Peradeniya Road)</a>
+          <a href="#locations">Galle (Fort Ramparts)</a>
+          <a href="#locations">Nugegoda (High-Level Road)</a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Modules & Portals</h4>
+        <div class="footer-links">
+          <a href="login.html">Member Portal</a>
+          <a href="login.html">Coach & Trainer Desk</a>
+          <a href="login.html">Attendance Terminal</a>
+          <a href="login.html">Pro Shop Store</a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contact Support</h4>
+        <div class="footer-links">
+          <span class="text-main font-semibold">📞 +94 11 234 5678</span>
+          <span class="text-main font-semibold">📱 +94 77 123 4567</span>
+          <a href="mailto:support@flexgym.lk">📧 info@flexgym.lk</a>
+          <span class="text-dim">Mon – Sun: 05:30 AM – 10:30 PM</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>&copy; 2026 Flex Gym Management System Sri Lanka. All rights reserved.</div>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — Flex Gym Sri Lanka</title>
+  <meta name="description" content="Sign in to Flex Gym Sri Lanka member and administrative portal.">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- jQuery Script -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+
+  <div class="auth-page-wrapper">
+    <!-- Left Hero Banner Side -->
+    <div class="auth-banner-side">
+      <a href="index.html" class="brand-logo" id="authLogo">
+        <div class="brand-badge">🏋️</div>
+        <span>FLEX<span class="text-primary">GYM</span></span>
+      </a>
+
+      <div class="auth-banner-content">
+        <h2>Sri Lanka's Premier <span class="gradient-text-fire">Fitness Network</span></h2>
+        <p class="text-muted" style="font-size: 1.1rem; line-height: 1.6;">
+          Sign in to access your workout routines, live attendance history, assigned coaches, and pro shop orders across Colombo 07, Kandy, and Galle.
+        </p>
+
+        <div class="auth-feature-list">
+          <div class="auth-feature-item">
+            <span class="icon">⚡</span>
+            <span>Real-time digital turnstile check-ins</span>
+          </div>
+          <div class="auth-feature-item">
+            <span class="icon">💪</span>
+            <span>Custom Lankan hypertrophy & conditioning splits</span>
+          </div>
+          <div class="auth-feature-item">
+            <span class="icon">🛍️</span>
+            <span>Pro supplement shop with transparent LKR pricing</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="font-size: 0.85rem; color: var(--text-dim);">
+        📍 Head Office: No. 45, Maitland Crescent, Colombo 07 • 📞 +94 11 234 5678
+      </div>
+    </div>
+
+    <!-- Right Login Form Side -->
+    <div class="auth-form-side">
+      <div class="auth-card">
+        <div class="auth-header">
+          <h2>Welcome Back</h2>
+          <p>Sign in to your account</p>
+        </div>
+
+        <!-- Direct match with backend variables: email & password -->
+        <form id="loginForm" onsubmit="return false;">
+          <div class="form-group">
+            <label for="loginEmail" class="form-label">
+              <span>Email Address</span>
+              <span class="required">*</span>
+            </label>
+            <input type="email" id="email" name="email" class="form-control" placeholder="kasun.p@flexgym.lk" required autofocus>
+          </div>
+
+          <div class="form-group">
+            <div class="flex justify-between items-center">
+              <label for="loginPassword" class="form-label" style="margin-bottom: 0;">
+                <span>Password</span>
+                <span class="required">*</span>
+              </label>
+              <a href="#" class="text-dim" style="font-size: 0.775rem;">Forgot Password?</a>
+            </div>
+            <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required style="margin-top: 0.45rem;">
+          </div>
+
+          <div class="form-group">
+            <label class="form-check">
+              <input type="checkbox" name="rememberMe" checked>
+              <span>Keep me signed in on this device</span>
+            </label>
+          </div>
+
+          <button type="button" class="btn btn-primary btn-block btn-lg" id="loginSubmitBtn" onclick="handleLogin()">
+            Sign In ➔
+          </button>
+        </form>
+
+        <div class="auth-footer">
+          <p>New to Flex Gym? <a href="signup.html">Register Account</a></p>
+          <p style="margin-top: 0.5rem;"><a href="index.html" style="color: var(--text-dim); font-size: 0.85rem;">← Back to Home</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/login.js"></script>
+</body>
+</html>

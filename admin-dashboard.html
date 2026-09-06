@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Portal | Flex Gym</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="CSS/style.css" />
+  <link rel="stylesheet" href="CSS/dashboard.css" />
+</head>
+
+<body>
+  <div class="dash-layout">
+    
+    <!-- SIDEBAR -->
+    <aside class="dash-sidebar">
+      <a href="index.html" class="dash-brand">
+        <div class="brand-icon">F</div>
+        <div class="brand-title">FLEX<span>GYM</span></div>
+      </a>
+
+      <div class="sidebar-label">Management</div>
+
+      <nav class="dash-nav">
+        <a href="#overview" class="dash-nav-item active" data-section="overview">
+          <span class="nav-icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+
+        <a href="#members" class="dash-nav-item" data-section="members">
+          <span class="nav-icon">👥</span>
+          <span>Members</span>
+          <span class="nav-badge">1,248</span>
+        </a>
+
+        <a href="#memberships" class="dash-nav-item" data-section="memberships">
+          <span class="nav-icon">💳</span>
+          <span>Memberships</span>
+        </a>
+
+        <a href="#attendance" class="dash-nav-item" data-section="attendance">
+          <span class="nav-icon">⏱️</span>
+          <span>Attendance</span>
+        </a>
+
+        <a href="#workouts" class="dash-nav-item" data-section="workouts">
+          <span class="nav-icon">📋</span>
+          <span>Workout Plans</span>
+        </a>
+
+        <a href="#products" class="dash-nav-item" data-section="products">
+          <span class="nav-icon">📦</span>
+          <span>Products</span>
+        </a>
+
+        <a href="#orders" class="dash-nav-item" data-section="orders">
+          <span class="nav-icon">🛒</span>
+          <span>Orders</span>
+          <span class="nav-badge" style="background:var(--warning);color:#000;">5</span>
+        </a>
+
+        <a href="#equipment" class="dash-nav-item" data-section="equipment">
+          <span class="nav-icon">⚙️</span>
+          <span>Equipment</span>
+        </a>
+
+        <a href="#lockers" class="dash-nav-item" data-section="lockers">
+          <span class="nav-icon">🔒</span>
+          <span>Lockers</span>
+        </a>
+
+        <a href="#trainers" class="dash-nav-item" data-section="trainers">
+          <span class="nav-icon">🏋️</span>
+          <span>Trainers</span>
+        </a>
+
+        <a href="#payments" class="dash-nav-item" data-section="payments">
+          <span class="nav-icon">💰</span>
+          <span>Payments</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="user-profile-pill">
+          <div class="user-avatar" id="dashUserAvatar">AD</div>
+          <div class="user-info">
+            <strong id="dashUserEmail">Admin User</strong>
+            <span id="dashUserRole">System Admin</span>
+          </div>
+          <button class="logout-btn" id="logoutBtn" title="Logout">🚪</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="dash-main">
+      
+      <!-- TOPBAR -->
+      <header class="dash-topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-toggle" id="mobileMenuToggle">☰</button>
+          <div class="breadcrumb">
+            Admin Portal <span>/</span> <strong id="breadcrumbCurrent">Dashboard</strong>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <a href="index.html" class="topbar-btn">🌐 View Website</a>
+          <button class="topbar-btn primary" data-modal-target="modalAddMember">+ Quick Add</button>
+        </div>
+      </header>
+
+      <!-- =========================================================
+           VIEW: OVERVIEW (DASHBOARD)
+      ========================================================= -->
+      <section id="view-overview" class="dash-section active">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>Executive Overview</h1>
+            <p>Welcome back, Admin. Real-time gym performance and metrics.</p>
+          </div>
+        </div>
+
+        <!-- STATS CARDS -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Total Active Members</span>
+              <div class="stat-icon">👥</div>
+            </div>
+            <div class="stat-val">1,248</div>
+            <div class="stat-trend up">↑ 12.4% vs last month</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Monthly Revenue</span>
+              <div class="stat-icon">💵</div>
+            </div>
+            <div class="stat-val">Rs. 2.45M</div>
+            <div class="stat-trend up">↑ 8.6% growth</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Today's Check-ins</span>
+              <div class="stat-icon">⏱️</div>
+            </div>
+            <div class="stat-val">342</div>
+            <div class="stat-trend neutral">48 currently in gym</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Locker Occupancy</span>
+              <div class="stat-icon">🔒</div>
+            </div>
+            <div class="stat-val">78%</div>
+            <div class="stat-trend down">22 available</div>
+          </div>
+        </div>
+
+        <!-- RECENT ACTIVITY & QUICK ACTIONS -->
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 28px;">
+          
+          <div class="dash-panel" style="margin-bottom: 0;">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">Recent Member Check-Ins</h3>
+                <p class="panel-subtitle">Real-time attendance feed from turnstiles</p>
+              </div>
+              <a href="#attendance" class="btn btn-secondary" style="padding: 6px 12px; font-size: 11px;">View All</a>
+            </div>
+
+            <div class="table-responsive">
+              <table class="dash-table">
+                <thead>
+                  <tr>
+                    <th>Member</th>
+                    <th>Package</th>
+                    <th>Check-in Time</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="cell-member">
+                        <div class="member-avatar">DN</div>
+                        <div class="member-meta">
+                          <strong>Dineth Perera</strong>
+                          <span>MEM-8921</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td><span class="badge badge-lime">Elite Pro</span></td>
+                    <td>10:42 AM</td>
+                    <td><span class="badge badge-success">Checked In</span></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="cell-member">
+                        <div class="member-avatar">SM</div>
+                        <div class="member-meta">
+                          <strong>Saman Kumara</strong>
+                          <span>MEM-7312</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td><span class="badge badge-info">Standard</span></td>
+                    <td>10:35 AM</td>
+                    <td><span class="badge badge-success">Checked In</span></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="cell-member">
+                        <div class="member-avatar">KR</div>
+                        <div class="member-meta">
+                          <strong>Kavindu Rathsara</strong>
+                          <span>MEM-9014</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td><span class="badge badge-lime">VIP Diamond</span></td>
+                    <td>09:50 AM</td>
+                    <td><span class="badge badge-muted">Checked Out</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="dash-panel" style="margin-bottom: 0;">
+            <div class="panel-header">
+              <h3 class="panel-title">Quick Actions</h3>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <button class="btn btn-secondary" style="justify-content: flex-start; gap: 12px;" data-modal-target="modalAddMember">
+                <span>➕</span> Register New Member
+              </button>
+              <button class="btn btn-secondary" style="justify-content: flex-start; gap: 12px;" onclick="FlexDashboard.switchSection('attendance')">
+                <span>⏱️</span> Fast Attendance Scanner
+              </button>
+              <button class="btn btn-secondary" style="justify-content: flex-start; gap: 12px;" onclick="FlexDashboard.switchSection('lockers')">
+                <span>🔒</span> Allocate Locker
+              </button>
+              <button class="btn btn-secondary" style="justify-content: flex-start; gap: 12px;" data-modal-target="modalAddProduct">
+                <span>📦</span> Add Store Product
+              </button>
+              <button class="btn btn-secondary" style="justify-content: flex-start; gap: 12px;" onclick="FlexDashboard.switchSection('workouts')">
+                <span>📋</span> Build Workout Plan
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- =========================================================
+           VIEW: MEMBERS MANAGEMENT
+      ========================================================= -->
+      <section id="view-members" class="dash-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>Members Management</h1>
+            <p>View, search, and manage registered gym members.</p>
+          </div>
+          <div class="section-actions">
+            <button class="btn btn-primary" data-modal-target="modalAddMember">+ Add New Member</button>
+          </div>
+        </div>
+
+        <div class="dash-panel">
+          <div class="filter-bar">
+            <div class="search-input-wrap">
+              <span class="search-icon">🔍</span>
+              <input type="text" class="search-input" placeholder="Search members by name, email, or ID..." data-table-search="membersTable" />
+            </div>
+            <select class="filter-select" data-table-filter="membersTable" data-col-index="3">
+              <option value="all">All Packages</option>
+              <option value="Elite Pro">Elite Pro</option>
+              <option value="Standard">Standard</option>
+              <option value="VIP Diamond">VIP Diamond</option>
+              <option value="Basic">Basic</option>
+            </select>
+            <select class="filter-select" data-table-filter="membersTable" data-col-index="4">
+              <option value="all">All Statuses</option>
+              <option value="Active">Active</option>
+              <option value="Expired">Expired</option>
+              <option value="Pending">Pending</option>
+            </select>
+          </div>
+
+          <div class="table-responsive">
+            <table class="dash-table" id="membersTable">
+              <thead>
+                <tr>
+                  <th>Member ID & Name</th>
+                  <th>Contact Info</th>
+                  <th>Joined Date</th>
+                  <th>Package</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="cell-member">
+                      <div class="member-avatar">DN</div>
+                      <div class="member-meta">
+                        <strong>Dineth Perera</strong>
+                        <span>ID: MEM-1048</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>dineth@gmail.com<br><small style="color:var(--text-muted)">+94 77 123 4567</small></td>
+                  <td>2024-01-15</td>
+                  <td><span class="badge badge-lime">Elite Pro</span></td>
+                  <td><span class="badge badge-success">Active</span></td>
+                  <td>
+                    <div class="action-btns">
+                      <button class="btn-icon" title="Edit" onclick="showToast('Edit Member modal opened')">✏️</button>
+                      <button class="btn-icon danger" title="Delete" onclick="showToast('Member deleted', 'error')">🗑️</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="cell-member">
+                      <div class="member-avatar">SM</div>
+                      <div class="member-meta">
+                        <strong>Saman Kumara</strong>
+                        <span>ID: MEM-1049</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>saman.k@yahoo.com<br><small style="color:var(--text-muted)">+94 71 889 2314</small></td>
+                  <td>2024-02-10</td>
+                  <td><span class="badge badge-info">Standard</span></td>
+                  <td><span class="badge badge-success">Active</span></td>
+                  <td>
+                    <div class="action-btns">
+                      <button class="btn-icon" title="Edit">✏️</button>
+                      <button class="btn-icon danger" title="Delete">🗑️</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="cell-member">
+                      <div class="member-avatar">KR</div>
+                      <div class="member-meta">
+                        <strong>Kavindu Rathsara</strong>
+                        <span>ID: MEM-1050</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>kavindu.r@gmail.com<br><small style="color:var(--text-muted)">+94 76 554 9901</small></td>
+                  <td>2023-11-20</td>
+                  <td><span class="badge badge-lime">VIP Diamond</span></td>
+                  <td><span class="badge badge-warning">Pending</span></td>
+                  <td>
+                    <div class="action-btns">
+                      <button class="btn-icon" title="Edit">✏️</button>
+                      <button class="btn-icon danger" title="Delete">🗑️</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="cell-member">
+                      <div class="member-avatar">AN</div>
+                      <div class="member-meta">
+                        <strong>Anusha Wickramasinghe</strong>
+                        <span>ID: MEM-1051</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>anusha.w@gmail.com<br><small style="color:var(--text-muted)">+94 70 334 1122</small></td>
+                  <td>2023-08-05</td>
+                  <td><span class="badge badge-muted">Basic</span></td>
+                  <td><span class="badge badge-danger">Expired</span></td>
+                  <td>
+                    <div class="action-btns">
+                      <button class="btn-icon" title="Edit">✏️</button>
+                      <button class="btn-icon danger" title="Delete">🗑️</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           VIEW: MEMBERSHIPS MANAGEMENT
+      ========================================================= -->
+      <section id="view-memberships" class="dash-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>Memberships & Packages</h1>
+            <p>Manage membership plans, pricing, durations, and member subscriptions.</p>
+          </div>
+          <div class="section-actions">
+            <button class="btn btn-primary" onclick="showToast('Create Package dialog opened')">+ Create New Package</button>
+          </div>
+        </div>
+
+        <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr);">
+          <div class="dash-panel" style="border-top: 3px solid var(--lime);">
+            <div class="stat-top">
+              <span class="stat-label">Basic Fitness</span>
+              <span class="badge badge-muted">Monthly</span>
+            </div>
+            <div class="stat-val">Rs. 4,500 <small style="font-size:12px;color:var(--text-muted)">/mo</small></div>
+            <p style="font-size: 12px; color:var(--text-muted); margin: 10px 0 15px;">Gym Floor Access, Locker Room, Free Induction.</p>
+            <div style="font-size: 11px; font-weight:700; color:var(--lime);">412 Active Subscriptions</div>
+          </div>
+
+          <div class="dash-panel" style="border-top: 3px solid var(--info);">
+            <div class="stat-top">
+              <span class="stat-label">Pro Strength & Cardio</span>
+              <span class="badge badge-info">Quarterly / Monthly</span>
+            </div>
+            <div class="stat-val">Rs. 8,500 <small style="font-size:12px;color:var(--text-muted)">/mo</small></div>
+            <p style="font-size: 12px; color:var(--text-muted); margin: 10px 0 15px;">All Equipment + Steam Sauna + 1 Trainer Consult/mo.</p>
+            <div style="font-size: 11px; font-weight:700; color:var(--info);">568 Active Subscriptions</div>
+          </div>
+
+          <div class="dash-panel" style="border-top: 3px solid var(--warning);">
+            <div class="stat-top">
+              <span class="stat-label">VIP Diamond Black</span>
+              <span class="badge badge-warning">Annual</span>
+            </div>
+            <div class="stat-val">Rs. 15,000 <small style="font-size:12px;color:var(--text-muted)">/mo</small></div>
+            <p style="font-size: 12px; color:var(--text-muted); margin: 10px 0 15px;">24/7 Access, Dedicated Personal Trainer, Free Nutrition Plan, VIP Locker.</p>
+            <div style="font-size: 11px; font-weight:700; color:var(--warning);">268 Active Subscriptions</div>
+          </div>
+        </div>
+
+        <div class="dash-panel">
+          <div class="panel-header">
+            <h3 class="panel-title">Active Subscriptions Log</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>Member</th>
+                  <th>Plan Name</th>
+                  <th>Start Date</th>
+                  <th>Renewal Date</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Dineth Perera</td>
+                  <td><span class="badge badge-lime">VIP Diamond</span></td>
+                  <td>2024-01-01</td>
+                  <td>2025-01-01</td>
+                  <td>Rs. 180,000</td>
+                  <td><span class="badge badge-success">Paid</span></td>
+                </tr>
+                <tr>
+                  <td>Saman Kumara</td>
+                  <td><span class="badge badge-info">Pro Strength</span></td>
+                  <td>2024-02-01</td>
+                  <td>2024-05-01</td>
+                  <td>Rs. 25,500</td>
+                  <td><span class="badge badge-success">Paid</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           VIEW: ATTENDANCE MANAGEMENT
+      ========================================================= -->
+      <section id="view-attendance" class="dash-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>Attendance & Turnstile Scanner</h1>
+            <p>Live check-in monitoring and member attendance records.</p>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px;">
+          <!-- QUICK SCANNER PANEL -->
+          <div class="dash-panel">
+            <div class="panel-header">
+              <h3 class="panel-title">⚡ Fast Check-In</h3>
+            </div>
+            <form onsubmit="event.preventDefault(); showToast('Check-in recorded successfully for Member #' + document.getElementById('scanMemberId').value); document.getElementById('scanMemberId').value='';">
+              <div class="form-group">
+                <label class="form-label">Scan Barcode or Enter Member ID</label>
+                <input type="text" id="scanMemberId" class="form-control" placeholder="e.g. MEM-1048" required autofocus />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Gate / Check-in Point</label>
+                <select class="form-control">
+                  <option>Main Entrance Turnstile 1</option>
+                  <option>Main Entrance Turnstile 2</option>
+                  <option>VIP Area Gate</option>
+                  <option>Reception Manual</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary" style="width: 100%;">Record Check-In ✓</button>
+            </form>
+          </div>
+
+          <!-- ATTENDANCE TABLE -->
+          <div class="dash-panel">
+            <div class="panel-header">
+              <h3 class="panel-title">Today's Live Attendance Feed</h3>
+              <span class="badge badge-success">Live Sync Active</span>
+            </div>
+
+            <div class="table-responsive">
+              <table class="dash-table">
+                <thead>
+                  <tr>
+                    <th>Member ID</th>
+                    <th>Name</th>
+                    <th>Time In</th>
+                    <th>Time Out</th>
+                    <th>Gate</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>MEM-1048</td>
+                    <td><strong>Dineth Perera</strong></td>
+                    <td>10:42 AM</td>
+                    <td>--</td>
+                    <td>Turnstile 1</td>
+                    <td><span class="badge badge-success">In Gym</span></td>
+                  </tr>
+                  <tr>
+                    <td>MEM-1049</td>
+                    <td><strong>Saman Kumara</strong></td>
+                    <td>10:35 AM</td>
+                    <td>--</td>
+                    <td>Turnstile 2</td>
+                    <td><span class="badge badge-success">In Gym</span></td>
+                  </tr>
+                  <tr>
+                    <td>MEM-1050</td>
+                    <td><strong>Kavindu Rathsara</strong></td>
+                    <td>08:15 AM</td>
+                    <td>09:50 AM</td>
+                    <td>Turnstile 1</td>
+                    <td><span class="badge badge-muted">Completed</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           VIEW: WORKOUT PLANS MANAGEMENT
+      ========================================================= -->
+      <section id="view-workouts" class="dash-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>Workout Plans Management</h1>
+            <p>Create tailored training routines and assign workout schedules to members.</p>
+          </div>
+          <div class="section-actions">
+            <button class="btn btn-primary" data-modal-target="modalAddWorkout">+ Create New Workout Routine</button>
+          </div>
+        </div>
+
+        <div class="dash-panel">
+          <div class="panel-header">
+            <h3 class="panel-title">Master Workout Programs</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>Plan Title</th>
+                  <th>Target Goal</th>
+                  <th>Level</th>
+                  <th>Days / Week</th>
+                  <th>Assigned Clients</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Hypertrophy Push-Pull-Legs</strong></td>
+                  <td>Muscle Growth</td>
+                  <td><span class="badge badge-lime">Intermediate</span></td>
+                  <td>6 Days</td>
+                  <td>142 Members</td>
+                  <td>
+                    <div class="action-btns">
+                      <button class="btn-icon" title="View & Edit">✏️</button>
+                      <button class="btn-icon" title="Assign to Member" onclick="showToast('Assign Routine modal opened')">👤</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Fat Annihilation HIIT & Core</strong></td>
+                  <td>Weight Loss</td>
+                  <td><span class="badge badge-warning">Beginner</span></td>
+                  <td>4 Days</td>
+                  <td>89 Members</td>
+                  <td>
+                    <div class="action-btns">
+                      <button class="btn-icon">✏️</button>
+                      <button class="btn-icon">👤</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Strength & Powerlifting Peak</strong></td>
+                  <td>Max Strength</td>
+                  <td><span class="badge badge-danger">Advanced</span></td>
+                  <td>5 Days</td>
+                  <td>64 Members</td>
+                  <td>
+                    <div class="action-btns">
+                      <button class="btn-icon">✏️</button>
+                      <button class="btn-icon">👤</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           VIEW: PRODUCTS (STORE INVENTORY)
+      ========================================================= -->
+      <section id="view-products" class="dash-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>Product & Supplement Inventory</h1>
+            <p>Manage store items, stock levels, categories, and prices.</p>
+          </div>
+          <div class="section-actions">
+            <button class="btn btn-primary" data-modal-target="modalAddProduct">+ Add Product</button>
+          </div>
+        </div>
+
+        <div class="dash-panel">
+          <div class="filter-bar">
+            <div class="search-input-wrap">
+              <span class="search-icon">🔍</span>
+              <input type="text" class="search-input" placeholder="Search inventory..." data-table-search="productsTable" />
+            </div>
+            <select class="filter-select" data-table-filter="productsTable" data-col-index="1">
+              <option value="all">All Categories</option>
+              <option value="Supplements">Supplements</option>
+              <option value="Gear">Gear & Accessories</option>
+              <option value="Apparel">Apparel</option>
+            </select>
+          </div>
+
+          <div class="table-responsive">
+            <table class="dash-table" id="productsTable">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Stock In Hand</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="cell-member">
+                      <img src="https://images.unsplash.com/photo-1579722821273-0f6c7d44362f?auto=format&fit=crop&w=100&q=80" style="width:36px;height:36px;border-radius:6px;object-fit:cover;" alt="Whey" />
+                      <div class="member-meta">
+                        <strong>HydroPure Isolate Whey (2kg)</strong>
+                        <span>SKU: SUPP-001</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="badge badge-lime">Supplements</span></td>
+                  <td>Rs. 18,500</td>
+                  <td>28 units</td>
+                  <td><span class="badge badge-success">In Stock</span></td>
+                  <td>
+                    <div class="action-btns">
+                      <button class="btn-icon" title="Edit">✏️</button>
+                      <button class="btn-icon danger" title="Delete">🗑️</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="cell-member">
+                      <img src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=100&q=80" style="width:36px;height:36px;border-radius:6px;object-fit:cover;" alt="Straps" />
+                      <div class="member-meta">
+                        <strong>Pro Lifting Straps & Wrist Wraps</strong>
+                        <span>SKU: GEAR-102</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="badge badge-info">Gear</span></td>
+                  <td>Rs. 3,200</td>
+                  <td>45 units</td>
+                  <td><span class="badge badge-success">In Stock</span></td>
+                  <td>
+                    <div class="action-btns">
+                      <button class="btn-icon">✏️</button>
+                      <button class="btn-icon danger">🗑️</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="cell-member">
+                      <img src="https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=100&q=80" style="width:36px;height:36px;border-radius:6px;object-fit:cover;" alt="Creatine" />
+                      <div class="member-meta">
+                        <strong>Pure Micronized Creatine 300g</strong>
+                        <span>SKU: SUPP-004</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="badge badge-lime">Supplements</span></td>
+                  <td>Rs. 6,800</td>
+                  <td>4 units</td>
+                  <td><span class="badge badge-warning">Low Stock</span></td>
+                  <td>
+                    <div class="action-btns">
+                      <button class="btn-icon">✏️</button>
+                      <button class="btn-icon danger">🗑️</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           VIEW: ORDERS MANAGEMENT
+      ========================================================= -->
+      <section id="view-orders" class="dash-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>Orders & Fulfillment</h1>
+            <p>Track store merchandise and supplement orders.</p>
+          </div>
+        </div>
+
+        <div class="dash-panel">
+          <div class="table-responsive">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Items Ordered</th>
+                  <th>Total Amount</th>
+                  <th>Payment</th>
+                  <th>Fulfillment Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>#ORD-9821</strong></td>
+                  <td>Dineth Perera</td>
+                  <td>1x HydroPure Whey, 1x Straps</td>
+                  <td>Rs. 21,700</td>
+                  <td><span class="badge badge-success">Paid (Card)</span></td>
+                  <td><span class="badge badge-warning">Processing</span></td>
+                  <td>
+                    <button class="btn btn-secondary" style="padding:4px 10px;font-size:11px;" onclick="showToast('Order marked as Completed')">Ship Order 🚚</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>#ORD-9820</strong></td>
+                  <td>Saman Kumara</td>
+                  <td>1x Creatine 300g</td>
+                  <td>Rs. 6,800</td>
+                  <td><span class="badge badge-success">Paid</span></td>
+                  <td><span class="badge badge-success">Delivered</span></td>
+                  <td>
+                    <button class="btn btn-secondary" style="padding:4px 10px;font-size:11px;">Invoice 📄</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           VIEW: EQUIPMENT MANAGEMENT
+      ========================================================= -->
+      <section id="view-equipment" class="dash-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>Gym Equipment & Maintenance</h1>
+            <p>Monitor condition, inspection logs, and service schedules.</p>
+          </div>
+          <div class="section-actions">
+            <button class="btn btn-primary" data-modal-target="modalAddEquipment">+ Add Equipment</button>
+          </div>
+        </div>
+
+        <div class="dash-panel">
+          <div class="table-responsive">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>Machine Name</th>
+                  <th>Category</th>
+                  <th>Serial / Model</th>
+                  <th>Condition Status</th>
+                  <th>Last Inspected</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Olympic Power Rack #1</strong></td>
+                  <td>Free Weights</td>
+                  <td>RACK-OLY-01</td>
+                  <td><span class="badge badge-success">Operational</span></td>
+                  <td>2024-02-14</td>
+                  <td>
+                    <div class="action-btns">
+                      <button class="btn-icon" title="Log Maintenance">🔧</button>
+                      <button class="btn-icon" title="Edit">✏️</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Matrix Cable Crossover Dual</strong></td>
+                  <td>Cable Machines</td>
+                  <td>CBL-MTX-04</td>
+                  <td><span class="badge badge-warning">Cable Wear (Check)</span></td>
+                  <td>2024-02-10</td>
+                  <td>
+                    <div class="action-btns">
+                      <button class="btn-icon" title="Log Maintenance">🔧</button>
+                      <button class="btn-icon" title="Edit">✏️</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>LifeFitness Treadmill T5</strong></td>
+                  <td>Cardio</td>
+                  <td>TM-LF-03</td>
+                  <td><span class="badge badge-danger">Under Repair</span></td>
+                  <td>2024-02-01</td>
+                  <td>
+                    <div class="action-btns">
+                      <button class="btn-icon" title="Log Maintenance">🔧</button>
+                      <button class="btn-icon" title="Edit">✏️</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           VIEW: LOCKERS MANAGEMENT
+      ========================================================= -->
+      <section id="view-lockers" class="dash-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>Locker Allocation & Status</h1>
+            <p>Real-time locker status across Male & Female locker rooms.</p>
+          </div>
+          <div class="section-actions">
+            <button class="btn btn-primary" data-modal-target="modalAssignLocker">+ Assign Locker</button>
+          </div>
+        </div>
+
+        <div class="dash-panel">
+          <div class="filter-bar">
+            <span style="font-size:13px;font-weight:700;margin-right:10px;">Filter Zone:</span>
+            <button class="btn btn-secondary" style="font-size:11px;padding:6px 14px;">All Lockers (40)</button>
+            <button class="btn btn-secondary" style="font-size:11px;padding:6px 14px;">Zone A (Male)</button>
+            <button class="btn btn-secondary" style="font-size:11px;padding:6px 14px;">Zone B (Female)</button>
+            <button class="btn btn-secondary" style="font-size:11px;padding:6px 14px;">VIP Locker Suite</button>
+          </div>
+
+          <div class="lockers-grid">
+            <div class="locker-card occupied" onclick="showToast('Locker #01 occupied by Dineth Perera')">
+              <div class="locker-num">#01</div>
+              <div class="locker-status" style="color:var(--danger)">Occupied</div>
+              <small style="font-size:10px;color:var(--text-muted)">Dineth P.</small>
+            </div>
+
+            <div class="locker-card available" onclick="showToast('Locker #02 is Available for allocation')">
+              <div class="locker-num">#02</div>
+              <div class="locker-status" style="color:var(--success)">Available</div>
+              <small style="font-size:10px;color:var(--text-muted)">Vacant</small>
+            </div>
+
+            <div class="locker-card available">
+              <div class="locker-num">#03</div>
+              <div class="locker-status" style="color:var(--success)">Available</div>
+              <small style="font-size:10px;color:var(--text-muted)">Vacant</small>
+            </div>
+
+            <div class="locker-card occupied">
+              <div class="locker-num">#04</div>
+              <div class="locker-status" style="color:var(--danger)">Occupied</div>
+              <small style="font-size:10px;color:var(--text-muted)">Saman K.</small>
+            </div>
+
+            <div class="locker-card maintenance">
+              <div class="locker-num">#05</div>
+              <div class="locker-status" style="color:var(--warning)">Repair</div>
+              <small style="font-size:10px;color:var(--text-muted)">Lock issue</small>
+            </div>
+
+            <div class="locker-card available">
+              <div class="locker-num">#06</div>
+              <div class="locker-status" style="color:var(--success)">Available</div>
+              <small style="font-size:10px;color:var(--text-muted)">Vacant</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           VIEW: TRAINERS MANAGEMENT
+      ========================================================= -->
+      <section id="view-trainers" class="dash-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>Fitness Coaches & Trainers</h1>
+            <p>Manage trainer credentials, client capacities, and shift assignments.</p>
+          </div>
+          <div class="section-actions">
+            <button class="btn btn-primary" data-modal-target="modalAddTrainer">+ Add New Trainer</button>
+          </div>
+        </div>
+
+        <div class="dash-panel">
+          <div class="table-responsive">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>Trainer Name</th>
+                  <th>Speciality</th>
+                  <th>Contact</th>
+                  <th>Client Load</th>
+                  <th>Hourly Rate</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="cell-member">
+                      <div class="member-avatar">KR</div>
+                      <div class="member-meta">
+                        <strong>Kasun Rajapaksha</strong>
+                        <span>Senior Strength Coach</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="badge badge-lime">Hypertrophy & Power</span></td>
+                  <td>kasun.r@flexgym.com</td>
+                  <td>18 / 20 Clients</td>
+                  <td>Rs. 3,500 / hr</td>
+                  <td><span class="badge badge-success">On Duty</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="cell-member">
+                      <div class="member-avatar">NF</div>
+                      <div class="member-meta">
+                        <strong>Nadeesha Fernando</strong>
+                        <span>Yoga & Mobility Expert</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="badge badge-info">Flexibility & Core</span></td>
+                  <td>nadeesha.f@flexgym.com</td>
+                  <td>12 / 15 Clients</td>
+                  <td>Rs. 3,000 / hr</td>
+                  <td><span class="badge badge-success">On Duty</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           VIEW: PAYMENTS & BILLING
+      ========================================================= -->
+      <section id="view-payments" class="dash-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>Financial Transactions & Invoices</h1>
+            <p>Audit trail of all membership fees, store purchases, and locker rentals.</p>
+          </div>
+        </div>
+
+        <div class="dash-panel">
+          <div class="table-responsive">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>Transaction Ref</th>
+                  <th>Member / Payer</th>
+                  <th>Category</th>
+                  <th>Amount</th>
+                  <th>Method</th>
+                  <th>Date & Time</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>#TXN-77301</strong></td>
+                  <td>Dineth Perera</td>
+                  <td>Membership Renewal</td>
+                  <td>Rs. 18,500</td>
+                  <td>Visa / Master</td>
+                  <td>Today, 10:30 AM</td>
+                  <td><span class="badge badge-success">Completed</span></td>
+                </tr>
+                <tr>
+                  <td><strong>#TXN-77300</strong></td>
+                  <td>Saman Kumara</td>
+                  <td>Supplements Store</td>
+                  <td>Rs. 6,800</td>
+                  <td>Cash</td>
+                  <td>Today, 09:15 AM</td>
+                  <td><span class="badge badge-success">Completed</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- =========================================================
+       MODALS
+  ========================================================= -->
+  <!-- MODAL: ADD MEMBER -->
+  <div class="modal-backdrop" id="modalAddMember">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Register New Member</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <form onsubmit="event.preventDefault(); showToast('New member registered successfully!'); closeModal('modalAddMember');">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-control" placeholder="e.g. Roshan Ranasinghe" required />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-control" placeholder="roshan@gmail.com" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input type="tel" class="form-control" placeholder="+94 77 000 0000" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Membership Plan</label>
+              <select class="form-control">
+                <option>Elite Pro (Monthly)</option>
+                <option>Pro Strength (Quarterly)</option>
+                <option>VIP Diamond (Annual)</option>
+                <option>Basic Fitness</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Gender</label>
+              <select class="form-control">
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Member</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD PRODUCT -->
+  <div class="modal-backdrop" id="modalAddProduct">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Add Store Product</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <form onsubmit="event.preventDefault(); showToast('Product added to inventory!'); closeModal('modalAddProduct');">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Product Name</label>
+            <input type="text" class="form-control" placeholder="e.g. Gold Standard Whey" required />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select class="form-control">
+                <option>Supplements</option>
+                <option>Gear</option>
+                <option>Apparel</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Price (LKR)</label>
+              <input type="number" class="form-control" placeholder="15000" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Initial Stock</label>
+              <input type="number" class="form-control" placeholder="20" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Image URL</label>
+              <input type="url" class="form-control" placeholder="https://..." />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn-primary">Add Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD EQUIPMENT -->
+  <div class="modal-backdrop" id="modalAddEquipment">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Register Gym Equipment</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <form onsubmit="event.preventDefault(); showToast('Equipment registered successfully!'); closeModal('modalAddEquipment');">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Equipment / Machine Name</label>
+            <input type="text" class="form-control" placeholder="e.g. Precor Elliptical Trainer" required />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select class="form-control">
+                <option>Cardio</option>
+                <option>Free Weights</option>
+                <option>Cable Machines</option>
+                <option>Functional</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Condition Status</label>
+              <select class="form-control">
+                <option>Operational</option>
+                <option>Needs Inspection</option>
+                <option>Under Maintenance</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Machine</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ASSIGN LOCKER -->
+  <div class="modal-backdrop" id="modalAssignLocker">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Allocate Locker</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <form onsubmit="event.preventDefault(); showToast('Locker allocated successfully!'); closeModal('modalAssignLocker');">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Locker Number</label>
+              <select class="form-control">
+                <option>#02 (Available)</option>
+                <option>#03 (Available)</option>
+                <option>#06 (Available)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Member ID / Name</label>
+              <input type="text" class="form-control" placeholder="MEM-1048" required />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn-primary">Assign Locker</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD TRAINER -->
+  <div class="modal-backdrop" id="modalAddTrainer">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Add Fitness Trainer</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <form onsubmit="event.preventDefault(); showToast('Trainer profile added successfully!'); closeModal('modalAddTrainer');">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Trainer Name</label>
+            <input type="text" class="form-control" placeholder="e.g. Dilshan Perera" required />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Specialization</label>
+              <input type="text" class="form-control" placeholder="e.g. Crossfit & HIIT" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Hourly Rate (LKR)</label>
+              <input type="number" class="form-control" placeholder="3500" required />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Trainer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD WORKOUT ROUTINE -->
+  <div class="modal-backdrop" id="modalAddWorkout">
+    <div class="modal-box" style="max-width: 600px;">
+      <div class="modal-header">
+        <h3>Create Workout Program</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <form onsubmit="event.preventDefault(); showToast('Workout routine created successfully!'); closeModal('modalAddWorkout');">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Program Name</label>
+            <input type="text" class="form-control" placeholder="e.g. 12-Week V-Taper Shred" required />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Difficulty Level</label>
+              <select class="form-control">
+                <option>Beginner</option>
+                <option>Intermediate</option>
+                <option>Advanced</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Days Per Week</label>
+              <input type="number" class="form-control" value="5" min="1" max="7" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Exercise Outline / Notes</label>
+            <textarea class="form-control" rows="3" placeholder="Day 1: Chest & Triceps (Incline Bench 4x8, Dips 3x12...)"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Routine</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="JS/dashboard.js"></script>
+</body>
+</html>

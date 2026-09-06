@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Our Trainers | Flex Gym</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" href="CSS/style.css">
+
+    <style>
+        .trainer-hero {
+            min-height: 75vh;
+            display: flex;
+            align-items: flex-end;
+            position: relative;
+            overflow: hidden;
+
+            background:
+                linear-gradient(
+                    0deg,
+                    rgba(0, 0, 0, .92),
+                    rgba(0, 0, 0, .18)
+                ),
+                url("https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=1800&q=85")
+                center / cover no-repeat;
+        }
+
+        .trainer-hero-content {
+            max-width: 720px;
+            padding: 100px 7% 85px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .trainer-hero-content h1 {
+            font-size: clamp(58px, 8vw, 115px);
+            line-height: .88;
+            letter-spacing: -6px;
+            font-weight: 900;
+            margin-top: 22px;
+        }
+
+        .trainer-hero-content h1 span {
+            display: block;
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        .trainer-hero-content p {
+            max-width: 500px;
+            color: #aaa;
+            font-size: 14px;
+            line-height: 1.8;
+            margin-top: 28px;
+        }
+
+        .trainer-section {
+            padding: 110px 0;
+            background: #0c0c0c;
+        }
+
+        .trainer-heading {
+            margin-bottom: 55px;
+        }
+
+        .trainer-heading h2 {
+            font-size: clamp(42px, 5vw, 75px);
+            line-height: .95;
+            letter-spacing: -4px;
+            font-weight: 900;
+            margin-top: 18px;
+        }
+
+        .trainer-heading h2 span {
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        .trainer-heading p {
+            max-width: 500px;
+            color: #777;
+            font-size: 14px;
+            line-height: 1.8;
+            margin-top: 20px;
+        }
+
+        .trainer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .trainer-card {
+            overflow: hidden;
+            background: #151515;
+            border: 1px solid rgba(255, 255, 255, .08);
+            transition: .35s ease;
+        }
+
+        .trainer-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent);
+        }
+
+        .trainer-photo {
+            height: 360px;
+            position: relative;
+            overflow: hidden;
+            background: #202020;
+        }
+
+        .trainer-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: .5s ease;
+        }
+
+        .trainer-card:hover .trainer-photo img {
+            transform: scale(1.06);
+        }
+
+        .trainer-status {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            padding: 8px 12px;
+            background: var(--accent);
+            color: #080808;
+            font-size: 9px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .trainer-details {
+            padding: 28px;
+        }
+
+        .trainer-role {
+            color: var(--accent);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .trainer-details h3 {
+            font-size: 25px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            margin-top: 12px;
+        }
+
+        .trainer-details p {
+            color: #777;
+            font-size: 13px;
+            line-height: 1.8;
+            margin-top: 12px;
+        }
+
+        .trainer-contact {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 22px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(255, 255, 255, .08);
+        }
+
+        .trainer-contact a {
+            color: #aaa;
+            font-size: 11px;
+            transition: .3s ease;
+        }
+
+        .trainer-contact a:hover {
+            color: var(--accent);
+        }
+
+        .trainer-cta {
+            padding: 110px 0;
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(8, 8, 8, .97),
+                    rgba(8, 8, 8, .68)
+                ),
+                url("https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1800&q=85")
+                center / cover no-repeat;
+        }
+
+        .trainer-cta-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+        }
+
+        .trainer-cta h2 {
+            font-size: clamp(42px, 5vw, 75px);
+            line-height: .92;
+            letter-spacing: -4px;
+            font-weight: 900;
+            margin-top: 18px;
+        }
+
+        .trainer-cta h2 span {
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        .trainer-cta p {
+            max-width: 480px;
+            color: #888;
+            font-size: 14px;
+            line-height: 1.8;
+            margin-top: 20px;
+        }
+
+        .trainer-cta-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        @media (max-width: 900px) {
+            .trainer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .trainer-cta-inner {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .trainer-hero-content {
+                padding: 80px 6% 65px;
+            }
+
+            .trainer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .trainer-photo {
+                height: 390px;
+            }
+
+            .trainer-section,
+            .trainer-cta {
+                padding: 75px 0;
+            }
+
+            .trainer-cta-buttons {
+                width: 100%;
+            }
+
+            .trainer-cta-buttons .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVIGATION -->
+
+<header class="navbar" id="navbar">
+
+    <div class="nav-container">
+
+        <a href="index.html" class="brand">
+            <div class="brand-icon">F</div>
+
+            <div class="brand-text">
+                <span class="brand-name">FLEX</span>
+                <span class="brand-subtitle">FITNESS CLUB</span>
+            </div>
+        </a>
+
+        <nav class="nav-menu">
+
+            <a href="index.html" class="nav-link">
+                Home
+            </a>
+
+            <a href="about.html" class="nav-link">
+                About
+            </a>
+
+            <a href="membership.html" class="nav-link">
+                Membership
+            </a>
+
+            <a href="trainer.html" class="nav-link active">
+                Trainers
+            </a>
+
+            <a href="workout-plans.html" class="nav-link">
+                Training
+            </a>
+
+            <a href="shop.html" class="nav-link">
+                Shop
+            </a>
+
+        </nav>
+
+        <div class="nav-actions">
+
+            <a href="cart.html" class="btn btn-outline" style="position:relative;">
+                🛒 Cart <span class="cart-badge" data-cart-count style="background:var(--accent);color:#000;padding:2px 7px;border-radius:999px;font-size:10px;font-weight:800;margin-left:4px;">0</span>
+            </a>
+
+            <a href="login.html" class="btn btn-primary">
+                Portal Login
+            </a>
+
+        </div>
+
+        <button class="mobile-menu-btn"
+                id="mobileMenuBtn"
+                type="button">
+
+            <span></span>
+            <span></span>
+            <span></span>
+
+        </button>
+
+    </div>
+
+</header>
+
+
+<!-- MOBILE MENU -->
+
+<div class="mobile-menu" id="mobileMenu">
+
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="membership.html">Membership</a>
+    <a href="trainer.html">Trainers</a>
+    <a href="workout-plans.html">Training</a>
+    <a href="shop.html">Shop</a>
+
+    <div class="mobile-menu-buttons">
+
+        <a href="login.html" class="btn btn-outline">
+            Login
+        </a>
+
+        <a href="signup.html" class="btn btn-primary">
+            Join Flex
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- MAIN -->
+
+<main>
+
+    <!-- HERO -->
+
+    <section class="trainer-hero">
+
+        <div class="trainer-hero-content">
+
+            <span class="section-label">
+                MEET THE TEAM
+            </span>
+
+            <h1>
+                TRAIN WITH<br>
+                <span>PURPOSE.</span>
+            </h1>
+
+            <p>
+                Meet the experienced trainers who help you build
+                strength, confidence and consistency at Flex Gym.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- TRAINERS -->
+
+    <section class="trainer-section">
+
+        <div class="container">
+
+            <div class="trainer-heading">
+
+                <span class="section-label">
+                    OUR TRAINERS
+                </span>
+
+                <h2>
+                    EXPERTS WHO<br>
+                    <span>MOVE YOU.</span>
+                </h2>
+
+                <p>
+                    Get the right guidance, personalized support and
+                    motivation to reach your fitness goals.
+                </p>
+
+            </div>
+
+
+            <div class="trainer-grid">
+
+                <!-- TRAINER 01 -->
+
+                <article class="trainer-card">
+
+                    <div class="trainer-photo">
+
+                        <img src="https://images.unsplash.com/photo-1567013127542-490d757e51fc?auto=format&fit=crop&w=900&q=85"
+                             alt="Fitness trainer">
+
+                        <span class="trainer-status">
+                            Available
+                        </span>
+
+                    </div>
+
+                    <div class="trainer-details">
+
+                        <span class="trainer-role">
+                            Strength Coach
+                        </span>
+
+                        <h3>
+                            Alex Morgan
+                        </h3>
+
+                        <p>
+                            Focused on strength development,
+                            muscle building and functional fitness.
+                        </p>
+
+                        <div class="trainer-contact">
+
+                            <a href="mailto:alex@flexgym.lk">
+                                alex@flexgym.lk
+                            </a>
+
+                            <a href="tel:+94112345678">
+                                +94 11 234 5678
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- TRAINER 02 -->
+
+                <article class="trainer-card">
+
+                    <div class="trainer-photo">
+
+                        <img src="https://images.unsplash.com/photo-1548690312-e3b507d8c110?auto=format&fit=crop&w=900&q=85"
+                             alt="Personal fitness trainer">
+
+                        <span class="trainer-status">
+                            Available
+                        </span>
+
+                    </div>
+
+                    <div class="trainer-details">
+
+                        <span class="trainer-role">
+                            Personal Trainer
+                        </span>
+
+                        <h3>
+                            Sarah Williams
+                        </h3>
+
+                        <p>
+                            Helping members improve fitness,
+                            endurance and healthy training habits.
+                        </p>
+
+                        <div class="trainer-contact">
+
+                            <a href="mailto:sarah@flexgym.lk">
+                                sarah@flexgym.lk
+                            </a>
+
+                            <a href="tel:+94112345679">
+                                +94 11 234 5679
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- TRAINER 03 -->
+
+                <article class="trainer-card">
+
+                    <div class="trainer-photo">
+
+                        <img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=85"
+                             alt="Fitness coach">
+
+                        <span class="trainer-status">
+                            Available
+                        </span>
+
+                    </div>
+
+                    <div class="trainer-details">
+
+                        <span class="trainer-role">
+                            Fitness Coach
+                        </span>
+
+                        <h3>
+                            Daniel Carter
+                        </h3>
+
+                        <p>
+                            Specializing in conditioning,
+                            mobility and performance training.
+                        </p>
+
+                        <div class="trainer-contact">
+
+                            <a href="mailto:daniel@flexgym.lk">
+                                daniel@flexgym.lk
+                            </a>
+
+                            <a href="tel:+94112345680">
+                                +94 11 234 5680
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- CTA -->
+
+    <section class="trainer-cta">
+
+        <div class="container">
+
+            <div class="trainer-cta-inner">
+
+                <div>
+
+                    <span class="section-label">
+                        READY TO START?
+                    </span>
+
+                    <h2>
+                        YOUR GOALS.<br>
+                        <span>OUR SUPPORT.</span>
+                    </h2>
+
+                    <p>
+                        Create your Flex Gym account and begin your
+                        fitness journey with the right guidance.
+                    </p>
+
+                </div>
+
+                <div class="trainer-cta-buttons">
+
+                    <a href="signup.html" class="btn btn-primary btn-large">
+                        Join Flex
+                        <span class="btn-arrow">→</span>
+                    </a>
+
+                    <a href="login.html" class="btn btn-glass btn-large">
+                        Login
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- FOOTER -->
+
+<footer class="footer">
+
+    <div class="container">
+
+        <div class="footer-grid">
+
+            <div class="footer-brand">
+
+                <a href="index.html" class="brand">
+
+                    <div class="brand-icon">F</div>
+
+                    <div class="brand-text">
+                        <span class="brand-name">FLEX</span>
+                        <span class="brand-subtitle">FITNESS CLUB</span>
+                    </div>
+
+                </a>
+
+                <p>
+                    Train harder. Live stronger.
+                    Build your best version at Flex Gym.
+                </p>
+
+            </div>
+
+            <div class="footer-column">
+
+                <h4>Explore</h4>
+
+                <a href="about.html">About Us</a>
+                <a href="membership.html">Memberships</a>
+                <a href="trainer.html">Trainers</a>
+                <a href="workout-plans.html">Training</a>
+                <a href="shop.html">Shop</a>
+
+            </div>
+
+            <div class="footer-column">
+
+                <h4>Account</h4>
+
+                <a href="login.html">Login</a>
+                <a href="signup.html">Create Account</a>
+
+            </div>
+
+            <div class="footer-column">
+
+                <h4>Contact</h4>
+
+                <a href="mailto:info@flexgym.lk">
+                    info@flexgym.lk
+                </a>
+
+                <a href="tel:+94112345678">
+                    +94 11 234 5678
+                </a>
+
+                <span>
+                    Colombo, Sri Lanka
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+
+            <span>
+                © 2026 Flex Gym. All rights reserved.
+            </span>
+
+            <span>
+                Flex Gym Management System
+            </span>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<script src="JS/cart.js"></script>
+<script src="JS/index.js"></script>
+</body>
+</html>

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flex Store | Flex Gym</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="CSS/style.css">
+  <link rel="stylesheet" href="CSS/dashboard.css">
+
+  <style>
+    .shop-page {
+      min-height: 100vh;
+      background: #080808;
+      color: #fff;
+    }
+
+    .shop-hero {
+      min-height: 50vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 130px 20px 60px;
+      background: linear-gradient(rgba(0,0,0,.6), rgba(0,0,0,.95)),
+                  url("https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=2000&q=90") center / cover no-repeat;
+    }
+
+    .shop-hero h1 {
+      font-size: clamp(40px, 6vw, 80px);
+      line-height: .95;
+      font-weight: 950;
+      letter-spacing: -3px;
+      text-transform: uppercase;
+      margin-top: 10px;
+    }
+
+    .shop-hero h1 span {
+      color: var(--lime);
+    }
+
+    .shop-section {
+      padding: 60px 6% 100px;
+      max-width: 1300px;
+      margin: auto;
+    }
+
+    .shop-layout {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 40px;
+    }
+
+    .category-sidebar h3 {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      color: var(--text-muted);
+    }
+
+    .category-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .category-item {
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      background: #111713;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .category-item:hover, .category-item.active {
+      background: var(--bg-surface-2);
+      color: var(--lime);
+      border-color: rgba(183, 243, 74, 0.3);
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+    }
+
+    .product-card {
+      background: #111713;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(183, 243, 74, 0.4);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    }
+
+    .product-image {
+      height: 220px;
+      position: relative;
+      background: #161f19;
+      overflow: hidden;
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .product-card:hover .product-image img {
+      transform: scale(1.08);
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: var(--lime);
+      color: #0b0f0d;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .product-content {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .product-category {
+      font-size: 11px;
+      color: var(--text-dim);
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .product-name {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+
+    .product-description {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      flex: 1;
+    }
+
+    .product-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+    }
+
+    .product-price {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--lime);
+    }
+
+    .add-cart-btn {
+      background: var(--lime);
+      color: #0b0f0d;
+      border: none;
+      padding: 8px 16px;
+      border-radius: var(--radius-md);
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .add-cart-btn:hover {
+      background: var(--lime-dark);
+      box-shadow: 0 0 15px var(--lime-glow);
+    }
+
+    .cart-floating {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: var(--lime);
+      color: #0b0f0d;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      text-decoration: none;
+      z-index: 999;
+      transition: var(--transition);
+    }
+
+    .cart-floating:hover {
+      transform: scale(1.1);
+    }
+
+    .cart-floating .cart-count {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      background: #ff5252;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 900;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+    }
+
+    @media (max-width: 900px) {
+      .shop-layout {
+        grid-template-columns: 1fr;
+      }
+      .category-list {
+        flex-direction: row;
+        overflow-x: auto;
+      }
+      .category-item {
+        white-space: nowrap;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<div class="shop-page">
+  
+  <!-- GLOBAL NAVBAR -->
+  <header class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="brand">
+        <div class="brand-icon">F</div>
+        <div class="brand-text">
+          <span class="brand-name">FLEX</span>
+          <span class="brand-subtitle">FITNESS CLUB</span>
+        </div>
+      </a>
+
+      <nav class="nav-menu">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="membership.html" class="nav-link">Membership</a>
+        <a href="workout-plans.html" class="nav-link">Training</a>
+        <a href="trainer.html" class="nav-link">Trainers</a>
+        <a href="shop.html" class="nav-link active">Shop</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="cart.html" class="btn btn-outline" style="position:relative;">
+          🛒 Cart <span class="cart-badge" data-cart-count style="background:var(--lime);color:#000;padding:2px 7px;border-radius:999px;font-size:10px;font-weight:800;margin-left:4px;">0</span>
+        </a>
+        <a href="login.html" class="btn btn-primary">Portal Login</a>
+      </div>
+
+      <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="shop-hero">
+    <div>
+      <span style="color:var(--lime); font-size:12px; font-weight:800; letter-spacing:3px; text-transform:uppercase;">Official Flex Gym Store</span>
+      <h1>Fuel Your<br><span>Performance.</span></h1>
+      <p style="color:var(--text-muted); max-width:600px; margin:15px auto 0; font-size:14px;">
+        100% authentic fitness supplements, high-durability workout gear, and performance apparel.
+      </p>
+    </div>
+  </section>
+
+  <!-- SHOP -->
+  <section class="shop-section">
+    <div class="shop-layout">
+      
+      <!-- CATEGORY SIDEBAR -->
+      <aside class="category-sidebar">
+        <h3>Categories</h3>
+        <div class="category-list">
+          <div class="category-item active">All Products</div>
+          <div class="category-item">Supplements</div>
+          <div class="category-item">Gear & Straps</div>
+          <div class="category-item">Apparel & Accessories</div>
+        </div>
+      </aside>
+
+      <!-- PRODUCTS GRID -->
+      <div class="shop-products">
+        <div class="product-grid">
+          
+          <!-- PRODUCT 1 -->
+          <div class="product-card">
+            <div class="product-image">
+              <span class="product-badge">Top Seller</span>
+              <img src="https://images.unsplash.com/photo-1579722821273-0f6c7d44362f?auto=format&fit=crop&w=600&q=80" alt="Whey Protein" />
+            </div>
+            <div class="product-content">
+              <span class="product-category">Supplements</span>
+              <h3 class="product-name">HydroPure Isolate Whey (2kg)</h3>
+              <p class="product-description">Ultra-pure hydrolyzed whey protein with 27g protein per scoop for rapid recovery.</p>
+              <div class="product-bottom">
+                <span class="product-price">Rs. 18,500</span>
+                <button class="add-cart-btn" data-add-to-cart data-product-id="prod-1" data-product-name="HydroPure Isolate Whey (2kg)" data-product-price="18500" data-product-cat="Supplements" data-product-img="https://images.unsplash.com/photo-1579722821273-0f6c7d44362f?auto=format&fit=crop&w=600&q=80">+ Add To Cart</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- PRODUCT 2 -->
+          <div class="product-card">
+            <div class="product-image">
+              <span class="product-badge">Essential</span>
+              <img src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80" alt="Lifting Straps" />
+            </div>
+            <div class="product-content">
+              <span class="product-category">Gear</span>
+              <h3 class="product-name">Pro Lifting Straps & Wrist Wraps</h3>
+              <p class="product-description">Heavy-duty neoprene padded cotton straps for heavy deadlifts and pulls.</p>
+              <div class="product-bottom">
+                <span class="product-price">Rs. 3,200</span>
+                <button class="add-cart-btn" data-add-to-cart data-product-id="prod-2" data-product-name="Pro Lifting Straps & Wrist Wraps" data-product-price="3200" data-product-cat="Gear" data-product-img="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80">+ Add To Cart</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- PRODUCT 3 -->
+          <div class="product-card">
+            <div class="product-image">
+              <img src="https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=600&q=80" alt="Creatine" />
+            </div>
+            <div class="product-content">
+              <span class="product-category">Supplements</span>
+              <h3 class="product-name">Pure Micronized Creatine 300g</h3>
+              <p class="product-description">100% pure Creapure creatine monohydrate for maximum power output.</p>
+              <div class="product-bottom">
+                <span class="product-price">Rs. 6,800</span>
+                <button class="add-cart-btn" data-add-to-cart data-product-id="prod-3" data-product-name="Pure Micronized Creatine 300g" data-product-price="6800" data-product-cat="Supplements" data-product-img="https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=600&q=80">+ Add To Cart</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- PRODUCT 4 -->
+          <div class="product-card">
+            <div class="product-image">
+              <img src="https://images.unsplash.com/photo-1586401100295-7a841c8e7b1d?auto=format&fit=crop&w=600&q=80" alt="Shaker Bottle" />
+            </div>
+            <div class="product-content">
+              <span class="product-category">Accessories</span>
+              <h3 class="product-name">Flex Stealth Shaker Bottle (800ml)</h3>
+              <p class="product-description">Leak-proof BPA-free matte black protein shaker with stainless steel wire whisk ball.</p>
+              <div class="product-bottom">
+                <span class="product-price">Rs. 2,400</span>
+                <button class="add-cart-btn" data-add-to-cart data-product-id="prod-4" data-product-name="Flex Stealth Shaker Bottle" data-product-price="2400" data-product-cat="Accessories" data-product-img="https://images.unsplash.com/photo-1586401100295-7a841c8e7b1d?auto=format&fit=crop&w=600&q=80">+ Add To Cart</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FLOATING CART BUTTON -->
+  <a href="cart.html" class="cart-floating" title="View Cart">
+    🛒
+    <span class="cart-count" data-cart-count>0</span>
+  </a>
+
+</div>
+
+<script src="JS/cart.js"></script>
+<script src="JS/index.js"></script>
+</body>
+</html>

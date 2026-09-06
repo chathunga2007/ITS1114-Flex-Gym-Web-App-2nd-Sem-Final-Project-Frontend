@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Receptionist Desk | Flex Gym</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="CSS/style.css" />
+  <link rel="stylesheet" href="CSS/dashboard.css" />
+</head>
+
+<body>
+  <div class="dash-layout">
+    
+    <!-- SIDEBAR -->
+    <aside class="dash-sidebar">
+      <a href="index.html" class="dash-brand">
+        <div class="brand-icon">F</div>
+        <div class="brand-title">FLEX<span>GYM</span></div>
+      </a>
+
+      <div class="sidebar-label">Front Desk</div>
+
+      <nav class="dash-nav">
+        <a href="#overview" class="dash-nav-item active" data-section="overview">
+          <span class="nav-icon">⏱️</span>
+          <span>Attendance Scanner</span>
+        </a>
+
+        <a href="#members" class="dash-nav-item" data-section="members">
+          <span class="nav-icon">👥</span>
+          <span>Member Lookup</span>
+        </a>
+
+        <a href="#lockers" class="dash-nav-item" data-section="lockers">
+          <span class="nav-icon">🔒</span>
+          <span>Locker Desk</span>
+        </a>
+
+        <a href="#pos" class="dash-nav-item" data-section="pos">
+          <span class="nav-icon">💵</span>
+          <span>Front Desk POS</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="user-profile-pill">
+          <div class="user-avatar" id="dashUserAvatar">FD</div>
+          <div class="user-info">
+            <strong id="dashUserEmail">Front Desk</strong>
+            <span id="dashUserRole">Receptionist</span>
+          </div>
+          <button class="logout-btn" id="logoutBtn" title="Logout">🚪</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="dash-main">
+      
+      <header class="dash-topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-toggle" id="mobileMenuToggle">☰</button>
+          <div class="breadcrumb">
+            Reception Desk <span>/</span> <strong id="breadcrumbCurrent">Attendance</strong>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <a href="index.html" class="topbar-btn">🌐 Website</a>
+          <button class="topbar-btn primary" data-modal-target="modalAddMember">+ New Member</button>
+        </div>
+      </header>
+
+      <!-- ATTENDANCE SCANNER (OVERVIEW) -->
+      <section id="view-overview" class="dash-section active">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>Front Desk Live Check-In</h1>
+            <p>Scan member QR / cards or enter member ID for instant entry authorization.</p>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px;">
+          <div class="dash-panel">
+            <div class="panel-header">
+              <h3 class="panel-title">⚡ Instant Check-In</h3>
+            </div>
+            <form onsubmit="event.preventDefault(); showToast('Access Granted for Member #' + document.getElementById('rcpScanInput').value); document.getElementById('rcpScanInput').value='';">
+              <div class="form-group">
+                <label class="form-label">Member ID / RFID Code</label>
+                <input type="text" id="rcpScanInput" class="form-control" placeholder="e.g. MEM-1048" required autofocus />
+              </div>
+              <button type="submit" class="btn btn-primary" style="width: 100%;">Authorize Entry ✓</button>
+            </form>
+          </div>
+
+          <div class="dash-panel">
+            <div class="panel-header">
+              <h3 class="panel-title">Recent Check-In Stream</h3>
+            </div>
+            <div class="table-responsive">
+              <table class="dash-table">
+                <thead>
+                  <tr>
+                    <th>Member</th>
+                    <th>Package Status</th>
+                    <th>Time</th>
+                    <th>Locker Key</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Dineth Perera</strong> (MEM-1048)</td>
+                    <td><span class="badge badge-success">Active VIP</span></td>
+                    <td>10:42 AM</td>
+                    <td><span class="badge badge-lime">#01 Assigned</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Saman Kumara</strong> (MEM-1049)</td>
+                    <td><span class="badge badge-success">Active Standard</span></td>
+                    <td>10:35 AM</td>
+                    <td><span class="badge badge-muted">No Locker</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MEMBERS -->
+      <section id="view-members" class="dash-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>Member Directory</h1>
+            <p>Lookup member subscription status, emergency contacts, and validity.</p>
+          </div>
+          <div class="section-actions">
+            <button class="btn btn-primary" data-modal-target="modalAddMember">+ Register Member</button>
+          </div>
+        </div>
+
+        <div class="dash-panel">
+          <div class="table-responsive">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>Member</th>
+                  <th>Contact</th>
+                  <th>Package</th>
+                  <th>Expiration</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Dineth Perera</strong></td>
+                  <td>+94 77 123 4567</td>
+                  <td><span class="badge badge-lime">VIP Diamond</span></td>
+                  <td>2025-01-01</td>
+                  <td>
+                    <button class="btn btn-secondary" style="padding:4px 10px;font-size:11px;" onclick="showToast('Member details opened')">View Card 💳</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- LOCKERS -->
+      <section id="view-lockers" class="dash-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>Front Desk Locker Keys</h1>
+            <p>Issue temporary daily keys or verify permanent locker assignments.</p>
+          </div>
+        </div>
+
+        <div class="dash-panel">
+          <div class="lockers-grid">
+            <div class="locker-card occupied">
+              <div class="locker-num">#01</div>
+              <div class="locker-status" style="color:var(--danger)">Dineth P.</div>
+            </div>
+            <div class="locker-card available" onclick="showToast('Issued temporary key for Locker #02')">
+              <div class="locker-num">#02</div>
+              <div class="locker-status" style="color:var(--success)">Issue Key +</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- POS -->
+      <section id="view-pos" class="dash-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>Front Desk POS & Payments</h1>
+            <p>Process walk-in day passes, energy drinks, and merchandise.</p>
+          </div>
+        </div>
+
+        <div class="dash-panel">
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <button class="btn btn-secondary" style="padding: 20px; font-size: 15px;" onclick="showToast('Day pass (Rs. 1,000) collected')">
+              🎟️ Issue Single Day Pass (Rs. 1,000)
+            </button>
+            <button class="btn btn-secondary" style="padding: 20px; font-size: 15px;" onclick="showToast('Energy drink sold (Rs. 450)')">
+              🥤 Sell Energy Drink / Water (Rs. 450)
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODAL: ADD MEMBER -->
+  <div class="modal-backdrop" id="modalAddMember">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Fast Member Registration</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <form onsubmit="event.preventDefault(); showToast('Member registered!'); closeModal('modalAddMember');">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-control" placeholder="e.g. Kasun Fernando" required />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Phone</label>
+              <input type="tel" class="form-control" placeholder="+94 77 ..." required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Package</label>
+              <select class="form-control">
+                <option>Elite Pro (Monthly)</option>
+                <option>Standard (Monthly)</option>
+                <option>VIP Diamond (Annual)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn-primary">Complete & Print Receipt</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="JS/dashboard.js"></script>
+</body>
+</html>

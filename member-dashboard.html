@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Member Portal | Flex Gym</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="CSS/style.css" />
+  <link rel="stylesheet" href="CSS/dashboard.css" />
+</head>
+
+<body>
+  <div class="dash-layout">
+    
+    <!-- SIDEBAR -->
+    <aside class="dash-sidebar">
+      <a href="index.html" class="dash-brand">
+        <div class="brand-icon">F</div>
+        <div class="brand-title">FLEX<span>GYM</span></div>
+      </a>
+
+      <div class="sidebar-label">Member Portal</div>
+
+      <nav class="dash-nav">
+        <a href="#overview" class="dash-nav-item active" data-section="overview">
+          <span class="nav-icon">🏠</span>
+          <span>Home Overview</span>
+        </a>
+
+        <a href="#membership" class="dash-nav-item" data-section="membership">
+          <span class="nav-icon">💳</span>
+          <span>My Membership</span>
+          <span class="nav-badge" style="background:var(--lime);color:#000;">PRO</span>
+        </a>
+
+        <a href="#workouts" class="dash-nav-item" data-section="workouts">
+          <span class="nav-icon">💪</span>
+          <span>My Workout Plan</span>
+        </a>
+
+        <a href="#locker" class="dash-nav-item" data-section="locker">
+          <span class="nav-icon">🔒</span>
+          <span>My Locker</span>
+          <span class="nav-badge">#01</span>
+        </a>
+
+        <a href="#attendance" class="dash-nav-item" data-section="attendance">
+          <span class="nav-icon">⏱️</span>
+          <span>My Attendance</span>
+        </a>
+
+        <a href="#orders" class="dash-nav-item" data-section="orders">
+          <span class="nav-icon">🛍️</span>
+          <span>My Orders</span>
+        </a>
+
+        <a href="#profile" class="dash-nav-item" data-section="profile">
+          <span class="nav-icon">👤</span>
+          <span>My Profile</span>
+        </a>
+
+        <a href="shop.html" class="dash-nav-item">
+          <span class="nav-icon">🛒</span>
+          <span>Member Store</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="user-profile-pill">
+          <div class="user-avatar" id="dashUserAvatar">DP</div>
+          <div class="user-info">
+            <strong id="dashUserEmail">Dineth Perera</strong>
+            <span id="dashUserRole">Elite Member</span>
+          </div>
+          <button class="logout-btn" id="logoutBtn" title="Logout">🚪</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="dash-main">
+      
+      <!-- TOPBAR -->
+      <header class="dash-topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-toggle" id="mobileMenuToggle">☰</button>
+          <div class="breadcrumb">
+            Member Hub <span>/</span> <strong id="breadcrumbCurrent">Overview</strong>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <a href="shop.html" class="topbar-btn">🛒 Store</a>
+          <a href="cart.html" class="topbar-btn">🛍️ Cart <span class="nav-badge" data-cart-count style="margin-left:4px;">0</span></a>
+          <a href="index.html" class="topbar-btn">🌐 Website</a>
+        </div>
+      </header>
+
+      <!-- =========================================================
+           VIEW: OVERVIEW
+      ========================================================= -->
+      <section id="view-overview" class="dash-section active">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>Welcome Back, Dineth! 🔥</h1>
+            <p>You're on a <strong>4-day workout streak</strong>. Ready to crush today's session?</p>
+          </div>
+        </div>
+
+        <!-- STATS CARDS -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Membership Status</span>
+              <div class="stat-icon">💳</div>
+            </div>
+            <div class="stat-val" style="color:var(--lime);font-size:22px;">Elite Pro VIP</div>
+            <div class="stat-trend up">Expires in 284 days</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Monthly Gym Visits</span>
+              <div class="stat-icon">⏱️</div>
+            </div>
+            <div class="stat-val">18 Visits</div>
+            <div class="stat-trend up">↑ 3 more than last month</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Assigned Locker</span>
+              <div class="stat-icon">🔒</div>
+            </div>
+            <div class="stat-val">Locker #01</div>
+            <div class="stat-trend neutral">Zone A (Male Suite)</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Active Training Routine</span>
+              <div class="stat-icon">💪</div>
+            </div>
+            <div class="stat-val" style="font-size:20px;">PPL Hypertrophy</div>
+            <div class="stat-trend up">Day 3: Legs & Core</div>
+          </div>
+        </div>
+
+        <!-- QUICK ACCESS WORKOUT & DIGITAL PASS -->
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+          
+          <div class="dash-panel">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">Today's Workout Preview</h3>
+                <p class="panel-subtitle">Day 3: Quad & Hamstring Dominance</p>
+              </div>
+              <a href="#workouts" class="btn btn-primary" style="font-size: 11px; padding: 6px 14px;">Open Routine →</a>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--bg-surface-2); border-radius:var(--radius-md);">
+                <div>
+                  <strong>Barbell Back Squat</strong>
+                  <div style="font-size: 11px; color:var(--text-muted);">4 Sets × 6-8 Reps (Heavy)</div>
+                </div>
+                <span class="badge badge-lime">Compound</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--bg-surface-2); border-radius:var(--radius-md);">
+                <div>
+                  <strong>Romanian Deadlift (Dumbbells)</strong>
+                  <div style="font-size: 11px; color:var(--text-muted);">3 Sets × 10 Reps</div>
+                </div>
+                <span class="badge badge-info">Hamstrings</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--bg-surface-2); border-radius:var(--radius-md);">
+                <div>
+                  <strong>Leg Press & Calf Raise Superset</strong>
+                  <div style="font-size: 11px; color:var(--text-muted);">4 Sets × 12 Reps</div>
+                </div>
+                <span class="badge badge-muted">Machine</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- DIGITAL GYM PASS -->
+          <div class="dash-panel" style="text-align:center;">
+            <div class="panel-header" style="justify-content:center; margin-bottom:10px;">
+              <h3 class="panel-title">Digital Entry Pass</h3>
+            </div>
+            <div style="background:#fff; width:160px; height:160px; margin:15px auto; border-radius:12px; display:grid; place-items:center; color:#000; font-weight:900; font-size:16px;">
+              <div style="text-align:center;">
+                <div style="font-size:40px;">📱</div>
+                <div>MEM-1048</div>
+              </div>
+            </div>
+            <p style="font-size:12px; color:var(--text-muted);">Scan this QR at the entrance turnstile for instant check-in.</p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- =========================================================
+           VIEW: MY MEMBERSHIP
+      ========================================================= -->
+      <section id="view-membership" class="dash-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>My Membership Plan</h1>
+            <p>Manage your active subscription, perks, and renewal options.</p>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+          <div class="dash-panel" style="border-top: 4px solid var(--lime);">
+            <div class="stat-top">
+              <span class="stat-label">Active Plan</span>
+              <span class="badge badge-lime">VIP Diamond Annual</span>
+            </div>
+            <div class="stat-val" style="margin-top:10px;">Rs. 180,000 / Year</div>
+            <div style="margin: 20px 0; border-top: 1px solid var(--border); padding-top: 16px;">
+              <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:13px;">
+                <span style="color:var(--text-muted)">Member ID:</span>
+                <strong>MEM-1048</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:13px;">
+                <span style="color:var(--text-muted)">Start Date:</span>
+                <strong>January 01, 2024</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:13px;">
+                <span style="color:var(--text-muted)">Valid Until:</span>
+                <strong style="color:var(--lime)">January 01, 2025</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:13px;">
+                <span style="color:var(--text-muted)">Payment Status:</span>
+                <span class="badge badge-success">Fully Paid</span>
+              </div>
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="showToast('Renewal invoice generated')">Renew / Extend Plan 💳</button>
+          </div>
+
+          <div class="dash-panel">
+            <div class="panel-header">
+              <h3 class="panel-title">Included Member Perks</h3>
+            </div>
+            <ul style="display:flex; flex-direction:column; gap:12px; font-size:13px;">
+              <li style="display:flex; align-items:center; gap:10px;">
+                <span style="color:var(--lime)">✓</span> 24/7 Access to all gym floors & equipment
+              </li>
+              <li style="display:flex; align-items:center; gap:10px;">
+                <span style="color:var(--lime)">✓</span> Free Steam Room & Hot Sauna access
+              </li>
+              <li style="display:flex; align-items:center; gap:10px;">
+                <span style="color:var(--lime)">✓</span> Dedicated Personal Locker (Locker #01)
+              </li>
+              <li style="display:flex; align-items:center; gap:10px;">
+                <span style="color:var(--lime)">✓</span> Monthly body composition & nutrition consultation
+              </li>
+              <li style="display:flex; align-items:center; gap:10px;">
+                <span style="color:var(--lime)">✓</span> 15% Member discount on all supplements in store
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           VIEW: MY WORKOUT PLAN
+      ========================================================= -->
+      <section id="view-workouts" class="dash-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>My Workout Routine</h1>
+            <p>Assigned by <strong>Coach Kasun Rajapaksha</strong> (PPL Hypertrophy 6-Day Split).</p>
+          </div>
+        </div>
+
+        <div class="dash-panel">
+          <div class="panel-header">
+            <h3 class="panel-title">Weekly Schedule</h3>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+            
+            <!-- DAY 1 -->
+            <div style="background:var(--bg-surface-2); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px;">
+              <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+                <strong>Day 1: Push (Chest & Shoulders)</strong>
+                <span class="badge badge-success">Done ✓</span>
+              </div>
+              <ul style="font-size:12px; color:var(--text-muted); display:flex; flex-direction:column; gap:6px;">
+                <li>• Incline Dumbbell Press (4 × 10)</li>
+                <li>• Flat Barbell Bench Press (3 × 8)</li>
+                <li>• Overhead Dumbbell Shoulder Press (3 × 12)</li>
+                <li>• Lateral Cable Raises (4 × 15)</li>
+                <li>• Tricep Rope Pushdowns (3 × 12)</li>
+              </ul>
+            </div>
+
+            <!-- DAY 2 -->
+            <div style="background:var(--bg-surface-2); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px;">
+              <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+                <strong>Day 2: Pull (Back & Biceps)</strong>
+                <span class="badge badge-success">Done ✓</span>
+              </div>
+              <ul style="font-size:12px; color:var(--text-muted); display:flex; flex-direction:column; gap:6px;">
+                <li>• Lat Pulldowns (Wide Grip) (4 × 10)</li>
+                <li>• Barbell Bent-Over Rows (4 × 8)</li>
+                <li>• Seated Cable Rows (3 × 12)</li>
+                <li>• Incline Dumbbell Bicep Curls (4 × 10)</li>
+                <li>• Hammer Rope Curls (3 × 12)</li>
+              </ul>
+            </div>
+
+            <!-- DAY 3 -->
+            <div style="background:var(--bg-surface-2); border:1px solid var(--lime); border-radius:var(--radius-md); padding:16px; box-shadow: 0 0 15px var(--lime-glow);">
+              <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+                <strong style="color:var(--lime);">Day 3: Legs & Calves (TODAY)</strong>
+                <span class="badge badge-lime">In Progress</span>
+              </div>
+              <ul style="font-size:12px; color:var(--text-main); display:flex; flex-direction:column; gap:6px;">
+                <li>• Barbell Squats (4 × 8)</li>
+                <li>• Romanian Deadlifts (3 × 10)</li>
+                <li>• Leg Press Heavy (4 × 12)</li>
+                <li>• Standing Calf Raises (4 × 15)</li>
+                <li>• Hanging Leg Raises (3 × 15)</li>
+              </ul>
+              <button class="btn btn-primary" style="width:100%; margin-top:14px; font-size:11px; padding:8px;" onclick="showToast('Great job! Day 3 marked as completed! 🔥')">Mark Day as Completed ✓</button>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           VIEW: MY LOCKER
+      ========================================================= -->
+      <section id="view-locker" class="dash-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>My Assigned Locker</h1>
+            <p>Secure storage information and locker key status.</p>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+          <div class="dash-panel" style="text-align:center; padding: 40px 20px;">
+            <div style="width: 90px; height: 90px; border-radius: 50%; background: var(--bg-surface-2); border: 2px solid var(--lime); color: var(--lime); font-size: 32px; font-weight: 900; display: grid; place-items: center; margin: 0 auto 20px;">
+              #01
+            </div>
+            <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 6px;">Locker No. 01</h2>
+            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">Male Locker Room • Zone A (Top Tier)</p>
+            <span class="badge badge-success" style="font-size: 13px; padding: 6px 14px;">Active & Assigned</span>
+          </div>
+
+          <div class="dash-panel">
+            <div class="panel-header">
+              <h3 class="panel-title">Locker Details</h3>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:14px; font-size:13px;">
+              <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border); padding-bottom:10px;">
+                <span style="color:var(--text-muted)">Passcode / Key Type:</span>
+                <strong>Digital Pin Pad (Personal PIN)</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border); padding-bottom:10px;">
+                <span style="color:var(--text-muted)">Assigned Date:</span>
+                <strong>January 01, 2024</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border); padding-bottom:10px;">
+                <span style="color:var(--text-muted)">Expiration:</span>
+                <strong>Matches Annual Membership</strong>
+              </div>
+              <button class="btn btn-secondary" style="margin-top:10px;" onclick="showToast('Locker assistance request sent to Reception')">Request Locker Change / Reset PIN 🔑</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           VIEW: MY ATTENDANCE
+      ========================================================= -->
+      <section id="view-attendance" class="dash-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>My Attendance Log</h1>
+            <p>Track your workout frequency and check-in history.</p>
+          </div>
+        </div>
+
+        <div class="dash-panel">
+          <div class="table-responsive">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Check-In Time</th>
+                  <th>Check-Out Time</th>
+                  <th>Duration</th>
+                  <th>Location / Gate</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Today</strong></td>
+                  <td>10:42 AM</td>
+                  <td>--</td>
+                  <td><span class="badge badge-lime">Active Session</span></td>
+                  <td>Main Turnstile 1</td>
+                </tr>
+                <tr>
+                  <td>Yesterday</td>
+                  <td>05:30 PM</td>
+                  <td>07:15 PM</td>
+                  <td>1 hr 45 min</td>
+                  <td>Main Turnstile 1</td>
+                </tr>
+                <tr>
+                  <td>2 days ago</td>
+                  <td>06:00 PM</td>
+                  <td>07:40 PM</td>
+                  <td>1 hr 40 min</td>
+                  <td>Main Turnstile 2</td>
+                </tr>
+                <tr>
+                  <td>3 days ago</td>
+                  <td>06:15 PM</td>
+                  <td>08:00 PM</td>
+                  <td>1 hr 45 min</td>
+                  <td>Main Turnstile 1</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           VIEW: MY ORDERS
+      ========================================================= -->
+      <section id="view-orders" class="dash-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>My Store Orders</h1>
+            <p>Merchandise and supplement purchase history.</p>
+          </div>
+          <div class="section-actions">
+            <a href="shop.html" class="btn btn-primary">Browse Gym Store →</a>
+          </div>
+        </div>
+
+        <div class="dash-panel">
+          <div class="table-responsive">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>Order Ref</th>
+                  <th>Items</th>
+                  <th>Total</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>#ORD-9821</strong></td>
+                  <td>HydroPure Isolate Whey (2kg), Pro Lifting Straps</td>
+                  <td>Rs. 21,700</td>
+                  <td>Today</td>
+                  <td><span class="badge badge-warning">Processing</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           VIEW: MY PROFILE
+      ========================================================= -->
+      <section id="view-profile" class="dash-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>My Profile & Fitness Goals</h1>
+            <p>Update personal stats, measurements, and account security.</p>
+          </div>
+        </div>
+
+        <div class="dash-panel">
+          <form onsubmit="event.preventDefault(); showToast('Profile updated successfully!');">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" class="form-control" value="Dineth Perera" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-control" value="dineth@gmail.com" required />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Phone Number</label>
+                <input type="tel" class="form-control" value="+94 77 123 4567" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Emergency Contact</label>
+                <input type="tel" class="form-control" value="+94 71 999 8888" required />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Height (cm)</label>
+                <input type="number" class="form-control" value="178" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Current Weight (kg)</label>
+                <input type="number" class="form-control" value="76" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Primary Fitness Goal</label>
+              <select class="form-control">
+                <option selected>Hypertrophy & Muscle Gain</option>
+                <option>Fat Loss & Shredding</option>
+                <option>Endurance & Stamina</option>
+                <option>Powerlifting & Strength</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="margin-top:10px;">Save Profile Changes</button>
+          </form>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="JS/cart.js"></script>
+  <script src="JS/dashboard.js"></script>
+</body>
+</html>

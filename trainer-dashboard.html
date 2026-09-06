@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trainer Portal | Flex Gym</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="CSS/style.css" />
+  <link rel="stylesheet" href="CSS/dashboard.css" />
+</head>
+
+<body>
+  <div class="dash-layout">
+    
+    <!-- SIDEBAR -->
+    <aside class="dash-sidebar">
+      <a href="index.html" class="dash-brand">
+        <div class="brand-icon">F</div>
+        <div class="brand-title">FLEX<span>GYM</span></div>
+      </a>
+
+      <div class="sidebar-label">Trainer Portal</div>
+
+      <nav class="dash-nav">
+        <a href="#overview" class="dash-nav-item active" data-section="overview">
+          <span class="nav-icon">📊</span>
+          <span>Overview</span>
+        </a>
+
+        <a href="#clients" class="dash-nav-item" data-section="clients">
+          <span class="nav-icon">👥</span>
+          <span>Assigned Clients</span>
+          <span class="nav-badge">18</span>
+        </a>
+
+        <a href="#workouts" class="dash-nav-item" data-section="workouts">
+          <span class="nav-icon">📋</span>
+          <span>Workout Programs</span>
+        </a>
+
+        <a href="#sessions" class="dash-nav-item" data-section="sessions">
+          <span class="nav-icon">📅</span>
+          <span>Training Schedule</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="user-profile-pill">
+          <div class="user-avatar" id="dashUserAvatar">KR</div>
+          <div class="user-info">
+            <strong id="dashUserEmail">Kasun Rajapaksha</strong>
+            <span id="dashUserRole">Head Coach</span>
+          </div>
+          <button class="logout-btn" id="logoutBtn" title="Logout">🚪</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="dash-main">
+      
+      <header class="dash-topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-toggle" id="mobileMenuToggle">☰</button>
+          <div class="breadcrumb">
+            Trainer Portal <span>/</span> <strong id="breadcrumbCurrent">Overview</strong>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <a href="index.html" class="topbar-btn">🌐 View Website</a>
+          <button class="topbar-btn primary" data-modal-target="modalAddWorkout">+ Create Plan</button>
+        </div>
+      </header>
+
+      <!-- OVERVIEW -->
+      <section id="view-overview" class="dash-section active">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>Coach Dashboard</h1>
+            <p>Track client progress, workout plans, and scheduled training sessions.</p>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Active Clients</span>
+              <div class="stat-icon">👥</div>
+            </div>
+            <div class="stat-val">18</div>
+            <div class="stat-trend up">Capacity: 20</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Today's Sessions</span>
+              <div class="stat-icon">⏱️</div>
+            </div>
+            <div class="stat-val">4 Sessions</div>
+            <div class="stat-trend neutral">Next: 04:00 PM</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Active Routines</span>
+              <div class="stat-icon">📋</div>
+            </div>
+            <div class="stat-val">12 Plans</div>
+            <div class="stat-trend up">Assigned to 48 members</div>
+          </div>
+        </div>
+
+        <div class="dash-panel">
+          <div class="panel-header">
+            <h3 class="panel-title">Today's PT Sessions</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Client</th>
+                  <th>Focus Area</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>10:00 AM - 11:00 AM</td>
+                  <td><strong>Dineth Perera</strong></td>
+                  <td>Leg Hypertrophy</td>
+                  <td><span class="badge badge-success">Completed ✓</span></td>
+                </tr>
+                <tr>
+                  <td>04:00 PM - 05:00 PM</td>
+                  <td><strong>Saman Kumara</strong></td>
+                  <td>Back & Deadlifts</td>
+                  <td><span class="badge badge-warning">Upcoming</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ASSIGNED CLIENTS -->
+      <section id="view-clients" class="dash-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>Assigned Clients</h1>
+            <p>Manage training programs, progress logs, and personal goals for your clients.</p>
+          </div>
+        </div>
+
+        <div class="dash-panel">
+          <div class="table-responsive">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>Client Name</th>
+                  <th>Goal</th>
+                  <th>Current Program</th>
+                  <th>Sessions Left</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="cell-member">
+                      <div class="member-avatar">DN</div>
+                      <div class="member-meta">
+                        <strong>Dineth Perera</strong>
+                        <span>MEM-1048</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Muscle Hypertrophy</td>
+                  <td><span class="badge badge-lime">PPL 6-Day</span></td>
+                  <td>8 / 10 Sessions</td>
+                  <td>
+                    <button class="btn btn-secondary" style="padding:4px 10px;font-size:11px;" onclick="showToast('Progress log updated')">Log Progress 📈</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- WORKOUTS -->
+      <section id="view-workouts" class="dash-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>Master Workout Programs</h1>
+            <p>Create and edit exercise templates.</p>
+          </div>
+          <div class="section-actions">
+            <button class="btn btn-primary" data-modal-target="modalAddWorkout">+ Create Program</button>
+          </div>
+        </div>
+
+        <div class="dash-panel">
+          <div class="table-responsive">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>Program Name</th>
+                  <th>Target Focus</th>
+                  <th>Level</th>
+                  <th>Assigned Count</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Hypertrophy Push-Pull-Legs</strong></td>
+                  <td>Muscle Growth</td>
+                  <td><span class="badge badge-lime">Intermediate</span></td>
+                  <td>142 Members</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- SESSIONS -->
+      <section id="view-sessions" class="dash-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>Weekly Schedule</h1>
+            <p>Coaching calendar and availability slots.</p>
+          </div>
+        </div>
+        <div class="dash-panel">
+          <p style="color:var(--text-muted);">Your coaching timetable is synced with the reception booking desk.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-backdrop" id="modalAddWorkout">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Create Workout Program</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <form onsubmit="event.preventDefault(); showToast('Program saved!'); closeModal('modalAddWorkout');">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Program Name</label>
+            <input type="text" class="form-control" placeholder="e.g. 8-Week Core Power" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Level</label>
+            <select class="form-control">
+              <option>Beginner</option>
+              <option>Intermediate</option>
+              <option>Advanced</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Program</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="JS/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Membership | Flex Gym</title>
+
+    <link rel="stylesheet" href="CSS/style.css">
+
+    <style>
+
+        /* ================================
+           MEMBERSHIP PAGE
+        ================================= */
+
+        .membership-page {
+            min-height: 100vh;
+            background: #080808;
+            color: #ffffff;
+        }
+
+        /* HERO */
+
+        .membership-hero {
+            min-height: 68vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+
+            padding: 120px 20px 80px;
+
+            background:
+                linear-gradient(
+                    rgba(0, 0, 0, 0.55),
+                    rgba(0, 0, 0, 0.92)
+                ),
+                url("https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=2000&q=90")
+                center / cover no-repeat;
+        }
+
+        .membership-hero-content {
+            max-width: 900px;
+        }
+
+        .hero-tag {
+            display: inline-block;
+
+            margin-bottom: 22px;
+
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+
+            color: #c9ff00;
+        }
+
+        .membership-hero h1 {
+            margin: 0;
+
+            font-size: clamp(50px, 8vw, 105px);
+            line-height: 0.92;
+
+            font-weight: 950;
+            text-transform: uppercase;
+            letter-spacing: -4px;
+        }
+
+        .membership-hero h1 span {
+            color: #c9ff00;
+        }
+
+        .membership-hero p {
+            max-width: 650px;
+
+            margin: 30px auto 0;
+
+            color: #c2c2c2;
+
+            font-size: 17px;
+            line-height: 1.8;
+        }
+
+        /* PLANS */
+
+        .membership-section {
+            padding: 100px 6%;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 65px;
+        }
+
+        .section-title small {
+            display: block;
+
+            margin-bottom: 12px;
+
+            color: #c9ff00;
+
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .section-title h2 {
+            margin: 0;
+
+            font-size: clamp(35px, 5vw, 58px);
+            font-weight: 950;
+
+            text-transform: uppercase;
+            letter-spacing: -2px;
+        }
+
+        .section-title p {
+            margin: 15px 0 0;
+
+            color: #777;
+
+            font-size: 15px;
+        }
+
+        /* CARDS */
+
+        .membership-grid {
+            max-width: 1250px;
+
+            margin: auto;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 25px;
+        }
+
+        .membership-card {
+            position: relative;
+
+            padding: 42px 34px 35px;
+
+            background: #111111;
+
+            border: 1px solid #252525;
+
+            border-radius: 24px;
+
+            overflow: hidden;
+
+            transition:
+                transform .3s ease,
+                border-color .3s ease,
+                box-shadow .3s ease;
+        }
+
+        .membership-card::before {
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 3px;
+
+            background: #252525;
+
+            transition: .3s ease;
+        }
+
+        .membership-card:hover {
+            transform: translateY(-10px);
+
+            border-color: #c9ff00;
+
+            box-shadow:
+                0 25px 70px rgba(0, 0, 0, .5);
+        }
+
+        .membership-card:hover::before {
+            background: #c9ff00;
+        }
+
+        /* FEATURED */
+
+        .membership-card.featured {
+            border-color: #c9ff00;
+
+            transform: scale(1.03);
+        }
+
+        .membership-card.featured::before {
+            background: #c9ff00;
+        }
+
+        .popular {
+            position: absolute;
+
+            top: 20px;
+            right: 20px;
+
+            padding: 8px 13px;
+
+            border-radius: 50px;
+
+            background: #c9ff00;
+
+            color: #000000;
+
+            font-size: 10px;
+            font-weight: 900;
+
+            letter-spacing: 1px;
+
+            text-transform: uppercase;
+        }
+
+        /* CARD CONTENT */
+
+        .plan-number {
+            margin-bottom: 18px;
+
+            color: #555;
+
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .plan-name {
+            margin-bottom: 15px;
+
+            font-size: 28px;
+            font-weight: 900;
+
+            text-transform: uppercase;
+        }
+
+        .plan-description {
+            min-height: 70px;
+
+            color: #808080;
+
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .plan-price {
+            margin-top: 30px;
+
+            font-size: 52px;
+            font-weight: 950;
+
+            letter-spacing: -2px;
+        }
+
+        .plan-price small {
+            color: #777;
+
+            font-size: 14px;
+            font-weight: 500;
+
+            letter-spacing: 0;
+        }
+
+        .plan-duration {
+            margin-top: 5px;
+
+            color: #c9ff00;
+
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .plan-divider {
+            height: 1px;
+
+            margin: 30px 0;
+
+            background: #252525;
+        }
+
+        /* FEATURES */
+
+        .plan-features {
+            list-style: none;
+
+            padding: 0;
+            margin: 0;
+        }
+
+        .plan-features li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            margin-bottom: 15px;
+
+            color: #c1c1c1;
+
+            font-size: 14px;
+        }
+
+        .plan-features li::before {
+            content: "✓";
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            width: 20px;
+            height: 20px;
+
+            flex-shrink: 0;
+
+            border-radius: 50%;
+
+            background: #1d1d1d;
+
+            color: #c9ff00;
+
+            font-size: 11px;
+            font-weight: 900;
+        }
+
+        /* BUTTON */
+
+        .plan-button {
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            width: 100%;
+
+            margin-top: 30px;
+
+            padding: 16px;
+
+            border: 0;
+            border-radius: 10px;
+
+            background: #c9ff00;
+
+            color: #000;
+
+            font-size: 13px;
+            font-weight: 900;
+
+            text-decoration: none;
+
+            text-transform: uppercase;
+
+            cursor: pointer;
+
+            transition: .25s ease;
+        }
+
+        .plan-button:hover {
+            background: #ffffff;
+
+            transform: translateY(-2px);
+        }
+
+        .secondary-button {
+            background: #1a1a1a;
+
+            color: #ffffff;
+
+            border: 1px solid #333;
+        }
+
+        .secondary-button:hover {
+            background: #c9ff00;
+
+            color: #000;
+
+            border-color: #c9ff00;
+        }
+
+        /* BENEFITS */
+
+        .benefits-section {
+            padding: 100px 6%;
+
+            background: #0d0d0d;
+        }
+
+        .benefits-grid {
+            max-width: 1150px;
+
+            margin: auto;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 20px;
+        }
+
+        .benefit-card {
+            padding: 35px 25px;
+
+            text-align: center;
+
+            background: #121212;
+
+            border: 1px solid #222;
+
+            border-radius: 18px;
+
+            transition: .3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+
+            border-color: #333;
+        }
+
+        .benefit-icon {
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            width: 58px;
+            height: 58px;
+
+            margin: 0 auto 20px;
+
+            border-radius: 15px;
+
+            background: #1b1b1b;
+
+            font-size: 25px;
+        }
+
+        .benefit-card h3 {
+            margin: 0 0 10px;
+
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .benefit-card p {
+            margin: 0;
+
+            color: #777;
+
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* CTA */
+
+        .membership-cta {
+            padding: 110px 20px;
+
+            text-align: center;
+
+            background:
+                linear-gradient(
+                    rgba(0,0,0,.55),
+                    rgba(0,0,0,.9)
+                ),
+                url("https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=2000&q=90")
+                center / cover no-repeat;
+        }
+
+        .membership-cta h2 {
+            margin: 0 0 15px;
+
+            font-size: clamp(38px, 6vw, 70px);
+            font-weight: 950;
+
+            text-transform: uppercase;
+        }
+
+        .membership-cta p {
+            margin: 0 auto 30px;
+
+            max-width: 550px;
+
+            color: #aaa;
+
+            line-height: 1.7;
+        }
+
+        .cta-button {
+            display: inline-flex;
+
+            padding: 16px 35px;
+
+            border-radius: 10px;
+
+            background: #c9ff00;
+
+            color: #000;
+
+            font-size: 13px;
+            font-weight: 900;
+
+            text-decoration: none;
+
+            text-transform: uppercase;
+
+            transition: .25s ease;
+        }
+
+        .cta-button:hover {
+            background: #fff;
+
+            transform: translateY(-3px);
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 1000px) {
+
+            .membership-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .membership-card.featured {
+                transform: none;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 650px) {
+
+            .membership-hero {
+                min-height: 60vh;
+
+                padding: 100px 20px 60px;
+            }
+
+            .membership-hero h1 {
+                letter-spacing: -2px;
+            }
+
+            .membership-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .membership-section,
+            .benefits-section {
+                padding: 70px 5%;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="membership-page">
+
+    <!-- GLOBAL NAVBAR -->
+    <header class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="brand">
+                <div class="brand-icon">F</div>
+                <div class="brand-text">
+                    <span class="brand-name">FLEX</span>
+                    <span class="brand-subtitle">FITNESS CLUB</span>
+                </div>
+            </a>
+
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="membership.html" class="nav-link active">Membership</a>
+                <a href="workout-plans.html" class="nav-link">Training</a>
+                <a href="trainer.html" class="nav-link">Trainers</a>
+                <a href="shop.html" class="nav-link">Shop</a>
+            </nav>
+
+            <div class="nav-actions">
+                <a href="cart.html" class="btn btn-outline" style="position:relative;">
+                    🛒 Cart <span class="cart-badge" data-cart-count style="background:var(--accent);color:#000;padding:2px 7px;border-radius:999px;font-size:10px;font-weight:800;margin-left:4px;">0</span>
+                </a>
+                <a href="login.html" class="btn btn-primary">Portal Login</a>
+            </div>
+
+            <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Open menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- ================= HERO ================= -->
+
+    <section class="membership-hero">
+
+        <div class="membership-hero-content">
+
+            <span class="hero-tag">
+                Flex Gym Membership
+            </span>
+
+            <h1>
+                Choose Your<br>
+                <span>Power.</span>
+            </h1>
+
+            <p>
+                No shortcuts. No excuses.
+                Choose a membership that matches your goals
+                and start building the strongest version of yourself.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= MEMBERSHIP PLANS ================= -->
+
+    <section class="membership-section">
+
+        <div class="section-title">
+
+            <small>Membership Plans</small>
+
+            <h2>
+                Find Your Plan
+            </h2>
+
+            <p>
+                Flexible packages designed for every fitness journey.
+            </p>
+
+        </div>
+
+
+        <div class="membership-grid">
+
+            <!-- PLAN 01 -->
+
+            <div class="membership-card">
+
+                <div class="plan-number">
+                    PLAN 01
+                </div>
+
+                <div class="plan-name">
+                    Starter
+                </div>
+
+                <div class="plan-description">
+                    Perfect for beginners who are ready
+                    to build a consistent training habit.
+                </div>
+
+                <div class="plan-price">
+                    $49
+                    <small>/ month</small>
+                </div>
+
+                <div class="plan-duration">
+                    1 MONTH
+                </div>
+
+                <div class="plan-divider"></div>
+
+                <ul class="plan-features">
+
+                    <li>
+                        Full Gym Access
+                    </li>
+
+                    <li>
+                        Modern Equipment
+                    </li>
+
+                    <li>
+                        Locker Access
+                    </li>
+
+                    <li>
+                        Basic Workout Guidance
+                    </li>
+
+                </ul>
+
+                <a href="login.html" class="plan-button secondary-button">
+                    Join Now
+                </a>
+
+            </div>
+
+
+            <!-- PLAN 02 -->
+
+            <div class="membership-card featured">
+
+                <div class="popular">
+                    Most Popular
+                </div>
+
+                <div class="plan-number">
+                    PLAN 02
+                </div>
+
+                <div class="plan-name">
+                    Pro
+                </div>
+
+                <div class="plan-description">
+                    The perfect balance for members who
+                    want serious progress and better results.
+                </div>
+
+                <div class="plan-price">
+                    $129
+                    <small>/ 3 months</small>
+                </div>
+
+                <div class="plan-duration">
+                    3 MONTHS
+                </div>
+
+                <div class="plan-divider"></div>
+
+                <ul class="plan-features">
+
+                    <li>
+                        Unlimited Gym Access
+                    </li>
+
+                    <li>
+                        Premium Equipment
+                    </li>
+
+                    <li>
+                        Locker Access
+                    </li>
+
+                    <li>
+                        Trainer Guidance
+                    </li>
+
+                    <li>
+                        Personalized Workout Plan
+                    </li>
+
+                </ul>
+
+                <a href="login.html" class="plan-button">
+                    Choose Pro
+                </a>
+
+            </div>
+
+
+            <!-- PLAN 03 -->
+
+            <div class="membership-card">
+
+                <div class="plan-number">
+                    PLAN 03
+                </div>
+
+                <div class="plan-name">
+                    Elite
+                </div>
+
+                <div class="plan-description">
+                    For dedicated athletes who want maximum
+                    support and an uninterrupted fitness journey.
+                </div>
+
+                <div class="plan-price">
+                    $399
+                    <small>/ year</small>
+                </div>
+
+                <div class="plan-duration">
+                    12 MONTHS
+                </div>
+
+                <div class="plan-divider"></div>
+
+                <ul class="plan-features">
+
+                    <li>
+                        Unlimited Gym Access
+                    </li>
+
+                    <li>
+                        All Gym Facilities
+                    </li>
+
+                    <li>
+                        Dedicated Locker
+                    </li>
+
+                    <li>
+                        Trainer Support
+                    </li>
+
+                    <li>
+                        Personalized Workout Plans
+                    </li>
+
+                </ul>
+
+                <a href="login.html" class="plan-button secondary-button">
+                    Choose Elite
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= BENEFITS ================= -->
+
+    <section class="benefits-section">
+
+        <div class="section-title">
+
+            <small>Why Flex Gym</small>
+
+            <h2>
+                More Than A Gym
+            </h2>
+
+            <p>
+                Everything you need to stay focused and consistent.
+            </p>
+
+        </div>
+
+
+        <div class="benefits-grid">
+
+            <div class="benefit-card">
+
+                <div class="benefit-icon">
+                    🏋️
+                </div>
+
+                <h3>
+                    Premium Equipment
+                </h3>
+
+                <p>
+                    Modern equipment for strength,
+                    cardio and functional training.
+                </p>
+
+            </div>
+
+
+            <div class="benefit-card">
+
+                <div class="benefit-icon">
+                    👨‍🏫
+                </div>
+
+                <h3>
+                    Expert Trainers
+                </h3>
+
+                <p>
+                    Get professional guidance from
+                    experienced trainers.
+                </p>
+
+            </div>
+
+
+            <div class="benefit-card">
+
+                <div class="benefit-icon">
+                    🔥
+                </div>
+
+                <h3>
+                    Workout Plans
+                </h3>
+
+                <p>
+                    Follow structured plans based on
+                    your fitness level and goals.
+                </p>
+
+            </div>
+
+
+            <div class="benefit-card">
+
+                <div class="benefit-icon">
+                    🎯
+                </div>
+
+                <h3>
+                    Track Progress
+                </h3>
+
+                <p>
+                    Stay motivated and keep improving
+                    every step of the way.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= CTA ================= -->
+
+    <section class="membership-cta">
+
+        <h2>
+            Ready To Get Stronger?
+        </h2>
+
+        <p>
+            Your next level starts with one decision.
+            Choose your membership and start your journey today.
+        </p>
+
+        <a href="signup.html" class="cta-button">
+            Become A Member
+        </a>
+
+    </section>
+
+</div>
+
+<script src="JS/cart.js"></script>
+<script src="JS/index.js"></script>
+</body>
+</html>

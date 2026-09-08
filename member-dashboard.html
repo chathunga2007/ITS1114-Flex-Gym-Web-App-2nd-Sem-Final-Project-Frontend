@@ -5,18 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Member Portal | Flex Gym</title>
 
+  <!-- typography & portal stylesheet -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="CSS/style.css" />
-  <link rel="stylesheet" href="CSS/dashboard.css" />
 </head>
-
 <body>
   <div class="dash-layout">
-    
-    <!-- SIDEBAR -->
+    <!-- member sidebar navigation -->
     <aside class="dash-sidebar">
       <a href="index.html" class="dash-brand">
         <div class="brand-icon">F</div>
@@ -30,61 +27,54 @@
           <span class="nav-icon">🏠</span>
           <span>Home Overview</span>
         </a>
-
         <a href="#membership" class="dash-nav-item" data-section="membership">
           <span class="nav-icon">💳</span>
           <span>My Membership</span>
-          <span class="nav-badge" style="background:var(--lime);color:#000;">PRO</span>
+          <span class="nav-badge" id="sidebarPlanBadge" style="background:var(--lime);color:#000;">PRO</span>
         </a>
-
         <a href="#workouts" class="dash-nav-item" data-section="workouts">
           <span class="nav-icon">💪</span>
           <span>My Workout Plan</span>
         </a>
-
         <a href="#locker" class="dash-nav-item" data-section="locker">
           <span class="nav-icon">🔒</span>
           <span>My Locker</span>
-          <span class="nav-badge">#01</span>
+          <span class="nav-badge" id="sidebarLockerBadge">--</span>
         </a>
-
         <a href="#attendance" class="dash-nav-item" data-section="attendance">
           <span class="nav-icon">⏱️</span>
           <span>My Attendance</span>
         </a>
-
         <a href="#orders" class="dash-nav-item" data-section="orders">
           <span class="nav-icon">🛍️</span>
           <span>My Orders</span>
         </a>
-
         <a href="#profile" class="dash-nav-item" data-section="profile">
           <span class="nav-icon">👤</span>
           <span>My Profile</span>
         </a>
-
         <a href="shop.html" class="dash-nav-item">
           <span class="nav-icon">🛒</span>
           <span>Member Store</span>
         </a>
       </nav>
 
+      <!-- user summary pill -->
       <div class="sidebar-bottom">
         <div class="user-profile-pill">
-          <div class="user-avatar" id="dashUserAvatar">DP</div>
+          <div class="user-avatar" id="dashUserAvatar">MB</div>
           <div class="user-info">
-            <strong id="dashUserEmail">Dineth Perera</strong>
-            <span id="dashUserRole">Elite Member</span>
+            <strong id="dashUserEmail">Gym Member</strong>
+            <span id="dashUserRole">Member</span>
           </div>
           <button class="logout-btn" id="logoutBtn" title="Logout">🚪</button>
         </div>
       </div>
     </aside>
 
-    <!-- MAIN CONTENT AREA -->
+    <!-- portal main workspace -->
     <main class="dash-main">
-      
-      <!-- TOPBAR -->
+      <!-- topbar header -->
       <header class="dash-topbar">
         <div class="topbar-left">
           <button class="mobile-menu-toggle" id="mobileMenuToggle">☰</button>
@@ -100,35 +90,33 @@
         </div>
       </header>
 
-      <!-- =========================================================
-           VIEW: OVERVIEW
-      ========================================================= -->
+      <!-- view: member dashboard overview -->
       <section id="view-overview" class="dash-section active">
         <div class="section-header">
           <div class="section-title">
-            <h1>Welcome Back, Dineth! 🔥</h1>
-            <p>You're on a <strong>4-day workout streak</strong>. Ready to crush today's session?</p>
+            <h1 id="memberWelcomeTitle">Welcome to Flex Gym! 🔥</h1>
+            <p id="memberWelcomeSubtitle">Member Portal • Ready to crush your fitness goals?</p>
           </div>
         </div>
 
-        <!-- STATS CARDS -->
+        <!-- summary stats -->
         <div class="stats-grid">
           <div class="stat-card">
             <div class="stat-top">
               <span class="stat-label">Membership Status</span>
               <div class="stat-icon">💳</div>
             </div>
-            <div class="stat-val" style="color:var(--lime);font-size:22px;">Elite Pro VIP</div>
-            <div class="stat-trend up">Expires in 284 days</div>
+            <div class="stat-val" id="overviewMemberPlan" style="color:var(--lime);font-size:20px;">Checking...</div>
+            <div class="stat-trend" id="overviewMemberPlanExpiry">Validity status</div>
           </div>
 
           <div class="stat-card">
             <div class="stat-top">
-              <span class="stat-label">Monthly Gym Visits</span>
+              <span class="stat-label">Gym Check-Ins</span>
               <div class="stat-icon">⏱️</div>
             </div>
-            <div class="stat-val">18 Visits</div>
-            <div class="stat-trend up">↑ 3 more than last month</div>
+            <div class="stat-val" id="overviewMemberVisits">0 Visits</div>
+            <div class="stat-trend up" id="overviewMemberVisitsTrend">Total verified sessions</div>
           </div>
 
           <div class="stat-card">
@@ -136,23 +124,23 @@
               <span class="stat-label">Assigned Locker</span>
               <div class="stat-icon">🔒</div>
             </div>
-            <div class="stat-val">Locker #01</div>
-            <div class="stat-trend neutral">Zone A (Male Suite)</div>
+            <div class="stat-val" id="overviewMemberLocker">No Locker</div>
+            <div class="stat-trend neutral" id="overviewMemberLockerZone">Request at front desk</div>
           </div>
 
           <div class="stat-card">
             <div class="stat-top">
-              <span class="stat-label">Active Training Routine</span>
+              <span class="stat-label">Active Routine</span>
               <div class="stat-icon">💪</div>
             </div>
-            <div class="stat-val" style="font-size:20px;">PPL Hypertrophy</div>
-            <div class="stat-trend up">Day 3: Legs & Core</div>
+            <div class="stat-val" id="overviewMemberRoutine" style="font-size:18px;">General Fitness</div>
+            <div class="stat-trend up" id="overviewMemberRoutineDay">Custom Plan</div>
           </div>
         </div>
 
-        <!-- QUICK ACCESS WORKOUT & DIGITAL PASS -->
+        <!-- routine snippet & digital entry pass -->
         <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
-          
+          <!-- workout preview -->
           <div class="dash-panel">
             <div class="panel-header">
               <div>
@@ -179,7 +167,7 @@
               </div>
               <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--bg-surface-2); border-radius:var(--radius-md);">
                 <div>
-                  <strong>Leg Press & Calf Raise Superset</strong>
+                  <strong>Leg Press &amp; Calf Raise Superset</strong>
                   <div style="font-size: 11px; color:var(--text-muted);">4 Sets × 12 Reps</div>
                 </div>
                 <span class="badge badge-muted">Machine</span>
@@ -187,213 +175,275 @@
             </div>
           </div>
 
-          <!-- DIGITAL GYM PASS -->
-          <div class="dash-panel" style="text-align:center;">
-            <div class="panel-header" style="justify-content:center; margin-bottom:10px;">
-              <h3 class="panel-title">Digital Entry Pass</h3>
+          <!-- digital check-in badge -->
+          <div class="dash-panel" style="text-align:center; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 24px 20px;">
+            <div class="panel-header" style="justify-content:center; margin-bottom:12px; width: 100%;">
+              <h3 class="panel-title">🪪 Member Access Pass</h3>
             </div>
-            <div style="background:#fff; width:160px; height:160px; margin:15px auto; border-radius:12px; display:grid; place-items:center; color:#000; font-weight:900; font-size:16px;">
-              <div style="text-align:center;">
-                <div style="font-size:40px;">📱</div>
-                <div>MEM-1048</div>
+
+            <div style="background: linear-gradient(135deg, rgba(204, 255, 0, 0.12), rgba(0, 0, 0, 0.6)); border: 2px solid var(--lime); width: 100%; max-width: 260px; padding: 20px; border-radius: 16px; margin-bottom: 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.4);">
+              <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); font-weight: 700; margin-bottom: 4px;">FLEX GYM PASS</div>
+              <div id="memberPassCode" style="font-weight: 900; font-size: 28px; color: var(--lime); letter-spacing: 1px; margin-bottom: 8px;">MEM-0</div>
+              <div id="memberPassHolder" style="font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 6px;">Member</div>
+              <div id="memberPassPlan" style="font-size: 12px; color: var(--text-muted);">Active Member</div>
+            </div>
+
+            <div style="margin-bottom: 8px;">
+              <span class="badge badge-warning" id="memberTodayStatusBadge">⏳ Not Checked In Today</span>
+            </div>
+            <div id="memberPassActionContainer" style="margin-bottom: 10px; width: 100%;"></div>
+            <div id="memberQrDateBadge" style="font-size:11px; color:var(--text-muted); margin-bottom:6px;">Daily Status: Live Sync</div>
+            <p id="memberPassInstruction" style="font-size:12px; color:var(--text-muted); line-height: 1.4; margin: 0;">
+              Provide your Member ID at the front desk turnstile for entry authorization.
+            </p>
+          </div>
+        </div>
+
+        <!-- member activity performance charts -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px;">
+          <div class="dash-panel" style="margin-bottom:0;">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">Weekly Workout Consistency</h3>
+                <p class="panel-subtitle">Minutes trained per day this week</p>
               </div>
+              <span class="badge badge-lime">Active Week</span>
             </div>
-            <p style="font-size:12px; color:var(--text-muted);">Scan this QR at the entrance turnstile for instant check-in.</p>
+            <div style="height: 200px; position: relative;">
+              <canvas id="chartMemberActivity"></canvas>
+            </div>
           </div>
 
+          <div class="dash-panel" style="margin-bottom:0;">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">Estimated Calorie Burn</h3>
+                <p class="panel-subtitle">Burn metrics across training sessions</p>
+              </div>
+              <span class="badge badge-info">Performance</span>
+            </div>
+            <div style="height: 200px; position: relative;">
+              <canvas id="chartMemberCalories"></canvas>
+            </div>
+          </div>
         </div>
       </section>
 
-      <!-- =========================================================
-           VIEW: MY MEMBERSHIP
-      ========================================================= -->
+      <!-- view: current membership plan -->
       <section id="view-membership" class="dash-section">
         <div class="section-header">
           <div class="section-title">
             <h1>My Membership Plan</h1>
-            <p>Manage your active subscription, perks, and renewal options.</p>
+            <p>Manage your active subscription, perks, and available package requests.</p>
           </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-          <div class="dash-panel" style="border-top: 4px solid var(--lime);">
+        <!-- pending request approval notice -->
+        <div id="memberRequestStatusBanner" style="display:none; margin-bottom:20px; padding:16px 20px; background:rgba(255, 170, 0, 0.12); border:1px solid var(--warning); border-radius:var(--radius-md); align-items:center; justify-content:space-between;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span style="font-size:24px;">⏳</span>
+            <div>
+              <strong style="color:var(--warning); font-size:14px;" id="bannerRequestTitle">Membership Request Pending Approval</strong>
+              <p style="margin:2px 0 0; font-size:12px; color:var(--text-muted);" id="bannerRequestSubtitle">You requested this package. Please visit the front desk or complete payment to activate.</p>
+            </div>
+          </div>
+          <span class="badge badge-warning" style="font-size:11px; padding:4px 10px;">PENDING CONFIRMATION</span>
+        </div>
+
+        <!-- subscription overview & benefits -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 30px;">
+          <div class="dash-panel" style="border-top: 4px solid var(--lime); margin-bottom:0;">
             <div class="stat-top">
               <span class="stat-label">Active Plan</span>
-              <span class="badge badge-lime">VIP Diamond Annual</span>
+              <span class="badge badge-lime" id="myMembershipStatusBadge">Active</span>
             </div>
-            <div class="stat-val" style="margin-top:10px;">Rs. 180,000 / Year</div>
+            <div class="stat-val" id="myMembershipPlanName" style="margin-top:10px; font-size:22px;">No Active Plan</div>
             <div style="margin: 20px 0; border-top: 1px solid var(--border); padding-top: 16px;">
               <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:13px;">
                 <span style="color:var(--text-muted)">Member ID:</span>
-                <strong>MEM-1048</strong>
+                <strong id="myMembershipMemberId">MEM-000</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:13px;">
+                <span style="color:var(--text-muted)">Member Name:</span>
+                <strong id="myMembershipMemberName">--</strong>
               </div>
               <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:13px;">
                 <span style="color:var(--text-muted)">Start Date:</span>
-                <strong>January 01, 2024</strong>
+                <strong id="myMembershipStartDate">--</strong>
               </div>
               <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:13px;">
                 <span style="color:var(--text-muted)">Valid Until:</span>
-                <strong style="color:var(--lime)">January 01, 2025</strong>
+                <strong style="color:var(--lime)" id="myMembershipEndDate">--</strong>
               </div>
               <div style="display:flex; justify-content:space-between; font-size:13px;">
                 <span style="color:var(--text-muted)">Payment Status:</span>
-                <span class="badge badge-success">Fully Paid</span>
+                <span class="badge badge-success" id="myMembershipPayStatus">Active</span>
               </div>
             </div>
-            <button class="btn btn-primary" style="width: 100%;" onclick="showToast('Renewal invoice generated')">Renew / Extend Plan 💳</button>
           </div>
 
-          <div class="dash-panel">
+          <div class="dash-panel" style="margin-bottom:0;">
             <div class="panel-header">
               <h3 class="panel-title">Included Member Perks</h3>
             </div>
             <ul style="display:flex; flex-direction:column; gap:12px; font-size:13px;">
               <li style="display:flex; align-items:center; gap:10px;">
-                <span style="color:var(--lime)">✓</span> 24/7 Access to all gym floors & equipment
+                <span style="color:var(--lime)">✓</span> Access to world-class gym facilities &amp; equipment
               </li>
               <li style="display:flex; align-items:center; gap:10px;">
-                <span style="color:var(--lime)">✓</span> Free Steam Room & Hot Sauna access
+                <span style="color:var(--lime)">✓</span> Digital Entry pass for contactless turnstile check-in
               </li>
               <li style="display:flex; align-items:center; gap:10px;">
-                <span style="color:var(--lime)">✓</span> Dedicated Personal Locker (Locker #01)
+                <span style="color:var(--lime)">✓</span> Steam Room &amp; Hot Sauna access
               </li>
               <li style="display:flex; align-items:center; gap:10px;">
-                <span style="color:var(--lime)">✓</span> Monthly body composition & nutrition consultation
+                <span style="color:var(--lime)">✓</span> Locker Desk access and personal storage
               </li>
               <li style="display:flex; align-items:center; gap:10px;">
-                <span style="color:var(--lime)">✓</span> 15% Member discount on all supplements in store
+                <span style="color:var(--lime)">✓</span> Exclusive member discounts on supplements and gear in store
               </li>
             </ul>
           </div>
         </div>
+
+        <!-- catalog of available packages -->
+        <div class="dash-panel">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">Available Gym Membership Packages</h3>
+              <p class="panel-subtitle">Select a package to request subscription or renewal. Front-desk will confirm upon payment.</p>
+            </div>
+          </div>
+          <div class="stats-grid" id="memberPackagesGrid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 16px;"></div>
+        </div>
       </section>
 
-      <!-- =========================================================
-           VIEW: MY WORKOUT PLAN
-      ========================================================= -->
+      <!-- view: member workout split -->
       <section id="view-workouts" class="dash-section">
         <div class="section-header">
           <div class="section-title">
-            <h1>My Workout Routine</h1>
-            <p>Assigned by <strong>Coach Kasun Rajapaksha</strong> (PPL Hypertrophy 6-Day Split).</p>
+            <h1 id="memberWorkoutHeaderTitle">My Workout Routine</h1>
+            <p id="memberWorkoutHeaderSubtitle">Training split, assigned coaching routines, and daily exercise schedule.</p>
           </div>
         </div>
 
+        <!-- routine headline card -->
+        <div class="dash-panel" id="memberActiveRoutineBanner" style="border-top: 4px solid var(--lime); margin-bottom: 24px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+            <div>
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom: 8px;">
+                <span class="badge badge-lime" id="memberRoutineDiffBadge">INTERMEDIATE</span>
+                <span class="badge badge-success" id="memberRoutineStatusBadge">ACTIVE SPLIT</span>
+              </div>
+              <h2 id="memberActiveRoutineName" style="font-size: 24px; font-weight: 800; margin: 0 0 6px 0;">Hypertrophy Push-Pull-Legs (PPL)</h2>
+              <p id="memberActiveRoutineDesc" style="color: var(--text-muted); font-size: 13px; margin: 0; max-width: 650px;">
+                High-frequency bodybuilding hypertrophy split targeting major muscle groups with optimal recovery.
+              </p>
+            </div>
+
+            <div style="text-align: right; background: var(--bg-surface-2); padding: 12px 18px; border-radius: var(--radius-md); border: 1px solid var(--border);">
+              <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Coaching Status</div>
+              <strong id="memberRoutineAssignedDate" style="color: #fff; font-size: 14px; display: block; margin-top: 2px;">Assigned Split</strong>
+              <span id="memberRoutineCompletionRate" style="font-size: 12px; color: var(--lime); margin-top: 4px; display: block;">🔥 Daily Training Sync Active</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- routine daily breakdown -->
         <div class="dash-panel">
+          <div class="panel-header" style="justify-content:space-between; align-items:center;">
+            <div>
+              <h3 class="panel-title">Weekly Exercise Schedule</h3>
+              <p class="panel-subtitle">Follow your assigned sets, reps, and target muscle groups.</p>
+            </div>
+          </div>
+
+          <div id="memberRoutineDaysGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;"></div>
+        </div>
+
+        <!-- explore other routines -->
+        <div class="dash-panel" style="margin-top: 24px;">
           <div class="panel-header">
-            <h3 class="panel-title">Weekly Schedule</h3>
+            <div>
+              <h3 class="panel-title">Explore All Gym Workout Programs</h3>
+              <p class="panel-subtitle">Want to switch your routine? Select any verified training program created by our master trainers.</p>
+            </div>
           </div>
-          
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
-            
-            <!-- DAY 1 -->
-            <div style="background:var(--bg-surface-2); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px;">
-              <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-                <strong>Day 1: Push (Chest & Shoulders)</strong>
-                <span class="badge badge-success">Done ✓</span>
-              </div>
-              <ul style="font-size:12px; color:var(--text-muted); display:flex; flex-direction:column; gap:6px;">
-                <li>• Incline Dumbbell Press (4 × 10)</li>
-                <li>• Flat Barbell Bench Press (3 × 8)</li>
-                <li>• Overhead Dumbbell Shoulder Press (3 × 12)</li>
-                <li>• Lateral Cable Raises (4 × 15)</li>
-                <li>• Tricep Rope Pushdowns (3 × 12)</li>
-              </ul>
-            </div>
 
-            <!-- DAY 2 -->
-            <div style="background:var(--bg-surface-2); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px;">
-              <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-                <strong>Day 2: Pull (Back & Biceps)</strong>
-                <span class="badge badge-success">Done ✓</span>
-              </div>
-              <ul style="font-size:12px; color:var(--text-muted); display:flex; flex-direction:column; gap:6px;">
-                <li>• Lat Pulldowns (Wide Grip) (4 × 10)</li>
-                <li>• Barbell Bent-Over Rows (4 × 8)</li>
-                <li>• Seated Cable Rows (3 × 12)</li>
-                <li>• Incline Dumbbell Bicep Curls (4 × 10)</li>
-                <li>• Hammer Rope Curls (3 × 12)</li>
-              </ul>
-            </div>
-
-            <!-- DAY 3 -->
-            <div style="background:var(--bg-surface-2); border:1px solid var(--lime); border-radius:var(--radius-md); padding:16px; box-shadow: 0 0 15px var(--lime-glow);">
-              <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-                <strong style="color:var(--lime);">Day 3: Legs & Calves (TODAY)</strong>
-                <span class="badge badge-lime">In Progress</span>
-              </div>
-              <ul style="font-size:12px; color:var(--text-main); display:flex; flex-direction:column; gap:6px;">
-                <li>• Barbell Squats (4 × 8)</li>
-                <li>• Romanian Deadlifts (3 × 10)</li>
-                <li>• Leg Press Heavy (4 × 12)</li>
-                <li>• Standing Calf Raises (4 × 15)</li>
-                <li>• Hanging Leg Raises (3 × 15)</li>
-              </ul>
-              <button class="btn btn-primary" style="width:100%; margin-top:14px; font-size:11px; padding:8px;" onclick="showToast('Great job! Day 3 marked as completed! 🔥')">Mark Day as Completed ✓</button>
-            </div>
-
-          </div>
+          <div id="memberAvailableWorkoutsGrid" class="stats-grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 16px;"></div>
         </div>
       </section>
 
-      <!-- =========================================================
-           VIEW: MY LOCKER
-      ========================================================= -->
+      <!-- view: personal locker storage -->
       <section id="view-locker" class="dash-section">
         <div class="section-header">
           <div class="section-title">
             <h1>My Assigned Locker</h1>
-            <p>Secure storage information and locker key status.</p>
+            <p>Secure storage information, key access, and locker availability.</p>
           </div>
         </div>
 
+        <!-- locker availability feed -->
+        <div id="memberLockerAvailabilityBanner" class="dash-panel" style="margin-bottom: 20px; border-left: 3px solid var(--lime); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 14px 20px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 24px;">🔐</span>
+            <div>
+              <strong style="color: #fff; font-size: 14px;">Gym Floor Lockers Status</strong>
+              <span id="memberAvailableLockersCountText" style="display: block; font-size: 12px; color: var(--text-muted);">Checking locker availability...</span>
+            </div>
+          </div>
+          <span id="memberLockerLiveBadge" class="badge badge-success">Live Sync Active</span>
+        </div>
+
+        <!-- locker card & key metadata -->
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
           <div class="dash-panel" style="text-align:center; padding: 40px 20px;">
-            <div style="width: 90px; height: 90px; border-radius: 50%; background: var(--bg-surface-2); border: 2px solid var(--lime); color: var(--lime); font-size: 32px; font-weight: 900; display: grid; place-items: center; margin: 0 auto 20px;">
-              #01
+            <div id="myLockerBigIcon" style="width: 90px; height: 90px; border-radius: 50%; background: var(--bg-surface-2); border: 2px solid var(--lime); color: var(--lime); font-size: 32px; font-weight: 900; display: grid; place-items: center; margin: 0 auto 20px;">
+              🔒
             </div>
-            <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 6px;">Locker No. 01</h2>
-            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">Male Locker Room • Zone A (Top Tier)</p>
-            <span class="badge badge-success" style="font-size: 13px; padding: 6px 14px;">Active & Assigned</span>
+            <h2 id="myLockerTitle" style="font-size: 24px; font-weight: 800; margin-bottom: 6px;">No Locker Assigned</h2>
+            <p id="myLockerSubtitle" style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">Claim an available locker below or contact the front desk receptionist.</p>
+            <span id="myLockerStatusBadge" class="badge badge-muted" style="font-size: 13px; padding: 6px 14px;">Not Assigned</span>
           </div>
 
           <div class="dash-panel">
             <div class="panel-header">
-              <h3 class="panel-title">Locker Details</h3>
+              <h3 class="panel-title">Locker Storage Details</h3>
             </div>
             <div style="display:flex; flex-direction:column; gap:14px; font-size:13px;">
               <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border); padding-bottom:10px;">
                 <span style="color:var(--text-muted)">Passcode / Key Type:</span>
-                <strong>Digital Pin Pad (Personal PIN)</strong>
+                <strong id="myLockerKeyType">Front Desk RFID / Key</strong>
               </div>
               <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border); padding-bottom:10px;">
                 <span style="color:var(--text-muted)">Assigned Date:</span>
-                <strong>January 01, 2024</strong>
+                <strong id="myLockerAssignedDate">--</strong>
               </div>
               <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border); padding-bottom:10px;">
-                <span style="color:var(--text-muted)">Expiration:</span>
-                <strong>Matches Annual Membership</strong>
+                <span style="color:var(--text-muted)">Locker Status:</span>
+                <strong id="myLockerExpiration">Linked to Active Membership</strong>
               </div>
-              <button class="btn btn-secondary" style="margin-top:10px;" onclick="showToast('Locker assistance request sent to Reception')">Request Locker Change / Reset PIN 🔑</button>
+              <div id="myLockerActionContainer" style="margin-top:10px;">
+                <button id="btnMemberRequestLocker" class="btn btn-primary" style="width:100%;">Claim Available Locker 🔑</button>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- =========================================================
-           VIEW: MY ATTENDANCE
-      ========================================================= -->
+      <!-- view: attendance records -->
       <section id="view-attendance" class="dash-section">
         <div class="section-header">
           <div class="section-title">
             <h1>My Attendance Log</h1>
             <p>Track your workout frequency and check-in history.</p>
           </div>
+          <div class="section-actions" id="memberAttendanceActionContainer"></div>
         </div>
 
         <div class="dash-panel">
           <div class="table-responsive">
-            <table class="dash-table">
+            <table class="dash-table" id="tableMemberAttendance">
               <thead>
                 <tr>
                   <th>Date</th>
@@ -403,44 +453,13 @@
                   <th>Location / Gate</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Today</strong></td>
-                  <td>10:42 AM</td>
-                  <td>--</td>
-                  <td><span class="badge badge-lime">Active Session</span></td>
-                  <td>Main Turnstile 1</td>
-                </tr>
-                <tr>
-                  <td>Yesterday</td>
-                  <td>05:30 PM</td>
-                  <td>07:15 PM</td>
-                  <td>1 hr 45 min</td>
-                  <td>Main Turnstile 1</td>
-                </tr>
-                <tr>
-                  <td>2 days ago</td>
-                  <td>06:00 PM</td>
-                  <td>07:40 PM</td>
-                  <td>1 hr 40 min</td>
-                  <td>Main Turnstile 2</td>
-                </tr>
-                <tr>
-                  <td>3 days ago</td>
-                  <td>06:15 PM</td>
-                  <td>08:00 PM</td>
-                  <td>1 hr 45 min</td>
-                  <td>Main Turnstile 1</td>
-                </tr>
-              </tbody>
+              <tbody></tbody>
             </table>
           </div>
         </div>
       </section>
 
-      <!-- =========================================================
-           VIEW: MY ORDERS
-      ========================================================= -->
+      <!-- view: merchandise order history -->
       <section id="view-orders" class="dash-section">
         <div class="section-header">
           <div class="section-title">
@@ -454,7 +473,7 @@
 
         <div class="dash-panel">
           <div class="table-responsive">
-            <table class="dash-table">
+            <table class="dash-table" id="tableMemberOrders">
               <thead>
                 <tr>
                   <th>Order Ref</th>
@@ -464,85 +483,94 @@
                   <th>Status</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td><strong>#ORD-9821</strong></td>
-                  <td>HydroPure Isolate Whey (2kg), Pro Lifting Straps</td>
-                  <td>Rs. 21,700</td>
-                  <td>Today</td>
-                  <td><span class="badge badge-warning">Processing</span></td>
-                </tr>
-              </tbody>
+              <tbody></tbody>
             </table>
           </div>
         </div>
       </section>
 
-      <!-- =========================================================
-           VIEW: MY PROFILE
-      ========================================================= -->
+      <!-- view: account profile & credentials -->
       <section id="view-profile" class="dash-section">
         <div class="section-header">
           <div class="section-title">
-            <h1>My Profile & Fitness Goals</h1>
+            <h1>My Profile &amp; Fitness Goals</h1>
             <p>Update personal stats, measurements, and account security.</p>
           </div>
         </div>
 
-        <div class="dash-panel">
-          <form onsubmit="event.preventDefault(); showToast('Profile updated successfully!');">
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">Full Name</label>
-                <input type="text" class="form-control" value="Dineth Perera" required />
-              </div>
-              <div class="form-group">
-                <label class="form-label">Email Address</label>
-                <input type="email" class="form-control" value="dineth@gmail.com" required />
-              </div>
+        <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 24px;">
+          <!-- user profile form -->
+          <div class="dash-panel">
+            <div class="panel-header">
+              <h3 class="panel-title">👤 Personal Details &amp; Physical Stats</h3>
             </div>
+            <form id="profileForm">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Full Name</label>
+                  <input type="text" id="inputFullName" class="form-control" placeholder="Full Name" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Email Address</label>
+                  <input type="email" id="inputEmail" class="form-control" placeholder="Email Address" required />
+                </div>
+              </div>
 
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">Phone Number</label>
-                <input type="tel" class="form-control" value="+94 77 123 4567" required />
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Phone Number</label>
+                  <input type="tel" id="inputPhone" class="form-control" placeholder="Phone Number" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Age</label>
+                  <input type="number" id="inputAge" class="form-control" placeholder="25" />
+                </div>
               </div>
-              <div class="form-group">
-                <label class="form-label">Emergency Contact</label>
-                <input type="tel" class="form-control" value="+94 71 999 8888" required />
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Height (cm)</label>
+                  <input type="number" step="0.1" id="inputHeight" class="form-control" placeholder="175" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Current Weight (kg)</label>
+                  <input type="number" step="0.1" id="inputWeight" class="form-control" placeholder="70" />
+                </div>
               </div>
+
+              <button type="submit" class="btn btn-primary" id="btnSaveProfile" style="margin-top:10px;">Save Profile Changes ✓</button>
+            </form>
+          </div>
+
+          <!-- password update card -->
+          <div class="dash-panel" style="border-top: 3px solid var(--lime);">
+            <div class="panel-header">
+              <h3 class="panel-title">🔐 Change Password</h3>
             </div>
-
-            <div class="form-row">
+            <form id="formChangePassword">
               <div class="form-group">
-                <label class="form-label">Height (cm)</label>
-                <input type="number" class="form-control" value="178" />
+                <label class="form-label">New Password</label>
+                <input type="password" id="inputNewPassword" class="form-control" placeholder="Enter new password (min 6 chars)" minlength="6" required />
               </div>
               <div class="form-group">
-                <label class="form-label">Current Weight (kg)</label>
-                <input type="number" class="form-control" value="76" />
+                <label class="form-label">Confirm New Password</label>
+                <input type="password" id="inputConfirmPassword" class="form-control" placeholder="Confirm new password" minlength="6" required />
               </div>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">Primary Fitness Goal</label>
-              <select class="form-control">
-                <option selected>Hypertrophy & Muscle Gain</option>
-                <option>Fat Loss & Shredding</option>
-                <option>Endurance & Stamina</option>
-                <option>Powerlifting & Strength</option>
-              </select>
-            </div>
-
-            <button type="submit" class="btn btn-primary" style="margin-top:10px;">Save Profile Changes</button>
-          </form>
+              <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 16px;">
+                💡 Keep your password safe. Once updated, you will use your new password for future logins.
+              </p>
+              <button type="submit" class="btn btn-primary" id="btnUpdatePassword" style="width: 100%;">Update Password 🔒</button>
+            </form>
+          </div>
         </div>
       </section>
-
     </main>
   </div>
 
-  <script src="JS/cart.js"></script>
+  <!-- client runtime scripts -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="JS/api.js"></script>
   <script src="JS/dashboard.js"></script>
 </body>
 </html>

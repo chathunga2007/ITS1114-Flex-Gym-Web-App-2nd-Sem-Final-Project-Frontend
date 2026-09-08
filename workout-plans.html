@@ -1,282 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Workout Plans | Flex Gym</title>
 
+    <!-- fonts & stylesheets -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-          rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="CSS/style.css">
-
-    <style>
-        .plans-hero {
-            min-height: 65vh;
-            display: flex;
-            align-items: flex-end;
-            background:
-                linear-gradient(0deg, rgba(0, 0, 0, .95), rgba(0, 0, 0, .2)),
-                url("https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=1800&q=85")
-                center / cover no-repeat;
-        }
-
-        .plans-hero-content {
-            padding: 100px 7% 80px;
-        }
-
-        .plans-hero h1 {
-            margin-top: 20px;
-            font-size: clamp(50px, 8vw, 105px);
-            line-height: .9;
-            letter-spacing: -5px;
-            font-weight: 900;
-        }
-
-        .plans-hero h1 span {
-            display: block;
-            color: var(--accent);
-            font-style: italic;
-        }
-
-        .plans-hero p {
-            max-width: 520px;
-            margin-top: 25px;
-            color: #aaa;
-            font-size: 14px;
-            line-height: 1.8;
-        }
-
-        .plans-section {
-            padding: 100px 0;
-            background: #0c0c0c;
-        }
-
-        .plans-heading {
-            margin-bottom: 45px;
-        }
-
-        .plans-heading h2 {
-            margin-top: 18px;
-            font-size: clamp(40px, 5vw, 70px);
-            line-height: .95;
-            letter-spacing: -4px;
-            font-weight: 900;
-        }
-
-        .plans-heading h2 span {
-            color: var(--accent);
-            font-style: italic;
-        }
-
-        .plans-heading p {
-            max-width: 550px;
-            margin-top: 20px;
-            color: #777;
-            font-size: 14px;
-            line-height: 1.8;
-        }
-
-        .plans-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-
-        .plan-card {
-            padding: 32px;
-            background: #151515;
-            border: 1px solid rgba(255, 255, 255, .08);
-            transition: .35s ease;
-        }
-
-        .plan-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--accent);
-        }
-
-        .plan-card.featured {
-            border-color: var(--accent);
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(190, 255, 0, .12),
-                    transparent 45%
-                ),
-                #151515;
-        }
-
-        .plan-tag {
-            display: inline-block;
-            padding: 8px 12px;
-            background: var(--accent);
-            color: #080808;
-            font-size: 9px;
-            font-weight: 900;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .plan-card h3 {
-            margin-top: 25px;
-            color: white;
-            font-size: 26px;
-            font-weight: 900;
-        }
-
-        .plan-card p {
-            min-height: 60px;
-            margin-top: 15px;
-            color: #777;
-            font-size: 13px;
-            line-height: 1.8;
-        }
-
-        .plan-meta {
-            display: flex;
-            justify-content: space-between;
-            gap: 15px;
-            margin: 25px 0;
-            padding: 18px 0;
-            border-top: 1px solid rgba(255, 255, 255, .08);
-            border-bottom: 1px solid rgba(255, 255, 255, .08);
-        }
-
-        .plan-meta span {
-            color: #777;
-            font-size: 11px;
-        }
-
-        .plan-meta strong {
-            display: block;
-            margin-top: 7px;
-            color: white;
-            font-size: 13px;
-        }
-
-        .plan-features {
-            display: flex;
-            flex-direction: column;
-            gap: 13px;
-            margin-bottom: 28px;
-        }
-
-        .plan-features li {
-            list-style: none;
-            color: #aaa;
-            font-size: 12px;
-        }
-
-        .plan-features li::before {
-            content: "✓";
-            margin-right: 10px;
-            color: var(--accent);
-            font-weight: 900;
-        }
-
-        .plan-button {
-            display: block;
-            width: 100%;
-            text-align: center;
-        }
-
-        .training-tips {
-            margin-top: 80px;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-
-        .tip-card {
-            padding: 30px;
-            background: #151515;
-            border-left: 3px solid var(--accent);
-        }
-
-        .tip-number {
-            color: var(--accent);
-            font-size: 35px;
-            font-weight: 900;
-        }
-
-        .tip-card h3 {
-            margin: 15px 0;
-            color: white;
-            font-size: 18px;
-        }
-
-        .tip-card p {
-            color: #777;
-            font-size: 13px;
-            line-height: 1.8;
-        }
-
-        .plans-cta {
-            margin-top: 80px;
-            padding: 65px 30px;
-            text-align: center;
-            background:
-                linear-gradient(
-                    rgba(0, 0, 0, .55),
-                    rgba(0, 0, 0, .75)
-                ),
-                url("https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1600&q=85")
-                center / cover no-repeat;
-        }
-
-        .plans-cta h2 {
-            color: white;
-            font-size: clamp(35px, 5vw, 65px);
-            line-height: 1;
-            font-weight: 900;
-        }
-
-        .plans-cta h2 span {
-            color: var(--accent);
-            font-style: italic;
-        }
-
-        .plans-cta p {
-            max-width: 500px;
-            margin: 20px auto 28px;
-            color: #aaa;
-            font-size: 13px;
-            line-height: 1.8;
-        }
-
-        @media (max-width: 950px) {
-            .plans-grid,
-            .training-tips {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .plans-hero-content {
-                padding: 80px 25px 60px;
-            }
-
-            .plan-card {
-                padding: 25px;
-            }
-        }
-    </style>
 </head>
-
 <body>
-
-    <!-- Navigation -->
+    <!-- navigation -->
     <header class="navbar" id="navbar">
         <div class="nav-container">
-
             <a href="index.html" class="brand">
                 <div class="brand-icon">F</div>
-
                 <div class="brand-text">
                     <span class="brand-name">FLEX</span>
                     <span class="brand-subtitle">FITNESS CLUB</span>
@@ -287,8 +27,8 @@
                 <a href="index.html" class="nav-link">Home</a>
                 <a href="about.html" class="nav-link">About</a>
                 <a href="membership.html" class="nav-link">Membership</a>
-                <a href="trainer.html" class="nav-link">Trainers</a>
                 <a href="workout-plans.html" class="nav-link active">Training</a>
+                <a href="trainer.html" class="nav-link">Trainers</a>
                 <a href="shop.html" class="nav-link">Shop</a>
             </nav>
 
@@ -299,257 +39,202 @@
                 <a href="login.html" class="btn btn-primary">Portal Login</a>
             </div>
 
-            <button class="mobile-menu-btn" id="mobileMenuBtn" type="button">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Open menu">
                 <span></span>
                 <span></span>
                 <span></span>
             </button>
-
         </div>
     </header>
 
-    <!-- Mobile Menu -->
+    <!-- mobile menu -->
     <div class="mobile-menu" id="mobileMenu">
         <a href="index.html">Home</a>
         <a href="about.html">About</a>
         <a href="membership.html">Membership</a>
-        <a href="trainer.html">Trainers</a>
         <a href="workout-plans.html">Training</a>
+        <a href="trainer.html">Trainers</a>
         <a href="shop.html">Shop</a>
-
         <div class="mobile-menu-buttons">
             <a href="login.html" class="btn btn-outline">Login</a>
             <a href="signup.html" class="btn btn-primary">Join Flex</a>
         </div>
     </div>
 
-    <!-- Hero -->
-    <section class="plans-hero">
-        <div class="plans-hero-content">
-            <div class="section-label">PERSONALIZED TRAINING</div>
-
-            <h1>
-                TRAIN
-                <span>SMART.</span>
-            </h1>
-
-            <p>
-                Choose a workout plan that matches your goals,
-                fitness level and lifestyle.
-            </p>
-        </div>
-    </section>
-
-    <!-- Workout Plans -->
-    <section class="plans-section">
-        <div class="container">
-
-            <div class="plans-heading">
-                <div class="section-label">WORKOUT PROGRAMS</div>
-
-                <h2>
-                    YOUR GOAL.
-                    <span>YOUR PLAN.</span>
-                </h2>
-
+    <!-- main content -->
+    <main>
+        <!-- hero section -->
+        <section class="plans-hero">
+            <div class="plans-hero-content">
+                <div class="section-label">PERSONALIZED TRAINING</div>
+                <h1>TRAIN <span>SMART.</span></h1>
                 <p>
-                    Start with a plan designed to help you build
-                    strength, improve endurance and transform your body.
+                    Choose a workout plan that matches your goals,
+                    fitness level and lifestyle.
                 </p>
             </div>
+        </section>
 
-            <div class="plans-grid">
-
-                <!-- Beginner Plan -->
-                <div class="plan-card">
-                    <span class="plan-tag">Beginner</span>
-
-                    <h3>Foundation</h3>
-
+        <!-- workout plans list -->
+        <section class="plans-section">
+            <div class="container">
+                <div class="plans-heading">
+                    <div class="section-label">WORKOUT PROGRAMS</div>
+                    <h2>YOUR GOAL. <span>YOUR PLAN.</span></h2>
                     <p>
-                        A simple full-body workout plan for people
-                        starting their fitness journey.
+                        Start with a plan designed to help you build
+                        strength, improve endurance and transform your body.
                     </p>
+                </div>
 
-                    <div class="plan-meta">
-                        <div>
-                            <span>Duration</span>
-                            <strong>4 Weeks</strong>
+                <div class="plans-grid">
+                    <!-- plan 01: beginner -->
+                    <div class="plan-card">
+                        <span class="plan-tag">Beginner</span>
+                        <h3>Foundation</h3>
+                        <p>
+                            A simple full-body workout plan for people
+                            starting their fitness journey.
+                        </p>
+                        <div class="plan-meta">
+                            <div>
+                                <span>Duration</span>
+                                <strong>4 Weeks</strong>
+                            </div>
+                            <div>
+                                <span>Level</span>
+                                <strong>Easy</strong>
+                            </div>
+                            <div>
+                                <span>Days</span>
+                                <strong>3 / Week</strong>
+                            </div>
                         </div>
-
-                        <div>
-                            <span>Level</span>
-                            <strong>Easy</strong>
-                        </div>
-
-                        <div>
-                            <span>Days</span>
-                            <strong>3 / Week</strong>
-                        </div>
+                        <ul class="plan-features">
+                            <li>Full-body workouts</li>
+                            <li>Basic strength training</li>
+                            <li>Beginner cardio sessions</li>
+                            <li>Mobility exercises</li>
+                        </ul>
+                        <a href="login.html" class="btn btn-outline plan-button">Start Plan</a>
                     </div>
 
-                    <ul class="plan-features">
-                        <li>Full-body workouts</li>
-                        <li>Basic strength training</li>
-                        <li>Beginner cardio sessions</li>
-                        <li>Mobility exercises</li>
-                    </ul>
-
-                    <a href="login.html" class="btn btn-outline plan-button">
-                        Start Plan
-                    </a>
-                </div>
-
-                <!-- Muscle Plan -->
-                <div class="plan-card featured">
-                    <span class="plan-tag">Most Popular</span>
-
-                    <h3>Muscle Builder</h3>
-
-                    <p>
-                        Build lean muscle and increase strength
-                        with a structured training program.
-                    </p>
-
-                    <div class="plan-meta">
-                        <div>
-                            <span>Duration</span>
-                            <strong>8 Weeks</strong>
+                    <!-- plan 02: muscle builder -->
+                    <div class="plan-card featured">
+                        <span class="plan-tag">Most Popular</span>
+                        <h3>Muscle Builder</h3>
+                        <p>
+                            Build lean muscle and increase strength
+                            with a structured training program.
+                        </p>
+                        <div class="plan-meta">
+                            <div>
+                                <span>Duration</span>
+                                <strong>8 Weeks</strong>
+                            </div>
+                            <div>
+                                <span>Level</span>
+                                <strong>Medium</strong>
+                            </div>
+                            <div>
+                                <span>Days</span>
+                                <strong>5 / Week</strong>
+                            </div>
                         </div>
-
-                        <div>
-                            <span>Level</span>
-                            <strong>Medium</strong>
-                        </div>
-
-                        <div>
-                            <span>Days</span>
-                            <strong>5 / Week</strong>
-                        </div>
+                        <ul class="plan-features">
+                            <li>Split strength workouts</li>
+                            <li>Progressive overload</li>
+                            <li>Muscle-building exercises</li>
+                            <li>Recovery guidance</li>
+                        </ul>
+                        <a href="login.html" class="btn btn-primary plan-button">Start Plan</a>
                     </div>
 
-                    <ul class="plan-features">
-                        <li>Split strength workouts</li>
-                        <li>Progressive overload</li>
-                        <li>Muscle-building exercises</li>
-                        <li>Recovery guidance</li>
-                    </ul>
-
-                    <a href="login.html" class="btn btn-primary plan-button">
-                        Start Plan
-                    </a>
-                </div>
-
-                <!-- Fat Loss Plan -->
-                <div class="plan-card">
-                    <span class="plan-tag">Advanced</span>
-
-                    <h3>Fat Burner</h3>
-
-                    <p>
-                        Improve cardiovascular fitness and burn
-                        calories with high-energy workouts.
-                    </p>
-
-                    <div class="plan-meta">
-                        <div>
-                            <span>Duration</span>
-                            <strong>6 Weeks</strong>
+                    <!-- plan 03: fat burner -->
+                    <div class="plan-card">
+                        <span class="plan-tag">Advanced</span>
+                        <h3>Fat Burner</h3>
+                        <p>
+                            Improve cardiovascular fitness and burn
+                            calories with high-energy workouts.
+                        </p>
+                        <div class="plan-meta">
+                            <div>
+                                <span>Duration</span>
+                                <strong>6 Weeks</strong>
+                            </div>
+                            <div>
+                                <span>Level</span>
+                                <strong>Hard</strong>
+                            </div>
+                            <div>
+                                <span>Days</span>
+                                <strong>5 / Week</strong>
+                            </div>
                         </div>
-
-                        <div>
-                            <span>Level</span>
-                            <strong>Hard</strong>
-                        </div>
-
-                        <div>
-                            <span>Days</span>
-                            <strong>5 / Week</strong>
-                        </div>
+                        <ul class="plan-features">
+                            <li>HIIT workouts</li>
+                            <li>Cardio training</li>
+                            <li>Core strengthening</li>
+                            <li>Fat-loss guidance</li>
+                        </ul>
+                        <a href="login.html" class="btn btn-outline plan-button">Start Plan</a>
                     </div>
-
-                    <ul class="plan-features">
-                        <li>HIIT workouts</li>
-                        <li>Cardio training</li>
-                        <li>Core strengthening</li>
-                        <li>Fat-loss guidance</li>
-                    </ul>
-
-                    <a href="login.html" class="btn btn-outline plan-button">
-                        Start Plan
-                    </a>
                 </div>
 
-            </div>
+                <!-- training tips -->
+                <div class="training-tips">
+                    <div class="tip-card">
+                        <div class="tip-number">01</div>
+                        <h3>Warm Up</h3>
+                        <p>
+                            Always warm up for 5 to 10 minutes before
+                            starting your workout.
+                        </p>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-number">02</div>
+                        <h3>Stay Consistent</h3>
+                        <p>
+                            Follow your workout plan regularly and
+                            track your progress every week.
+                        </p>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-number">03</div>
+                        <h3>Recover Well</h3>
+                        <p>
+                            Rest properly, drink enough water and
+                            maintain a balanced diet.
+                        </p>
+                    </div>
+                </div>
 
-            <!-- Training Tips -->
-            <div class="training-tips">
-
-                <div class="tip-card">
-                    <div class="tip-number">01</div>
-                    <h3>Warm Up</h3>
+                <!-- plan cta -->
+                <div class="plans-cta">
+                    <h2>READY TO <span>START?</span></h2>
                     <p>
-                        Always warm up for 5 to 10 minutes before
-                        starting your workout.
+                        Join Flex Gym today and get access to
+                        professional training plans and expert guidance.
                     </p>
+                    <a href="signup.html" class="btn btn-primary">Join Flex Gym</a>
                 </div>
-
-                <div class="tip-card">
-                    <div class="tip-number">02</div>
-                    <h3>Stay Consistent</h3>
-                    <p>
-                        Follow your workout plan regularly and
-                        track your progress every week.
-                    </p>
-                </div>
-
-                <div class="tip-card">
-                    <div class="tip-number">03</div>
-                    <h3>Recover Well</h3>
-                    <p>
-                        Rest properly, drink enough water and
-                        maintain a balanced diet.
-                    </p>
-                </div>
-
             </div>
+        </section>
+    </main>
 
-            <!-- CTA -->
-            <div class="plans-cta">
-                <h2>
-                    READY TO
-                    <span>START?</span>
-                </h2>
-
-                <p>
-                    Join Flex Gym today and get access to
-                    professional training plans and expert guidance.
-                </p>
-
-                <a href="signup.html" class="btn btn-primary">
-                    Join Flex Gym
-                </a>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- Footer -->
+    <!-- footer -->
     <footer class="footer">
         <div class="container">
-
             <div class="footer-grid">
-
                 <div class="footer-brand">
                     <a href="index.html" class="brand">
                         <div class="brand-icon">F</div>
-
                         <div class="brand-text">
                             <span class="brand-name">FLEX</span>
                             <span class="brand-subtitle">FITNESS CLUB</span>
                         </div>
                     </a>
-
                     <p>
                         Build strength. Build confidence.
                         Become your strongest self.
@@ -574,23 +259,24 @@
 
                 <div class="footer-column">
                     <h4>Contact</h4>
-                    <p>Colombo, Sri Lanka</p>
-                    <p>+94 77 123 4567</p>
-                    <p>info@flexgym.com</p>
+                    <a href="mailto:info@flexgym.lk">info@flexgym.lk</a>
+                    <a href="tel:+94112345678">+94 11 234 5678</a>
+                    <span>Colombo, Sri Lanka</span>
                 </div>
-
             </div>
 
             <div class="footer-bottom">
-                <p>© 2025 Flex Gym. All Rights Reserved.</p>
+                <p>© 2026 Flex Gym. All Rights Reserved.</p>
                 <p>Designed for a stronger tomorrow.</p>
             </div>
-
         </div>
     </footer>
 
+    <!-- scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="JS/api.js"></script>
+    <script src="JS/workout.js"></script>
     <script src="JS/cart.js"></script>
     <script src="JS/index.js"></script>
 </body>
-
 </html>

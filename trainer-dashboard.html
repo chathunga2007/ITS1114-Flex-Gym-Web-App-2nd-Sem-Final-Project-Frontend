@@ -3,20 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Trainer Portal | Flex Gym</title>
+  <title>Trainer Page | Flex Gym</title>
 
+  <!-- typography & portal styles -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="CSS/style.css" />
-  <link rel="stylesheet" href="CSS/dashboard.css" />
 </head>
-
 <body>
   <div class="dash-layout">
-    
-    <!-- SIDEBAR -->
+    <!-- coach sidebar navigation -->
     <aside class="dash-sidebar">
       <a href="index.html" class="dash-brand">
         <div class="brand-icon">F</div>
@@ -30,24 +27,22 @@
           <span class="nav-icon">📊</span>
           <span>Overview</span>
         </a>
-
         <a href="#clients" class="dash-nav-item" data-section="clients">
           <span class="nav-icon">👥</span>
           <span>Assigned Clients</span>
           <span class="nav-badge">18</span>
         </a>
-
         <a href="#workouts" class="dash-nav-item" data-section="workouts">
           <span class="nav-icon">📋</span>
           <span>Workout Programs</span>
         </a>
-
         <a href="#sessions" class="dash-nav-item" data-section="sessions">
           <span class="nav-icon">📅</span>
           <span>Training Schedule</span>
         </a>
       </nav>
 
+      <!-- coach account info -->
       <div class="sidebar-bottom">
         <div class="user-profile-pill">
           <div class="user-avatar" id="dashUserAvatar">KR</div>
@@ -60,9 +55,8 @@
       </div>
     </aside>
 
-    <!-- MAIN CONTENT AREA -->
+    <!-- main trainer workspace -->
     <main class="dash-main">
-      
       <header class="dash-topbar">
         <div class="topbar-left">
           <button class="mobile-menu-toggle" id="mobileMenuToggle">☰</button>
@@ -77,7 +71,7 @@
         </div>
       </header>
 
-      <!-- OVERVIEW -->
+      <!-- view: coach overview dashboard -->
       <section id="view-overview" class="dash-section active">
         <div class="section-header">
           <div class="section-title">
@@ -86,14 +80,15 @@
           </div>
         </div>
 
+        <!-- coach kpi metrics -->
         <div class="stats-grid">
           <div class="stat-card">
             <div class="stat-top">
               <span class="stat-label">Active Clients</span>
               <div class="stat-icon">👥</div>
             </div>
-            <div class="stat-val">18</div>
-            <div class="stat-trend up">Capacity: 20</div>
+            <div class="stat-val" id="trainerStatClients">0</div>
+            <div class="stat-trend up" id="trainerStatClientsTrend">Registered Members</div>
           </div>
 
           <div class="stat-card">
@@ -101,8 +96,8 @@
               <span class="stat-label">Today's Sessions</span>
               <div class="stat-icon">⏱️</div>
             </div>
-            <div class="stat-val">4 Sessions</div>
-            <div class="stat-trend neutral">Next: 04:00 PM</div>
+            <div class="stat-val" id="trainerStatTodaySessions">0</div>
+            <div class="stat-trend neutral" id="trainerStatTodaySessionsTrend">Checked In Today</div>
           </div>
 
           <div class="stat-card">
@@ -110,11 +105,26 @@
               <span class="stat-label">Active Routines</span>
               <div class="stat-icon">📋</div>
             </div>
-            <div class="stat-val">12 Plans</div>
-            <div class="stat-trend up">Assigned to 48 members</div>
+            <div class="stat-val" id="trainerStatRoutines">0 Plans</div>
+            <div class="stat-trend up" id="trainerStatRoutinesTrend">Master Templates</div>
           </div>
         </div>
 
+        <!-- program breakdown chart -->
+        <div class="dash-panel" style="margin-bottom: 24px;">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">Workout Program Tier Distribution</h3>
+              <p class="panel-subtitle">Distribution of routines by difficulty level</p>
+            </div>
+            <span class="badge badge-lime">Active Routines</span>
+          </div>
+          <div style="height: 200px; position: relative;">
+            <canvas id="chartTrainerBreakdown"></canvas>
+          </div>
+        </div>
+
+        <!-- today's personal training queue -->
         <div class="dash-panel">
           <div class="panel-header">
             <h3 class="panel-title">Today's PT Sessions</h3>
@@ -139,7 +149,7 @@
                 <tr>
                   <td>04:00 PM - 05:00 PM</td>
                   <td><strong>Saman Kumara</strong></td>
-                  <td>Back & Deadlifts</td>
+                  <td>Back &amp; Deadlifts</td>
                   <td><span class="badge badge-warning">Upcoming</span></td>
                 </tr>
               </tbody>
@@ -148,52 +158,37 @@
         </div>
       </section>
 
-      <!-- ASSIGNED CLIENTS -->
+      <!-- view: assigned clients -->
       <section id="view-clients" class="dash-section">
         <div class="section-header">
           <div class="section-title">
-            <h1>Assigned Clients</h1>
-            <p>Manage training programs, progress logs, and personal goals for your clients.</p>
+            <h1>Assigned Clients &amp; Athletes</h1>
+            <p>Manage personalized training programs, physical stats, progress logs, and coaching routines.</p>
+          </div>
+          <div class="section-actions">
+            <button class="btn btn-primary" data-modal-target="modalAssignWorkoutPlan">📋 Assign Routine to Client</button>
           </div>
         </div>
 
         <div class="dash-panel">
           <div class="table-responsive">
-            <table class="dash-table">
+            <table class="dash-table" id="tableTrainerClients">
               <thead>
                 <tr>
-                  <th>Client Name</th>
-                  <th>Goal</th>
-                  <th>Current Program</th>
-                  <th>Sessions Left</th>
-                  <th>Action</th>
+                  <th>Client Profile</th>
+                  <th>Fitness Goal &amp; Physical Stats</th>
+                  <th>Assigned Workout Routine</th>
+                  <th>Gym Sessions</th>
+                  <th style="text-align:center;">Coaching Actions</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <div class="cell-member">
-                      <div class="member-avatar">DN</div>
-                      <div class="member-meta">
-                        <strong>Dineth Perera</strong>
-                        <span>MEM-1048</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td>Muscle Hypertrophy</td>
-                  <td><span class="badge badge-lime">PPL 6-Day</span></td>
-                  <td>8 / 10 Sessions</td>
-                  <td>
-                    <button class="btn btn-secondary" style="padding:4px 10px;font-size:11px;" onclick="showToast('Progress log updated')">Log Progress 📈</button>
-                  </td>
-                </tr>
-              </tbody>
+              <tbody></tbody>
             </table>
           </div>
         </div>
       </section>
 
-      <!-- WORKOUTS -->
+      <!-- view: master workout programs -->
       <section id="view-workouts" class="dash-section">
         <div class="section-header">
           <div class="section-title">
@@ -201,70 +196,145 @@
             <p>Create and edit exercise templates.</p>
           </div>
           <div class="section-actions">
+            <button class="btn btn-secondary" data-modal-target="modalAssignWorkoutPlan" style="margin-right:8px;">📋 Assign Plan to Client</button>
             <button class="btn btn-primary" data-modal-target="modalAddWorkout">+ Create Program</button>
           </div>
         </div>
 
         <div class="dash-panel">
           <div class="table-responsive">
-            <table class="dash-table">
+            <table class="dash-table" id="tableTrainerWorkouts">
               <thead>
                 <tr>
                   <th>Program Name</th>
-                  <th>Target Focus</th>
-                  <th>Level</th>
-                  <th>Assigned Count</th>
+                  <th>Difficulty Level</th>
+                  <th>Routine Description / Outline</th>
+                  <th>Status</th>
+                  <th style="text-align:center;">Actions</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Hypertrophy Push-Pull-Legs</strong></td>
-                  <td>Muscle Growth</td>
-                  <td><span class="badge badge-lime">Intermediate</span></td>
-                  <td>142 Members</td>
-                </tr>
-              </tbody>
+              <tbody></tbody>
             </table>
           </div>
         </div>
       </section>
 
-      <!-- SESSIONS -->
+      <!-- view: training schedule -->
       <section id="view-sessions" class="dash-section">
         <div class="section-header">
           <div class="section-title">
-            <h1>Weekly Schedule</h1>
-            <p>Coaching calendar and availability slots.</p>
+            <h1>Weekly Coaching Schedule</h1>
+            <p>Manage personal training appointments, timetable slots, and client workout sessions.</p>
+          </div>
+          <div class="section-actions">
+            <button class="btn btn-primary" data-modal-target="modalAddSessionSlot">+ Book Training Slot</button>
           </div>
         </div>
+
+        <!-- timetable stats -->
+        <div class="stats-grid" style="margin-bottom: 20px;">
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Total Scheduled Slots</span>
+              <div class="stat-icon">📅</div>
+            </div>
+            <div class="stat-val" id="statScheduleTotal">0</div>
+            <div class="stat-trend up" id="statScheduleTotalTrend">Weekly PT Sessions</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Today's Sessions</span>
+              <div class="stat-icon">⏱️</div>
+            </div>
+            <div class="stat-val" id="statScheduleToday">0</div>
+            <div class="stat-trend neutral" id="statScheduleTodayTrend">Active for Today</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Completed Sessions</span>
+              <div class="stat-icon">✅</div>
+            </div>
+            <div class="stat-val" id="statScheduleCompleted">0</div>
+            <div class="stat-trend up" id="statScheduleCompletedTrend">Finished Workouts</div>
+          </div>
+        </div>
+
+        <!-- timetable day & status filters -->
+        <div class="dash-panel" style="margin-bottom: 20px; padding: 14px 20px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+            <div class="day-filter-group" id="scheduleDayFilterGroup" style="display: flex; gap: 6px; flex-wrap: wrap;">
+              <button class="btn btn-sm btn-primary day-filter-btn active" data-day="ALL">All Days</button>
+              <button class="btn btn-sm btn-secondary day-filter-btn" data-day="Monday">Mon</button>
+              <button class="btn btn-sm btn-secondary day-filter-btn" data-day="Tuesday">Tue</button>
+              <button class="btn btn-sm btn-secondary day-filter-btn" data-day="Wednesday">Wed</button>
+              <button class="btn btn-sm btn-secondary day-filter-btn" data-day="Thursday">Thu</button>
+              <button class="btn btn-sm btn-secondary day-filter-btn" data-day="Friday">Fri</button>
+              <button class="btn btn-sm btn-secondary day-filter-btn" data-day="Saturday">Sat</button>
+              <button class="btn btn-sm btn-secondary day-filter-btn" data-day="Sunday">Sun</button>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <label style="font-size: 12px; color: var(--text-dim); margin: 0;">Filter Status:</label>
+              <select id="scheduleStatusFilter" class="form-control" style="width: auto; padding: 4px 10px; font-size: 12px;">
+                <option value="ALL">All Statuses</option>
+                <option value="UPCOMING">Upcoming</option>
+                <option value="IN_PROGRESS">In Progress</option>
+                <option value="COMPLETED">Completed</option>
+                <option value="CANCELLED">Cancelled</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- scheduled slots roster -->
         <div class="dash-panel">
-          <p style="color:var(--text-muted);">Your coaching timetable is synced with the reception booking desk.</p>
+          <div class="table-responsive">
+            <table class="dash-table" id="tableTrainerSchedule">
+              <thead>
+                <tr>
+                  <th>Day &amp; Time Slot</th>
+                  <th>Client / Trainee</th>
+                  <th>Focus Area &amp; Routine</th>
+                  <th>Gym Zone / Location</th>
+                  <th>Status</th>
+                  <th style="text-align:center;">Actions</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
         </div>
       </section>
-
     </main>
   </div>
 
-  <!-- MODAL -->
+  <!-- modals collection -->
+
+  <!-- modal: create workout -->
   <div class="modal-backdrop" id="modalAddWorkout">
     <div class="modal-box">
       <div class="modal-header">
         <h3>Create Workout Program</h3>
-        <button class="modal-close">&times;</button>
+        <button class="modal-close" data-modal-close>&times;</button>
       </div>
-      <form onsubmit="event.preventDefault(); showToast('Program saved!'); closeModal('modalAddWorkout');">
+      <form id="formAddWorkoutTrainer">
         <div class="modal-body">
           <div class="form-group">
             <label class="form-label">Program Name</label>
-            <input type="text" class="form-control" placeholder="e.g. 8-Week Core Power" required />
+            <input type="text" id="addTrainerPlanTitle" class="form-control" placeholder="e.g. 8-Week Core Power" required />
           </div>
           <div class="form-group">
             <label class="form-label">Level</label>
-            <select class="form-control">
-              <option>Beginner</option>
-              <option>Intermediate</option>
-              <option>Advanced</option>
+            <select id="addTrainerPlanDiff" class="form-control">
+              <option value="BEGINNER">Beginner</option>
+              <option value="INTERMEDIATE" selected>Intermediate</option>
+              <option value="ADVANCED">Advanced</option>
             </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Exercise Outline / Routine Notes</label>
+            <textarea id="addTrainerPlanNotes" class="form-control" rows="3" placeholder="Day 1: Chest &amp; Triceps..."></textarea>
           </div>
         </div>
         <div class="modal-footer">
@@ -275,6 +345,341 @@
     </div>
   </div>
 
+  <!-- modal: assign plan to client -->
+  <div class="modal-backdrop" id="modalAssignWorkoutPlan">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Assign Workout Plan to Client</h3>
+        <button class="modal-close" data-modal-close>&times;</button>
+      </div>
+      <form id="formAssignWorkoutPlanTrainer">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Select Client / Member</label>
+            <select id="assignPlanMemberSelect" class="form-control" required>
+              <option value="">Loading gym members...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Select Workout Routine</label>
+            <select id="assignPlanSelect" class="form-control" required>
+              <option value="">Loading workout routines...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Start / Assignment Date</label>
+            <input type="date" id="assignPlanDate" class="form-control" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn-primary">Assign Routine ✓</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- modal: edit workout routine -->
+  <div class="modal-backdrop" id="modalEditWorkout">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Edit Workout Program</h3>
+        <button class="modal-close" data-modal-close>&times;</button>
+      </div>
+      <form id="formEditWorkout">
+        <input type="hidden" id="editPlanId" />
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Program Name</label>
+            <input type="text" id="editPlanTitle" class="form-control" placeholder="e.g. 8-Week Core Power" required />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Level</label>
+              <select id="editPlanDiff" class="form-control">
+                <option value="BEGINNER">Beginner</option>
+                <option value="INTERMEDIATE">Intermediate</option>
+                <option value="ADVANCED">Advanced</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select id="editPlanStatus" class="form-control">
+                <option value="ACTIVE">ACTIVE</option>
+                <option value="INACTIVE">INACTIVE</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Routine Description / Outline</label>
+            <textarea id="editPlanNotes" class="form-control" rows="3"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btnUpdateWorkout">Update Program ✓</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- modal: client progress sheet -->
+  <div class="modal-backdrop" id="modalClientProgress">
+    <div class="modal-box" style="max-width: 680px; width: 92%;">
+      <div class="modal-header">
+        <div>
+          <h3 id="clientFileModalTitle" style="margin: 0; font-size: 1.15rem;">Client Coaching &amp; Progress File</h3>
+          <span id="clientFileModalSubtitle" style="font-size: 0.82rem; color: var(--text-dim);">Trainee Health, Routine &amp; Attendance Overview</span>
+        </div>
+        <button class="modal-close" data-modal-close>&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 20px; display: flex; flex-direction: column; gap: 16px;">
+        <!-- client snapshot -->
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <div id="cpfAvatar" class="member-avatar" style="width: 48px; height: 48px; font-size: 1.1rem; background: var(--primary); color: #000; font-weight: 700;">CL</div>
+            <div>
+              <h4 id="cpfName" style="margin: 0 0 4px 0; font-size: 1.1rem; color: #fff;">Client Name</h4>
+              <div style="display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: var(--text-dim); flex-wrap: wrap;">
+                <span id="cpfId" class="badge badge-lime">MEM-0</span>
+                <span id="cpfGender">MALE</span> • 
+                <span id="cpfEmail">client@example.com</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <span id="cpfStatusBadge" class="badge badge-success">ACTIVE MEMBER</span>
+          </div>
+        </div>
+
+        <!-- metrics & bmi index -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px;">
+          <div style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 12px; text-align: center;">
+            <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase;">Height</div>
+            <div id="cpfHeight" style="font-size: 1.15rem; font-weight: 700; color: #fff; margin-top: 4px;">175 cm</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 12px; text-align: center;">
+            <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase;">Weight</div>
+            <div id="cpfWeight" style="font-size: 1.15rem; font-weight: 700; color: #fff; margin-top: 4px;">70.0 kg</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 12px; text-align: center;">
+            <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase;">BMI Index</div>
+            <div id="cpfBmi" style="font-size: 1.15rem; font-weight: 700; color: var(--primary); margin-top: 4px;">22.9</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 12px; text-align: center;">
+            <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase;">Gym Sessions</div>
+            <div id="cpfSessions" style="font-size: 1.15rem; font-weight: 700; color: #00e5ff; margin-top: 4px;">12 Logged</div>
+          </div>
+        </div>
+
+        <!-- training goal -->
+        <div style="background: rgba(215,255,0,0.05); border: 1px solid rgba(215,255,0,0.2); border-radius: 10px; padding: 12px 16px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+            <strong style="color: var(--primary); font-size: 0.85rem;">🎯 Fitness Goal &amp; Target:</strong>
+            <span id="cpfBmiCategory" class="badge badge-lime">Healthy Weight</span>
+          </div>
+          <p id="cpfGoalDesc" style="margin: 0; font-size: 0.82rem; color: #ddd;">Muscle Hypertrophy &amp; Progressive Overload Strength Training</p>
+        </div>
+
+        <!-- assigned routine -->
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px 16px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <strong style="color: #fff; font-size: 0.9rem;">📋 Current Assigned Workout Routine</strong>
+            <button type="button" id="btnReassignFromModal" class="btn btn-secondary btn-sm" style="font-size: 11px; padding: 3px 8px;">Change Routine ✏️</button>
+          </div>
+          <div id="cpfPlanDetails" style="font-size: 0.85rem; color: var(--text-dim); line-height: 1.5;"></div>
+        </div>
+
+        <!-- coach notes -->
+        <div style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 14px 16px;">
+          <label class="form-label" style="display: flex; align-items: center; justify-content: space-between;">
+            <span>📝 Coach Notes &amp; Guidance</span>
+            <span id="cpfNotesSavedStatus" style="font-size: 0.75rem; color: var(--primary);"></span>
+          </label>
+          <textarea id="cpfTrainerNotes" class="form-control" rows="3" placeholder="e.g. Focus on deadlift form, increase protein intake to 140g, knee recovery on leg days..."></textarea>
+          <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
+            <button type="button" id="btnSaveTrainerNotes" class="btn btn-primary btn-sm">Save Coaching Notes 💾</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-modal-close>Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- modal: book training slot -->
+  <div class="modal-backdrop" id="modalAddSessionSlot">
+    <div class="modal-box" style="max-width: 580px; width: 92%;">
+      <div class="modal-header">
+        <div>
+          <h3 style="margin: 0; font-size: 1.15rem;">Book Training Session Slot</h3>
+          <span style="font-size: 0.82rem; color: var(--text-dim);">Schedule a personal training appointment with a trainee</span>
+        </div>
+        <button class="modal-close" data-modal-close>&times;</button>
+      </div>
+      <form id="formAddSessionSlot">
+        <div class="modal-body" style="padding: 20px;">
+          <div class="form-group">
+            <label class="form-label">Select Client / Trainee</label>
+            <select id="addSessionMemberSelect" class="form-control" required>
+              <option value="">-- Choose Member / Trainee --</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Day of Week</label>
+              <select id="addSessionDay" class="form-control" required>
+                <option value="Monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+                <option value="Saturday">Saturday</option>
+                <option value="Sunday">Sunday</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Time Slot</label>
+              <select id="addSessionTime" class="form-control" required>
+                <option value="06:00 AM - 07:00 AM">06:00 AM - 07:00 AM</option>
+                <option value="07:00 AM - 08:00 AM">07:00 AM - 08:00 AM</option>
+                <option value="08:30 AM - 09:30 AM">08:30 AM - 09:30 AM</option>
+                <option value="10:00 AM - 11:00 AM" selected>10:00 AM - 11:00 AM</option>
+                <option value="11:30 AM - 12:30 PM">11:30 AM - 12:30 PM</option>
+                <option value="03:00 PM - 04:00 PM">03:00 PM - 04:00 PM</option>
+                <option value="04:30 PM - 05:30 PM">04:30 PM - 05:30 PM</option>
+                <option value="05:30 PM - 06:30 PM">05:30 PM - 06:30 PM</option>
+                <option value="06:30 PM - 07:30 PM">06:30 PM - 07:30 PM</option>
+                <option value="07:30 PM - 08:30 PM">07:30 PM - 08:30 PM</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Focus Area &amp; Target Routine</label>
+            <input type="text" id="addSessionFocus" class="form-control" placeholder="e.g. Chest &amp; Triceps Hypertrophy / Deadlift Form Check" required />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Gym Zone / Location</label>
+              <select id="addSessionZone" class="form-control">
+                <option value="Main Floor (Free Weights)" selected>Main Floor (Free Weights)</option>
+                <option value="Powerlifting &amp; Squat Racks">Powerlifting &amp; Squat Racks</option>
+                <option value="Cardio &amp; Conditioning Loft">Cardio &amp; Conditioning Loft</option>
+                <option value="Studio 1 (Functional Fitness)">Studio 1 (Functional Fitness)</option>
+                <option value="CrossFit / Calisthenics Cage">CrossFit / Calisthenics Cage</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Session Status</label>
+              <select id="addSessionStatus" class="form-control">
+                <option value="UPCOMING" selected>Upcoming</option>
+                <option value="IN_PROGRESS">In Progress</option>
+                <option value="COMPLETED">Completed</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Coaching Notes (Optional)</label>
+            <textarea id="addSessionNotes" class="form-control" rows="2" placeholder="Focus on progressive overload, bring lifting belt..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn-primary">Book Session Slot ✓</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- modal: edit session slot -->
+  <div class="modal-backdrop" id="modalEditSessionSlot">
+    <div class="modal-box" style="max-width: 580px; width: 92%;">
+      <div class="modal-header">
+        <div>
+          <h3 style="margin: 0; font-size: 1.15rem;">Reschedule / Edit Session</h3>
+          <span style="font-size: 0.82rem; color: var(--text-dim);">Update time slot, focus, or session completion status</span>
+        </div>
+        <button class="modal-close" data-modal-close>&times;</button>
+      </div>
+      <form id="formEditSessionSlot">
+        <input type="hidden" id="editSessionId" />
+        <div class="modal-body" style="padding: 20px;">
+          <div class="form-group">
+            <label class="form-label">Client / Trainee</label>
+            <input type="text" id="editSessionMemberName" class="form-control" readonly style="opacity: 0.85;" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Day of Week</label>
+              <select id="editSessionDay" class="form-control" required>
+                <option value="Monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+                <option value="Saturday">Saturday</option>
+                <option value="Sunday">Sunday</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Time Slot</label>
+              <select id="editSessionTime" class="form-control" required>
+                <option value="06:00 AM - 07:00 AM">06:00 AM - 07:00 AM</option>
+                <option value="07:00 AM - 08:00 AM">07:00 AM - 08:00 AM</option>
+                <option value="08:30 AM - 09:30 AM">08:30 AM - 09:30 AM</option>
+                <option value="10:00 AM - 11:00 AM">10:00 AM - 11:00 AM</option>
+                <option value="11:30 AM - 12:30 PM">11:30 AM - 12:30 PM</option>
+                <option value="03:00 PM - 04:00 PM">03:00 PM - 04:00 PM</option>
+                <option value="04:30 PM - 05:30 PM">04:30 PM - 05:30 PM</option>
+                <option value="05:30 PM - 06:30 PM">05:30 PM - 06:30 PM</option>
+                <option value="06:30 PM - 07:30 PM">06:30 PM - 07:30 PM</option>
+                <option value="07:30 PM - 08:30 PM">07:30 PM - 08:30 PM</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Focus Area &amp; Target Routine</label>
+            <input type="text" id="editSessionFocus" class="form-control" required />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Gym Zone / Location</label>
+              <select id="editSessionZone" class="form-control">
+                <option value="Main Floor (Free Weights)">Main Floor (Free Weights)</option>
+                <option value="Powerlifting &amp; Squat Racks">Powerlifting &amp; Squat Racks</option>
+                <option value="Cardio &amp; Conditioning Loft">Cardio &amp; Conditioning Loft</option>
+                <option value="Studio 1 (Functional Fitness)">Studio 1 (Functional Fitness)</option>
+                <option value="CrossFit / Calisthenics Cage">CrossFit / Calisthenics Cage</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Session Status</label>
+              <select id="editSessionStatus" class="form-control">
+                <option value="UPCOMING">Upcoming</option>
+                <option value="IN_PROGRESS">In Progress</option>
+                <option value="COMPLETED">Completed</option>
+                <option value="CANCELLED">Cancelled</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Coaching Notes (Optional)</label>
+            <textarea id="editSessionNotes" class="form-control" rows="2"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Changes ✓</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- client runtime scripts -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="JS/api.js"></script>
   <script src="JS/dashboard.js"></script>
 </body>
 </html>

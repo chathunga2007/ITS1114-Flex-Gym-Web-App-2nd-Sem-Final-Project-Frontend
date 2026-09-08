@@ -1,808 +1,359 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Flex Gym | Train Hard. Live Strong.</title>
-
-    <meta name="description"
-        content="Flex Gym Management System - Premium fitness, training, memberships and gym services.">
-
+    <meta name="description" content="Flex Gym Management System - Premium fitness, training, memberships and gym services.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-        rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="CSS/style.css">
 </head>
-
 <body>
-
-    <!-- =========================================================
-     NAVIGATION
-========================================================= -->
-
     <header class="navbar" id="navbar">
-
         <div class="nav-container">
-
             <a href="index.html" class="brand">
-                <div class="brand-icon">
-                    F
-                </div>
-
+                <div class="brand-icon">F</div>
                 <div class="brand-text">
                     <span class="brand-name">FLEX</span>
                     <span class="brand-subtitle">FITNESS CLUB</span>
                 </div>
             </a>
 
-
             <nav class="nav-menu">
-
-                <a href="index.html" class="nav-link active">
-                    Home
-                </a>
-
-                <a href="about.html" class="nav-link">
-                    About
-                </a>
-
-                <a href="membership.html" class="nav-link">
-                    Membership
-                </a>
-
-                <a href="workout-plans.html" class="nav-link">
-                    Training
-                </a>
-
-                <a href="trainer.html" class="nav-link">
-                    Trainers
-                </a>
-
-                <a href="shop.html" class="nav-link">
-                    Shop
-                </a>
-
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="membership.html" class="nav-link">Membership</a>
+                <a href="workout-plans.html" class="nav-link">Training</a>
+                <a href="trainer.html" class="nav-link">Trainers</a>
+                <a href="shop.html" class="nav-link">Shop</a>
             </nav>
 
-
             <div class="nav-actions">
-
                 <a href="cart.html" class="btn btn-outline" style="position:relative;">
                     🛒 Cart <span class="cart-badge" data-cart-count style="background:var(--accent);color:#000;padding:2px 7px;border-radius:999px;font-size:10px;font-weight:800;margin-left:4px;">0</span>
                 </a>
-
-                <a href="login.html" class="btn btn-primary">
-                    Portal Login
-                </a>
-
+                <a href="login.html" class="btn btn-primary">Portal Login</a>
             </div>
 
-
             <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Open menu">
-
                 <span></span>
                 <span></span>
                 <span></span>
-
             </button>
-
         </div>
-
     </header>
 
-
-
-    <!-- =========================================================
-     MOBILE MENU
-========================================================= -->
-
     <div class="mobile-menu" id="mobileMenu">
-
         <a href="index.html">Home</a>
         <a href="about.html">About</a>
         <a href="membership.html">Membership</a>
         <a href="workout-plans.html">Training</a>
         <a href="shop.html">Shop</a>
-
         <div class="mobile-menu-buttons">
-
-            <a href="login.html" class="btn btn-outline">
-                Login
-            </a>
-
-            <a href="signup.html" class="btn btn-primary">
-                Join Flex
-            </a>
-
+            <a href="login.html" class="btn btn-outline">Login</a>
+            <a href="signup.html" class="btn btn-primary">Join Flex</a>
         </div>
-
     </div>
 
-
-
-    <!-- =========================================================
-     HERO SECTION
-========================================================= -->
-
     <main>
-
         <section class="hero">
-
             <div class="hero-overlay"></div>
-
             <div class="hero-container">
-
                 <div class="hero-content">
-
                     <div class="hero-badge">
                         <span class="pulse-dot"></span>
                         PREMIUM FITNESS EXPERIENCE
                     </div>
-
-
                     <h1 class="hero-title">
-
                         BUILD YOUR
                         <span>STRONGER</span>
                         SELF.
-
                     </h1>
-
-
                     <p class="hero-description">
-
                         Welcome to Flex Gym — where strength meets discipline.
                         Train with expert coaches, access premium equipment,
                         track your progress and become the best version of yourself.
-
                     </p>
-
-
                     <div class="hero-buttons">
-
                         <a href="membership.html" class="btn btn-primary btn-large">
-
                             Explore Memberships
-
                             <span class="btn-arrow">→</span>
-
                         </a>
-
-
-                        <a href="about.html" class="btn btn-glass btn-large">
-
-                            Discover Flex
-
-                        </a>
-
+                        <a href="about.html" class="btn btn-glass btn-large">Discover Flex</a>
                     </div>
-
-
                     <div class="hero-trust">
-
                         <div class="trust-item">
-
                             <strong>5+</strong>
                             <span>Years Experience</span>
-
                         </div>
-
-
                         <div class="trust-divider"></div>
-
-
                         <div class="trust-item">
-
                             <strong>1K+</strong>
                             <span>Active Members</span>
-
                         </div>
-
-
                         <div class="trust-divider"></div>
-
-
                         <div class="trust-item">
-
                             <strong>20+</strong>
                             <span>Expert Trainers</span>
-
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
-
             <div class="hero-scroll">
-
                 <span>SCROLL TO EXPLORE</span>
-
                 <div class="scroll-line"></div>
-
             </div>
-
         </section>
 
-
-
-        <!-- =========================================================
-     QUICK STATS
-========================================================= -->
-
         <section class="stats-section">
-
             <div class="container">
-
                 <div class="stats-grid">
-
                     <div class="stat-card">
-
-                        <div class="stat-icon">
-                            <span>01</span>
-                        </div>
-
+                        <div class="stat-icon"><span>01</span></div>
                         <div>
                             <h3>Modern Equipment</h3>
                             <p>Train with premium fitness equipment.</p>
                         </div>
-
                     </div>
-
-
                     <div class="stat-card">
-
-                        <div class="stat-icon">
-                            <span>02</span>
-                        </div>
-
+                        <div class="stat-icon"><span>02</span></div>
                         <div>
                             <h3>Expert Trainers</h3>
                             <p>Personalized guidance for your goals.</p>
                         </div>
-
                     </div>
-
-
                     <div class="stat-card">
-
-                        <div class="stat-icon">
-                            <span>03</span>
-                        </div>
-
+                        <div class="stat-icon"><span>03</span></div>
                         <div>
                             <h3>Smart Tracking</h3>
                             <p>Keep your membership and progress organized.</p>
                         </div>
-
                     </div>
-
-
                     <div class="stat-card">
-
-                        <div class="stat-icon">
-                            <span>04</span>
-                        </div>
-
+                        <div class="stat-icon"><span>04</span></div>
                         <div>
                             <h3>Flexible Plans</h3>
                             <p>Choose a membership that fits your lifestyle.</p>
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
         </section>
 
-
-
-        <!-- =========================================================
-     ABOUT / INTRO
-========================================================= -->
-
         <section class="intro-section">
-
             <div class="container">
-
                 <div class="section-grid">
-
                     <div class="section-image intro-image">
-
                         <div class="image-overlay-card">
-
-                            <span class="mini-label">
-                                FLEX GYM
-                            </span>
-
-                            <strong>
-                                YOUR
-                                <br>
-                                POTENTIAL.
-                            </strong>
-
+                            <span class="mini-label">FLEX GYM</span>
+                            <strong>YOUR<br>POTENTIAL.</strong>
                         </div>
-
                     </div>
-
-
                     <div class="section-content">
-
-                        <span class="section-label">
-                            WHY FLEX GYM
-                        </span>
-
-                        <h2>
-                            MORE THAN
-                            <span>A GYM.</span>
-                        </h2>
-
+                        <span class="section-label">WHY FLEX GYM</span>
+                        <h2>MORE THAN <span>A GYM.</span></h2>
                         <p>
                             Flex Gym is built for people who are serious about
                             improving themselves. Whether you are starting your
                             fitness journey or pushing towards your next personal
                             record, we provide the environment and support you need.
                         </p>
-
                         <p>
                             From flexible memberships and expert trainers to
                             personalized workout plans and smart attendance
                             management, everything is designed around your fitness
                             journey.
                         </p>
-
-
                         <a href="about.html" class="text-link">
                             Learn more about Flex
                             <span>→</span>
                         </a>
-
                     </div>
-
                 </div>
-
             </div>
-
         </section>
 
-
-
-        <!-- =========================================================
-     FEATURES
-========================================================= -->
-
         <section class="features-section">
-
             <div class="container">
-
                 <div class="section-heading centered">
-
-                    <span class="section-label">
-                        EVERYTHING YOU NEED
-                    </span>
-
-                    <h2>
-                        TRAIN <span>SMARTER.</span>
-                    </h2>
-
+                    <span class="section-label">EVERYTHING YOU NEED</span>
+                    <h2>TRAIN <span>SMARTER.</span></h2>
                     <p>
                         A complete fitness experience designed to keep you
                         motivated, organized and moving forward.
                     </p>
-
                 </div>
-
-
                 <div class="features-grid">
-
                     <article class="feature-card">
-
-                        <div class="feature-number">
-                            01
-                        </div>
-
-                        <div class="feature-icon">
-                            🏋
-                        </div>
-
-                        <h3>
-                            Premium Equipment
-                        </h3>
-
+                        <div class="feature-number">01</div>
+                        <div class="feature-icon">🏋</div>
+                        <h3>Premium Equipment</h3>
                         <p>
                             Access a wide range of modern equipment for strength,
                             cardio and functional training.
                         </p>
-
-                        <a href="about.html" class="feature-link">
-                            Explore <span>→</span>
-                        </a>
-
+                        <a href="about.html" class="feature-link">Explore <span>→</span></a>
                     </article>
 
-
                     <article class="feature-card">
-
-                        <div class="feature-number">
-                            02
-                        </div>
-
-                        <div class="feature-icon">
-                            ⚡
-                        </div>
-
-                        <h3>
-                            Personal Training
-                        </h3>
-
+                        <div class="feature-number">02</div>
+                        <div class="feature-icon">⚡</div>
+                        <h3>Personal Training</h3>
                         <p>
                             Get guidance from experienced trainers and follow
                             structured workout plans.
                         </p>
-
-                        <a href="workout-plans.html" class="feature-link">
-                            View Training <span>→</span>
-                        </a>
-
+                        <a href="workout-plans.html" class="feature-link">View Training <span>→</span></a>
                     </article>
 
-
                     <article class="feature-card">
-
-                        <div class="feature-number">
-                            03
-                        </div>
-
-                        <div class="feature-icon">
-                            📊
-                        </div>
-
-                        <h3>
-                            Fitness Tracking
-                        </h3>
-
+                        <div class="feature-number">03</div>
+                        <div class="feature-icon">📊</div>
+                        <h3>Fitness Tracking</h3>
                         <p>
                             Keep your membership, attendance and workout information
                             organized in one place.
                         </p>
-
-                        <a href="login.html" class="feature-link">
-                            Member Login <span>→</span>
-                        </a>
-
+                        <a href="login.html" class="feature-link">Member Login <span>→</span></a>
                     </article>
 
-
                     <article class="feature-card">
-
-                        <div class="feature-number">
-                            04
-                        </div>
-
-                        <div class="feature-icon">
-                            🛒
-                        </div>
-
-                        <h3>
-                            Fitness Shop
-                        </h3>
-
+                        <div class="feature-number">04</div>
+                        <div class="feature-icon">🛒</div>
+                        <h3>Fitness Shop</h3>
                         <p>
                             Browse gym products and place orders through the Flex
                             online shop.
                         </p>
-
-                        <a href="shop.html" class="feature-link">
-                            Visit Shop <span>→</span>
-                        </a>
-
+                        <a href="shop.html" class="feature-link">Visit Shop <span>→</span></a>
                     </article>
-
                 </div>
-
             </div>
-
         </section>
 
-
-
-        <!-- =========================================================
-     MEMBERSHIP CTA
-========================================================= -->
-
         <section class="membership-cta">
-
             <div class="cta-background"></div>
-
             <div class="container">
-
                 <div class="cta-content">
-
-                    <span class="section-label">
-                        READY TO START?
-                    </span>
-
-                    <h2>
-                        YOUR NEXT
-                        <span>LEVEL</span>
-                        STARTS HERE.
-                    </h2>
-
+                    <span class="section-label">READY TO START?</span>
+                    <h2>YOUR NEXT <span>LEVEL</span> STARTS HERE.</h2>
                     <p>
                         Choose your membership, walk through our doors and
                         start building the stronger version of yourself.
                     </p>
-
-
                     <div class="cta-buttons">
-
                         <a href="membership.html" class="btn btn-primary btn-large">
-
                             View Membership Plans
                             <span class="btn-arrow">→</span>
-
                         </a>
-
-                        <a href="signup.html" class="btn btn-glass btn-large">
-
-                            Create Account
-
-                        </a>
-
+                        <a href="signup.html" class="btn btn-glass btn-large">Create Account</a>
                     </div>
-
                 </div>
-
             </div>
-
         </section>
-
-
-
-        <!-- =========================================================
-     SHOP PREVIEW
-========================================================= -->
 
         <section class="shop-preview">
-
             <div class="container">
-
                 <div class="section-heading">
-
                     <div>
-
-                        <span class="section-label">
-                            FLEX SHOP
-                        </span>
-
-                        <h2>
-                            TRAIN.
-                            <span>EQUIP.</span>
-                            REPEAT.
-                        </h2>
-
+                        <span class="section-label">FLEX SHOP</span>
+                        <h2>TRAIN. <span>EQUIP.</span> REPEAT.</h2>
                     </div>
-
-
-                    <a href="shop.html" class="btn btn-outline-dark">
-                        View Shop →
-                    </a>
-
+                    <a href="shop.html" class="btn btn-outline-dark">View Shop →</a>
                 </div>
-
-
                 <div class="shop-info">
-
                     <div class="shop-info-item">
-
                         <span class="shop-icon">01</span>
-
                         <div>
                             <h3>Fitness Products</h3>
-                            <p>
-                                Browse products available through the Flex Gym shop.
-                            </p>
+                            <p>Browse products available through the Flex Gym shop.</p>
                         </div>
-
                     </div>
-
-
                     <div class="shop-info-item">
-
                         <span class="shop-icon">02</span>
-
                         <div>
                             <h3>Easy Ordering</h3>
-                            <p>
-                                Add products to your cart and place your order easily.
-                            </p>
+                            <p>Add products to your cart and place your order easily.</p>
                         </div>
-
                     </div>
-
-
                     <div class="shop-info-item">
-
                         <span class="shop-icon">03</span>
-
                         <div>
                             <h3>Order Tracking</h3>
-                            <p>
-                                Members can view their previous orders from their
-                                dashboard.
-                            </p>
+                            <p>Members can view their previous orders from their dashboard.</p>
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
         </section>
-
-
-
-        <!-- =========================================================
-     FINAL CTA
-========================================================= -->
 
         <section class="final-cta">
-
             <div class="container">
-
                 <div class="final-cta-inner">
-
                     <div>
-
-                        <span class="section-label">
-                            FLEX GYM
-                        </span>
-
-                        <h2>
-                            STOP WAITING.
-                            <br>
-                            <span>START TRAINING.</span>
-                        </h2>
-
+                        <span class="section-label">FLEX GYM</span>
+                        <h2>STOP WAITING.<br><span>START TRAINING.</span></h2>
                     </div>
-
-
                     <a href="signup.html" class="btn btn-primary btn-large">
-
                         Join Flex Today
                         <span class="btn-arrow">→</span>
-
                     </a>
-
                 </div>
-
             </div>
-
         </section>
-
     </main>
 
-
-
-    <!-- =========================================================
-     FOOTER
-========================================================= -->
-
     <footer class="footer">
-
         <div class="container">
-
             <div class="footer-grid">
-
                 <div class="footer-brand">
-
                     <a href="index.html" class="brand">
-
-                        <div class="brand-icon">
-                            F
-                        </div>
-
+                        <div class="brand-icon">F</div>
                         <div class="brand-text">
-
-                            <span class="brand-name">
-                                FLEX
-                            </span>
-
-                            <span class="brand-subtitle">
-                                FITNESS CLUB
-                            </span>
-
+                            <span class="brand-name">FLEX</span>
+                            <span class="brand-subtitle">FITNESS CLUB</span>
                         </div>
-
                     </a>
-
-
                     <p>
                         Train harder. Live stronger.
                         Build your best version at Flex Gym.
                     </p>
-
                 </div>
 
-
                 <div class="footer-column">
-
                     <h4>Explore</h4>
-
                     <a href="about.html">About Us</a>
                     <a href="membership.html">Memberships</a>
                     <a href="workout-plans.html">Training</a>
                     <a href="shop.html">Shop</a>
-
                 </div>
 
-
                 <div class="footer-column">
-
                     <h4>Account</h4>
-
                     <a href="login.html">Login</a>
                     <a href="signup.html">Create Account</a>
-
                 </div>
-
 
                 <div class="footer-column">
-
                     <h4>Contact</h4>
-
-                    <a href="mailto:info@flexgym.lk">
-                        info@flexgym.lk
-                    </a>
-
-                    <a href="tel:+94112345678">
-                        +94 11 234 5678
-                    </a>
-
-                    <span>
-                        Colombo, Sri Lanka
-                    </span>
-
+                    <a href="mailto:info@flexgym.lk">info@flexgym.lk</a>
+                    <a href="tel:+94112345678">+94 11 234 5678</a>
+                    <span>Colombo, Sri Lanka</span>
                 </div>
-
             </div>
-
 
             <div class="footer-bottom">
-
-                <span>
-                    © 2026 Flex Gym. All rights reserved.
-                </span>
-
-                <span>
-                    Flex Gym Management System
-                </span>
-
+                <span>© 2026 Flex Gym. All rights reserved.</span>
+                <span>Flex Gym Management System</span>
             </div>
-
         </div>
-
     </footer>
 
-
-
-    <!-- =========================================================
-     JAVASCRIPT
-========================================================= -->
-
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="JS/api.js"></script>
     <script src="JS/cart.js"></script>
     <script src="JS/index.js"></script>
-
 </body>
-
 </html>

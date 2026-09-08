@@ -5,376 +5,173 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Your Shopping Cart | Flex Gym</title>
 
+  <!-- typography & main stylesheet -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="CSS/style.css">
-  <link rel="stylesheet" href="CSS/dashboard.css">
-
-  <style>
-    .cart-page {
-      min-height: 100vh;
-      background: #080808;
-      color: #fff;
-    }
-
-    .cart-hero {
-      padding: 130px 6% 50px;
-      background: linear-gradient(rgba(0,0,0,.65), rgba(0,0,0,.95)),
-                  url("https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=2000&q=90") center / cover no-repeat;
-    }
-
-    .cart-hero-inner {
-      max-width: 1250px;
-      margin: auto;
-    }
-
-    .cart-hero h1 {
-      font-size: clamp(40px, 6vw, 75px);
-      line-height: .95;
-      font-weight: 950;
-      letter-spacing: -3px;
-      text-transform: uppercase;
-      margin-top: 10px;
-    }
-
-    .cart-section {
-      padding: 60px 6% 100px;
-      max-width: 1250px;
-      margin: auto;
-    }
-
-    .cart-layout {
-      display: grid;
-      grid-template-columns: 1fr 380px;
-      gap: 35px;
-      align-items: start;
-    }
-
-    .cart-items-card {
-      background: #111713;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 24px;
-    }
-
-    .cart-item-row {
-      display: grid;
-      grid-template-columns: 80px 1fr auto auto auto;
-      gap: 18px;
-      align-items: center;
-      padding: 18px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .cart-item-row:last-child {
-      border-bottom: none;
-    }
-
-    .cart-item-img {
-      width: 80px;
-      height: 80px;
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      background: #18221b;
-    }
-
-    .cart-item-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .cart-item-cat {
-      font-size: 10px;
-      font-weight: 700;
-      color: var(--lime);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .cart-item-info h4 {
-      font-size: 15px;
-      margin: 3px 0 5px;
-    }
-
-    .cart-item-price {
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-
-    .cart-item-qty {
-      display: flex;
-      align-items: center;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      overflow: hidden;
-      background: var(--bg-surface-2);
-    }
-
-    .qty-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-main);
-      width: 28px;
-      height: 28px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    .qty-btn:hover {
-      background: var(--lime);
-      color: #000;
-    }
-
-    .qty-num {
-      width: 28px;
-      text-align: center;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .cart-item-total {
-      font-size: 15px;
-      font-weight: 800;
-      color: var(--lime);
-      min-width: 90px;
-      text-align: right;
-    }
-
-    .cart-item-remove {
-      background: transparent;
-      border: none;
-      color: var(--text-dim);
-      font-size: 16px;
-      cursor: pointer;
-      padding: 6px;
-    }
-
-    .cart-item-remove:hover {
-      color: var(--danger);
-    }
-
-    .order-summary-card {
-      background: #111713;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 26px;
-    }
-
-    .summary-title {
-      font-size: 18px;
-      font-weight: 800;
-      margin-bottom: 20px;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 12px;
-    }
-
-    .summary-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13px;
-      margin-bottom: 12px;
-      color: var(--text-muted);
-    }
-
-    .summary-row strong {
-      color: var(--text-main);
-    }
-
-    .summary-total-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 18px;
-      font-weight: 800;
-      margin-top: 18px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border);
-      color: var(--lime);
-    }
-
-    .empty-cart-box {
-      text-align: center;
-      padding: 60px 20px;
-    }
-
-    .empty-cart-icon {
-      font-size: 50px;
-      margin-bottom: 15px;
-    }
-
-    @media (max-width: 900px) {
-      .cart-layout {
-        grid-template-columns: 1fr;
-      }
-      .cart-item-row {
-        grid-template-columns: 60px 1fr;
-        gap: 12px;
-      }
-    }
-  </style>
 </head>
-
 <body>
-<div class="cart-page">
-  
-  <!-- GLOBAL NAVBAR -->
-  <header class="navbar" id="navbar">
-    <div class="nav-container">
-      <a href="index.html" class="brand">
-        <div class="brand-icon">F</div>
-        <div class="brand-text">
-          <span class="brand-name">FLEX</span>
-          <span class="brand-subtitle">FITNESS CLUB</span>
-        </div>
-      </a>
-
-      <nav class="nav-menu">
-        <a href="index.html" class="nav-link">Home</a>
-        <a href="about.html" class="nav-link">About</a>
-        <a href="membership.html" class="nav-link">Membership</a>
-        <a href="workout-plans.html" class="nav-link">Training</a>
-        <a href="trainer.html" class="nav-link">Trainers</a>
-        <a href="shop.html" class="nav-link">Shop</a>
-      </nav>
-
-      <div class="nav-actions">
-        <a href="cart.html" class="btn btn-outline active">
-          🛒 Cart <span class="cart-badge" data-cart-count style="background:var(--lime);color:#000;padding:2px 7px;border-radius:999px;font-size:10px;font-weight:800;margin-left:4px;">0</span>
+  <div class="cart-page">
+    <!-- main site navbar -->
+    <header class="navbar" id="navbar">
+      <div class="nav-container">
+        <a href="index.html" class="brand">
+          <div class="brand-icon">F</div>
+          <div class="brand-text">
+            <span class="brand-name">FLEX</span>
+            <span class="brand-subtitle">FITNESS CLUB</span>
+          </div>
         </a>
-        <a href="login.html" class="btn btn-primary">Portal Login</a>
-      </div>
 
-      <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Open menu">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </header>
+        <nav class="nav-menu">
+          <a href="index.html" class="nav-link">Home</a>
+          <a href="about.html" class="nav-link">About</a>
+          <a href="membership.html" class="nav-link">Membership</a>
+          <a href="workout-plans.html" class="nav-link">Training</a>
+          <a href="trainer.html" class="nav-link">Trainers</a>
+          <a href="shop.html" class="nav-link">Shop</a>
+        </nav>
 
-  <!-- HERO -->
-  <section class="cart-hero">
-    <div class="cart-hero-inner">
-      <span style="color:var(--lime); font-size:12px; font-weight:800; letter-spacing:3px; text-transform:uppercase;">Shopping Basket</span>
-      <h1>Your Cart</h1>
-    </div>
-  </section>
-
-  <!-- CONTENT -->
-  <section class="cart-section">
-    
-    <!-- EMPTY STATE -->
-    <div id="cartEmptyState" class="cart-items-card empty-cart-box" style="display:none;">
-      <div class="empty-cart-icon">🛒</div>
-      <h2>Your Cart Is Empty</h2>
-      <p style="color:var(--text-muted); margin: 10px 0 24px;">Looks like you haven't added any supplements or gear yet.</p>
-      <a href="shop.html" class="btn btn-primary">Start Shopping →</a>
-    </div>
-
-    <!-- CART GRID -->
-    <div class="cart-layout" id="cartContentArea">
-      
-      <!-- ITEMS LIST -->
-      <div class="cart-items-card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:1px solid var(--border); padding-bottom:12px;">
-          <h3 style="font-size:16px; font-weight:800; text-transform:uppercase;">Review Items</h3>
-          <button class="btn btn-secondary" style="font-size:11px; padding:4px 10px;" onclick="FlexCart.clearCart()">Clear Cart</button>
+        <div class="nav-actions">
+          <a href="cart.html" class="btn btn-outline active">
+            🛒 Cart <span class="cart-badge" data-cart-count style="background:var(--lime);color:#000;padding:2px 7px;border-radius:999px;font-size:10px;font-weight:800;margin-left:4px;">0</span>
+          </a>
+          <a href="login.html" class="btn btn-primary">Portal Login</a>
         </div>
 
-        <div id="cartItemsList">
-          <!-- Populated by JS/cart.js -->
-        </div>
-      </div>
-
-      <!-- ORDER SUMMARY -->
-      <aside class="order-summary-card">
-        <h3 class="summary-title">Order Summary</h3>
-
-        <div class="summary-row">
-          <span>Subtotal</span>
-          <strong id="cartSubtotal">Rs. 0</strong>
-        </div>
-
-        <div class="summary-row">
-          <span>Islandwide Delivery</span>
-          <strong id="cartShipping">Rs. 500</strong>
-        </div>
-
-        <div class="summary-row">
-          <span>Member Discount</span>
-          <strong style="color:var(--lime);">Applied</strong>
-        </div>
-
-        <div class="summary-total-row">
-          <span>Total Amount</span>
-          <span id="cartTotal">Rs. 0</span>
-        </div>
-
-        <button class="btn btn-primary" style="width:100%; margin-top:24px; padding:14px; font-size:14px;" onclick="openCheckoutModal()">
-          Proceed To Checkout 💳
+        <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Open menu">
+          <span></span><span></span><span></span>
         </button>
-
-        <a href="shop.html" style="display:block; text-align:center; color:var(--text-muted); font-size:12px; margin-top:15px; text-decoration:none;">
-          ← Continue Shopping
-        </a>
-      </aside>
-
-    </div>
-
-  </section>
-
-</div>
-
-<!-- CHECKOUT MODAL -->
-<div class="modal-backdrop" id="modalCheckout">
-  <div class="modal-box">
-    <div class="modal-header">
-      <h3>Complete Your Order</h3>
-      <button class="modal-close" onclick="document.getElementById('modalCheckout').classList.remove('show')">&times;</button>
-    </div>
-    <form onsubmit="event.preventDefault(); document.getElementById('modalCheckout').classList.remove('show'); FlexCart.clearCart(); showToast('Order #ORD-' + Math.floor(1000 + Math.random()*9000) + ' placed successfully! Check Member Hub.'); setTimeout(() => window.location.href='member-dashboard.html#orders', 1200);">
-      <div class="modal-body">
-        <div class="form-group">
-          <label class="form-label">Full Name</label>
-          <input type="text" class="form-control" value="Dineth Perera" required />
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Phone</label>
-            <input type="tel" class="form-control" value="+94 77 123 4567" required />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Delivery City</label>
-            <input type="text" class="form-control" value="Colombo 03" required />
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Delivery Address</label>
-          <textarea class="form-control" rows="2" required>No. 45, Galle Road, Colombo 03</textarea>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Payment Method</label>
-          <select class="form-control">
-            <option>Cash on Delivery (Islandwide)</option>
-            <option>Credit / Debit Card (Visa, Master)</option>
-            <option>Flex Member Account Balance</option>
-          </select>
-        </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" onclick="document.getElementById('modalCheckout').classList.remove('show')">Cancel</button>
-        <button type="submit" class="btn btn-primary">Confirm & Place Order ✓</button>
+    </header>
+
+    <!-- cart hero title -->
+    <section class="cart-hero">
+      <div class="cart-hero-inner">
+        <span style="color:var(--lime); font-size:12px; font-weight:800; letter-spacing:3px; text-transform:uppercase;">Shopping Basket</span>
+        <h1>Your Cart</h1>
       </div>
-    </form>
+    </section>
+
+    <!-- cart view container -->
+    <section class="cart-section">
+      <!-- empty cart fallback -->
+      <div id="cartEmptyState" class="cart-items-card empty-cart-box" style="display:none;">
+        <div class="empty-cart-icon">🛒</div>
+        <h2>Your Cart Is Empty</h2>
+        <p style="color:var(--text-muted); margin: 10px 0 24px;">Looks like you haven't added any supplements or gear yet.</p>
+        <a href="shop.html" class="btn btn-primary">Start Shopping →</a>
+      </div>
+
+      <!-- active cart checkout layout -->
+      <div class="cart-layout" id="cartContentArea">
+        <!-- selected products list -->
+        <div class="cart-items-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:1px solid var(--border); padding-bottom:12px;">
+            <h3 style="font-size:16px; font-weight:800; text-transform:uppercase;">Review Items</h3>
+            <button class="btn btn-secondary" style="font-size:11px; padding:4px 10px;" onclick="FlexCart.clearCart()">Clear Cart</button>
+          </div>
+
+          <!-- items dynamically rendered by cart.js -->
+          <div id="cartItemsList"></div>
+        </div>
+
+        <!-- pricing calculation summary -->
+        <aside class="order-summary-card">
+          <h3 class="summary-title">Order Summary</h3>
+
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <strong id="cartSubtotal">Rs. 0</strong>
+          </div>
+
+          <div class="summary-row">
+            <span>Islandwide Delivery</span>
+            <strong id="cartShipping">Rs. 500</strong>
+          </div>
+
+          <div class="summary-row">
+            <span>Member Discount</span>
+            <strong style="color:var(--lime);">Applied</strong>
+          </div>
+
+          <div class="summary-total-row">
+            <span>Total Amount</span>
+            <span id="cartTotal">Rs. 0</span>
+          </div>
+
+          <button class="btn btn-primary" style="width:100%; margin-top:24px; padding:14px; font-size:14px;" onclick="openCheckoutModal()">
+            Proceed To Checkout 💳
+          </button>
+
+          <a href="shop.html" style="display:block; text-align:center; color:var(--text-muted); font-size:12px; margin-top:15px; text-decoration:none;">
+            ← Continue Shopping
+          </a>
+        </aside>
+      </div>
+    </section>
   </div>
-</div>
 
-<script src="JS/cart.js"></script>
-<script src="JS/index.js"></script>
-<script>
-  function openCheckoutModal() {
-    document.getElementById('modalCheckout').classList.add('show');
-  }
-</script>
+  <!-- checkout delivery & payment modal -->
+  <div class="modal-backdrop" id="modalCheckout">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Complete Your Order</h3>
+        <button class="modal-close" onclick="document.getElementById('modalCheckout').classList.remove('show')">&times;</button>
+      </div>
+      <form id="formCheckout">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" id="checkoutFullName" class="form-control" value="Member Customer" required />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Phone</label>
+              <input type="tel" id="checkoutPhone" class="form-control" value="+94 77 123 4567" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Delivery City</label>
+              <input type="text" id="checkoutCity" class="form-control" value="Colombo 03" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Delivery Address</label>
+            <textarea id="checkoutAddress" class="form-control" rows="2" required>No. 45, Galle Road, Colombo 03</textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Payment Method</label>
+            <select id="checkoutPaymentMethod" class="form-control">
+              <option value="CASH">Cash on Delivery (Islandwide)</option>
+              <option value="CARD">Credit / Debit Card (Visa, Master)</option>
+              <option value="ACCOUNT">Flex Member Account Balance</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="document.getElementById('modalCheckout').classList.remove('show')">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btnConfirmOrder">Confirm & Place Order ✓</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- checkout modal helper -->
+  <script>
+    function openCheckoutModal() {
+      if (window.UIView && typeof UIView.openModal === 'function') {
+        UIView.openModal('modalCheckout');
+      } else {
+        document.getElementById('modalCheckout').classList.add('show');
+      }
+    }
+  </script>
+
+  <!-- app scripts -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="JS/api.js"></script>
+  <script src="JS/cart.js"></script>
+  <script src="JS/index.js"></script>
 </body>
 </html>

@@ -1,504 +1,92 @@
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Login | Flex Gym</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-        rel="stylesheet">
-
-    <link rel="stylesheet" href="CSS/style.css">
-
-    <style>
-        .auth-page {
-            min-height: 100vh;
-            display: grid;
-            grid-template-columns: 1.05fr 0.95fr;
-            background: #080808;
-        }
-
-        .auth-visual {
-            position: relative;
-            min-height: 100vh;
-            display: flex;
-            align-items: flex-end;
-            padding: 70px;
-            overflow: hidden;
-
-            background:
-                linear-gradient(0deg,
-                    rgba(0, 0, 0, .9),
-                    rgba(0, 0, 0, .15)),
-                url("https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=1600&q=85") center / cover no-repeat;
-        }
-
-        .auth-visual-content {
-            position: relative;
-            z-index: 2;
-            max-width: 600px;
-        }
-
-        .auth-visual-content h1 {
-            font-size: clamp(55px, 7vw, 95px);
-            line-height: .88;
-            letter-spacing: -5px;
-            font-weight: 900;
-        }
-
-        .auth-visual-content h1 span {
-            display: block;
-            color: var(--accent);
-            font-style: italic;
-        }
-
-        .auth-visual-content p {
-            max-width: 480px;
-            margin-top: 25px;
-            color: #aaa;
-            font-size: 14px;
-            line-height: 1.8;
-        }
-
-        .auth-panel {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            padding: 50px;
-            background: #0c0c0c;
-        }
-
-        .auth-box {
-            width: min(100%, 440px);
-        }
-
-        .auth-logo {
-            margin-bottom: 55px;
-        }
-
-        .auth-heading {
-            margin-bottom: 35px;
-        }
-
-        .auth-heading h2 {
-            font-size: 42px;
-            line-height: 1;
-            letter-spacing: -2px;
-            font-weight: 900;
-        }
-
-        .auth-heading p {
-            margin-top: 12px;
-            color: #777;
-            font-size: 13px;
-        }
-
-        .auth-form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .form-group label {
-            color: #aaa;
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-        }
-
-        .form-group input {
-            width: 100%;
-            height: 54px;
-
-            padding: 0 17px;
-
-            border: 1px solid rgba(255, 255, 255, .12);
-            border-radius: 7px;
-
-            outline: none;
-
-            background: #151515;
-            color: white;
-
-            font-size: 13px;
-
-            transition: .3s ease;
-        }
-
-        .form-group input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(215, 255, 0, .07);
-        }
-
-        .password-wrapper {
-            position: relative;
-        }
-
-        .password-wrapper input {
-            padding-right: 65px;
-        }
-
-        .password-toggle {
-            position: absolute;
-
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-
-            background: transparent;
-            color: #777;
-
-            font-size: 10px;
-            font-weight: 800;
-
-            text-transform: uppercase;
-        }
-
-        .password-toggle:hover {
-            color: var(--accent);
-        }
-
-        .auth-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            margin-top: -4px;
-        }
-
-        .remember-me {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-
-            color: #777;
-            font-size: 11px;
-        }
-
-        .remember-me input {
-            accent-color: var(--accent);
-        }
-
-        .forgot-link {
-            color: var(--accent);
-            font-size: 11px;
-            font-weight: 700;
-        }
-
-        .auth-submit {
-            width: 100%;
-            height: 57px;
-
-            margin-top: 5px;
-
-            border-radius: 7px;
-
-            background: var(--accent);
-            color: #080808;
-
-            font-size: 12px;
-            font-weight: 900;
-
-            letter-spacing: .5px;
-
-            transition: .3s ease;
-        }
-
-        .auth-submit:hover {
-            background: white;
-            transform: translateY(-2px);
-        }
-
-        .auth-submit:disabled {
-            opacity: .6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .auth-message {
-            display: none;
-
-            padding: 12px 14px;
-
-            border-radius: 6px;
-
-            font-size: 11px;
-            line-height: 1.5;
-        }
-
-        .auth-message.show {
-            display: block;
-        }
-
-        .auth-message.error {
-            background: rgba(255, 70, 70, .08);
-            border: 1px solid rgba(255, 70, 70, .2);
-            color: #ff8585;
-        }
-
-        .auth-message.success {
-            background: rgba(215, 255, 0, .08);
-            border: 1px solid rgba(215, 255, 0, .2);
-            color: var(--accent);
-        }
-
-        .auth-switch {
-            margin-top: 30px;
-
-            text-align: center;
-
-            color: #666;
-            font-size: 12px;
-        }
-
-        .auth-switch a {
-            color: var(--accent);
-            font-weight: 800;
-        }
-
-        .auth-back {
-            position: absolute;
-
-            top: 28px;
-            left: 35px;
-
-            color: #777;
-
-            font-size: 11px;
-            font-weight: 700;
-
-            z-index: 5;
-
-            transition: .3s ease;
-        }
-
-        .auth-back:hover {
-            color: white;
-        }
-
-        @media (max-width: 850px) {
-
-            .auth-page {
-                grid-template-columns: 1fr;
-            }
-
-            .auth-visual {
-                display: none;
-            }
-
-            .auth-panel {
-                min-height: 100vh;
-                padding: 35px 7%;
-            }
-
-            .auth-logo {
-                margin-bottom: 45px;
-            }
-        }
-
-        @media (max-width: 480px) {
-
-            .auth-panel {
-                padding: 30px 6%;
-            }
-
-            .auth-heading h2 {
-                font-size: 36px;
-            }
-
-            .auth-row {
-                align-items: flex-start;
-                flex-direction: column;
-                gap: 12px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Flex Gym</title>
+
+  <!-- typography & auth stylesheet -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="CSS/style.css">
 </head>
-
 <body>
+  <div class="auth-page">
+    <!-- left visual banner -->
+    <section class="auth-visual">
+      <a href="index.html" class="auth-back">← Back to Flex Gym</a>
 
-    <div class="auth-page">
+      <div class="auth-visual-content">
+        <span class="section-label">WELCOME BACK</span>
+        <h1>GET BACK <span>TO WORK.</span></h1>
+        <p>
+          Your fitness journey doesn't stop.
+          Log in to manage your membership, track attendance,
+          view workout plans and continue your progress.
+        </p>
+      </div>
+    </section>
 
-        <!-- =====================================================
-         LEFT VISUAL
-    ====================================================== -->
-
-        <section class="auth-visual">
-
-            <a href="index.html" class="auth-back">
-                ← Back to Flex Gym
-            </a>
-
-            <div class="auth-visual-content">
-
-                <span class="section-label">
-                    WELCOME BACK
-                </span>
-
-                <h1>
-                    GET BACK
-                    <span>TO WORK.</span>
-                </h1>
-
-                <p>
-                    Your fitness journey doesn't stop.
-                    Log in to manage your membership, track attendance,
-                    view workout plans and continue your progress.
-                </p>
-
+    <!-- login form panel -->
+    <section class="auth-panel">
+      <div class="auth-box">
+        <!-- brand header -->
+        <div class="auth-logo">
+          <a href="index.html" class="brand">
+            <div class="brand-icon">F</div>
+            <div class="brand-text">
+              <span class="brand-name">FLEX</span>
+              <span class="brand-subtitle">FITNESS CLUB</span>
             </div>
+          </a>
+        </div>
 
-        </section>
+        <div class="auth-heading">
+          <h2>Welcome back.</h2>
+          <p>Sign in to your Flex Gym account.</p>
+        </div>
 
+        <!-- server response feedback container -->
+        <div id="authMessage" class="auth-message"></div>
 
-        <!-- =====================================================
-         LOGIN PANEL
-    ====================================================== -->
+        <!-- user credentials form -->
+        <form id="loginForm" class="auth-form">
+          <div class="form-group">
+            <label for="loginEmail">Email Address</label>
+            <input type="email" id="loginEmail" name="email" placeholder="you@example.com" autocomplete="email" required>
+          </div>
 
-        <section class="auth-panel">
-
-            <div class="auth-box">
-
-                <div class="auth-logo">
-
-                    <a href="index.html" class="brand">
-
-                        <div class="brand-icon">
-                            F
-                        </div>
-
-                        <div class="brand-text">
-
-                            <span class="brand-name">
-                                FLEX
-                            </span>
-
-                            <span class="brand-subtitle">
-                                FITNESS CLUB
-                            </span>
-
-                        </div>
-
-                    </a>
-
-                </div>
-
-
-                <div class="auth-heading">
-
-                    <h2>
-                        Welcome back.
-                    </h2>
-
-                    <p>
-                        Sign in to your Flex Gym account.
-                    </p>
-
-                </div>
-
-
-                <div id="authMessage" class="auth-message">
-                </div>
-
-
-                <form id="loginForm" class="auth-form">
-
-                    <div class="form-group">
-
-                        <label for="email">
-                            Email Address
-                        </label>
-
-                        <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email"
-                            required>
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label for="password">
-                            Password
-                        </label>
-
-                        <div class="password-wrapper">
-
-                            <input type="password" id="password" name="password" placeholder="Enter your password"
-                                autocomplete="current-password" required>
-
-                            <button type="button" class="password-toggle" id="passwordToggle">
-
-                                Show
-
-                            </button>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="auth-row">
-
-                        <label class="remember-me">
-
-                            <input type="checkbox" id="rememberMe">
-
-                            Remember me
-
-                        </label>
-
-
-                        <a href="#" class="forgot-link" id="forgotPassword">
-
-                            Forgot password?
-
-                        </a>
-
-                    </div>
-
-
-                    <button type="submit" class="auth-submit" id="loginButton">
-
-                        SIGN IN TO FLEX →
-
-                    </button>
-
-                </form>
-
-
-                <div class="auth-switch">
-
-                    Don't have an account?
-
-                    <a href="signup.html">
-                        Create one
-                    </a>
-
-                </div>
-
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <div class="password-wrapper">
+              <input type="password" id="loginPassword" name="password" placeholder="Enter your password" autocomplete="current-password" required>
+              <button type="button" class="password-toggle" id="passwordToggle">Show</button>
             </div>
+          </div>
 
-        </section>
+          <div class="auth-row">
+            <label class="remember-me">
+              <input type="checkbox" id="rememberMe"> Remember me
+            </label>
+            <a href="#" class="forgot-link" id="forgotPassword">Forgot password?</a>
+          </div>
 
-    </div>
+          <button type="submit" class="auth-submit" id="loginButton">
+            SIGN IN TO FLEX →
+          </button>
+        </form>
 
+        <div class="auth-switch">
+          Don't have an account? <a href="signup.html">Create one</a>
+        </div>
+      </div>
+    </section>
+  </div>
 
-    <script src="JS/auth.js"></script>
-
+  <!-- client scripts -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="JS/api.js"></script>
+  <script src="JS/login.js"></script>
 </body>
-
 </html>

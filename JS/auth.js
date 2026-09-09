@@ -48,7 +48,11 @@ function handleLogin() {
     const rememberMe = $("#rememberMe").is(":checked");
 
     if (!email || !password) {
-        alert("Please enter both email and password.");
+        if (window.FlexAlert) {
+            FlexAlert.warning("Missing Fields", "Please enter both email and password.");
+        } else {
+            alert("Please enter both email and password.");
+        }
         return;
     }
 
@@ -119,18 +123,32 @@ function handleLogin() {
                             }
                         }
                         isAuthSubmitting = false;
-                        alert("Login Successfully!");
-                        redirectUser(role);
+                        if (window.FlexAlert) {
+                            FlexAlert.success("Login Successful! ⚡", "Welcome back to Flex Gym.", { timer: 1400 }).then(() => {
+                                redirectUser(role);
+                            });
+                        } else {
+                            redirectUser(role);
+                        }
                     },
                     error: function() {
                         isAuthSubmitting = false;
-                        alert("Login Successfully!");
-                        redirectUser(role || "ROLE_MEMBER");
+                        if (window.FlexAlert) {
+                            FlexAlert.success("Login Successful! ⚡", "Welcome back to Flex Gym.", { timer: 1400 }).then(() => {
+                                redirectUser(role || "ROLE_MEMBER");
+                            });
+                        } else {
+                            redirectUser(role || "ROLE_MEMBER");
+                        }
                     }
                 });
             } else {
                 isAuthSubmitting = false;
-                alert("Login response did not contain an authentication token.");
+                if (window.FlexAlert) {
+                    FlexAlert.error("Login Failed", "Authentication token was not returned by the server.");
+                } else {
+                    alert("Login response did not contain an authentication token.");
+                }
                 loginBtn.prop("disabled", false).text("SIGN IN TO FLEX →");
             }
         },
@@ -139,13 +157,25 @@ function handleLogin() {
             loginBtn.prop("disabled", false).text("SIGN IN TO FLEX →");
 
             if (xhr.status === 401 || xhr.status === 403) {
-                alert("Invalid Credentials");
+                if (window.FlexAlert) {
+                    FlexAlert.error("Invalid Credentials", "Incorrect email or password.");
+                } else {
+                    alert("Invalid Credentials");
+                }
                 messageEl.addClass("show error").text("Invalid email or password.");
             } else if (xhr.status === 404) {
-                alert("User not found with provided email.");
+                if (window.FlexAlert) {
+                    FlexAlert.warning("User Not Found", "No account found with this email.");
+                } else {
+                    alert("User not found with provided email.");
+                }
                 messageEl.addClass("show error").text("No account found with this email.");
             } else {
-                alert("Login failed. Please verify the backend server is running on port 8080.");
+                if (window.FlexAlert) {
+                    FlexAlert.error("Server Error", "Unable to connect to authentication server on port 8080.");
+                } else {
+                    alert("Login failed. Please verify the backend server is running on port 8080.");
+                }
                 messageEl.addClass("show error").text("Unable to connect to authentication server.");
             }
         }
@@ -168,19 +198,35 @@ function handleSignup() {
     const terms = $("#terms").is(":checked");
 
     if (!fullName || !phone || !email || !password) {
-        alert("Please fill all required fields.");
+        if (window.FlexAlert) {
+            FlexAlert.warning("Required Fields", "Please fill in all required fields.");
+        } else {
+            alert("Please fill all required fields.");
+        }
         return;
     }
     if (password.length < 8) {
-        alert("Password must contain at least 8 characters.");
+        if (window.FlexAlert) {
+            FlexAlert.warning("Weak Password", "Password must contain at least 8 characters.");
+        } else {
+            alert("Password must contain at least 8 characters.");
+        }
         return;
     }
     if (password !== confirmPassword) {
-        alert("Passwords do not match.");
+        if (window.FlexAlert) {
+            FlexAlert.warning("Password Mismatch", "Passwords do not match.");
+        } else {
+            alert("Passwords do not match.");
+        }
         return;
     }
     if (!terms) {
-        alert("Please accept the Terms & Conditions.");
+        if (window.FlexAlert) {
+            FlexAlert.warning("Terms Required", "Please accept the Terms & Conditions.");
+        } else {
+            alert("Please accept the Terms & Conditions.");
+        }
         return;
     }
 
@@ -219,21 +265,39 @@ function handleSignup() {
         },
         success: function() {
             isAuthSubmitting = false;
-            alert("User registered successfully!");
-            window.location.href = "login.html";
+            if (window.FlexAlert) {
+                FlexAlert.success("Account Created! 🎉", "User registered successfully! Please sign in to continue.", { timer: 2500 }).then(() => {
+                    window.location.href = "login.html";
+                });
+            } else {
+                alert("User registered successfully!");
+                window.location.href = "login.html";
+            }
         },
         error: function(xhr) {
             isAuthSubmitting = false;
             signupBtn.prop("disabled", false).text("CREATE MY FLEX ACCOUNT →");
 
             if (xhr.status === 409) {
-                alert("Username / Email already exists.");
+                if (window.FlexAlert) {
+                    FlexAlert.warning("Account Exists", "An account with this email address already exists.");
+                } else {
+                    alert("Username / Email already exists.");
+                }
                 messageEl.addClass("show error").text("An account with this email address already exists.");
             } else if (xhr.status === 400) {
-                alert("Registration failed: Please check the entered information.");
+                if (window.FlexAlert) {
+                    FlexAlert.error("Invalid Details", "Please check the entered information.");
+                } else {
+                    alert("Registration failed: Please check the entered information.");
+                }
                 messageEl.addClass("show error").text("Invalid registration details provided.");
             } else {
-                alert("Registration failed. Please try again.");
+                if (window.FlexAlert) {
+                    FlexAlert.error("Registration Failed", "Server error during registration. Please try again.");
+                } else {
+                    alert("Registration failed. Please try again.");
+                }
                 messageEl.addClass("show error").text("Server error during registration. Please try again.");
             }
         }

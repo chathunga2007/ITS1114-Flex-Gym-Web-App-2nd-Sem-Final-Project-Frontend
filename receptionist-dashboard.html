@@ -5,18 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Receptionist Desk | Flex Gym</title>
 
+  <!-- typography & desk styles -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="CSS/style.css" />
-  <link rel="stylesheet" href="CSS/dashboard.css" />
 </head>
-
 <body>
   <div class="dash-layout">
-    
-    <!-- SIDEBAR -->
+    <!-- front desk sidebar -->
     <aside class="dash-sidebar">
       <a href="index.html" class="dash-brand">
         <div class="brand-icon">F</div>
@@ -30,23 +27,25 @@
           <span class="nav-icon">⏱️</span>
           <span>Attendance Scanner</span>
         </a>
-
         <a href="#members" class="dash-nav-item" data-section="members">
           <span class="nav-icon">👥</span>
           <span>Member Lookup</span>
         </a>
-
         <a href="#lockers" class="dash-nav-item" data-section="lockers">
           <span class="nav-icon">🔒</span>
           <span>Locker Desk</span>
         </a>
-
         <a href="#pos" class="dash-nav-item" data-section="pos">
           <span class="nav-icon">💵</span>
           <span>Front Desk POS</span>
         </a>
+        <a href="#memberships" class="dash-nav-item" data-section="memberships">
+          <span class="nav-icon">💳</span>
+          <span>Membership Requests</span>
+        </a>
       </nav>
 
+      <!-- staff profile card -->
       <div class="sidebar-bottom">
         <div class="user-profile-pill">
           <div class="user-avatar" id="dashUserAvatar">FD</div>
@@ -59,9 +58,8 @@
       </div>
     </aside>
 
-    <!-- MAIN CONTENT AREA -->
+    <!-- desk main workspace -->
     <main class="dash-main">
-      
       <header class="dash-topbar">
         <div class="topbar-left">
           <button class="mobile-menu-toggle" id="mobileMenuToggle">☰</button>
@@ -76,7 +74,7 @@
         </div>
       </header>
 
-      <!-- ATTENDANCE SCANNER (OVERVIEW) -->
+      <!-- view: attendance scanner -->
       <section id="view-overview" class="dash-section active">
         <div class="section-header">
           <div class="section-title">
@@ -85,60 +83,92 @@
           </div>
         </div>
 
+        <!-- desk activity stats -->
+        <div class="stats-grid" style="margin-bottom:24px;">
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Today's Check-ins</span>
+              <div class="stat-icon">⏱️</div>
+            </div>
+            <div class="stat-val" id="rcpStatTodayAttendance">0</div>
+            <div class="stat-trend neutral" id="rcpStatTodayAttendanceTrend">Live Turnstile Scans</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Active Members</span>
+              <div class="stat-icon">👥</div>
+            </div>
+            <div class="stat-val" id="rcpStatActiveMembers">0</div>
+            <div class="stat-trend up" id="rcpStatActiveMembersTrend">Registered Members</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Pending Requests</span>
+              <div class="stat-icon">⏳</div>
+            </div>
+            <div class="stat-val" id="rcpStatPendingMemberships">0</div>
+            <div class="stat-trend down" id="rcpStatPendingMembershipsTrend">Pending Approvals</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Available Lockers</span>
+              <div class="stat-icon">🔑</div>
+            </div>
+            <div class="stat-val" id="rcpStatAvailableLockers">0</div>
+            <div class="stat-trend up" id="rcpStatAvailableLockersTrend">Floor Key Slots</div>
+          </div>
+        </div>
+
         <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px;">
+          <!-- fast entry panel -->
           <div class="dash-panel">
             <div class="panel-header">
-              <h3 class="panel-title">⚡ Instant Check-In</h3>
+              <h3 class="panel-title">⚡ Instant Turnstile Check-In / Exit</h3>
             </div>
-            <form onsubmit="event.preventDefault(); showToast('Access Granted for Member #' + document.getElementById('rcpScanInput').value); document.getElementById('rcpScanInput').value='';">
+            <form id="formRcpScanAttendance">
               <div class="form-group">
-                <label class="form-label">Member ID / RFID Code</label>
-                <input type="text" id="rcpScanInput" class="form-control" placeholder="e.g. MEM-1048" required autofocus />
+                <label class="form-label">Member ID</label>
+                <input type="text" id="rcpScanInput" class="form-control" placeholder="Enter Member ID (e.g. 5 or MEM-5)" required autofocus />
               </div>
-              <button type="submit" class="btn btn-primary" style="width: 100%;">Authorize Entry ✓</button>
+              <div style="margin-top:14px;">
+                <button type="submit" class="btn btn-primary" id="btnRcpRecordAttendance" style="width:100%;">Scan Turnstile (Check-In / Exit) ✓</button>
+              </div>
             </form>
           </div>
 
+          <!-- live scan feed -->
           <div class="dash-panel">
             <div class="panel-header">
-              <h3 class="panel-title">Recent Check-In Stream</h3>
+              <h3 class="panel-title">Today's Live Turnstile Stream</h3>
+              <span class="badge badge-success">Live Sync Active</span>
             </div>
             <div class="table-responsive">
-              <table class="dash-table">
+              <table class="dash-table" id="tableRcpAttendance">
                 <thead>
                   <tr>
                     <th>Member</th>
-                    <th>Package Status</th>
-                    <th>Time</th>
-                    <th>Locker Key</th>
+                    <th>Time In</th>
+                    <th>Time Out / Duration</th>
+                    <th>Status</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td><strong>Dineth Perera</strong> (MEM-1048)</td>
-                    <td><span class="badge badge-success">Active VIP</span></td>
-                    <td>10:42 AM</td>
-                    <td><span class="badge badge-lime">#01 Assigned</span></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Saman Kumara</strong> (MEM-1049)</td>
-                    <td><span class="badge badge-success">Active Standard</span></td>
-                    <td>10:35 AM</td>
-                    <td><span class="badge badge-muted">No Locker</span></td>
-                  </tr>
-                </tbody>
+                <tbody></tbody>
               </table>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- MEMBERS -->
+      <!-- view: member lookup -->
       <section id="view-members" class="dash-section">
         <div class="section-header">
           <div class="section-title">
             <h1>Member Directory</h1>
-            <p>Lookup member subscription status, emergency contacts, and validity.</p>
+            <p>Lookup member details, contact numbers, physical stats, and account status.</p>
           </div>
           <div class="section-actions">
             <button class="btn btn-primary" data-modal-target="modalAddMember">+ Register Member</button>
@@ -146,116 +176,704 @@
         </div>
 
         <div class="dash-panel">
+          <div class="filter-bar">
+            <div class="search-input-wrap">
+              <span class="search-icon">🔍</span>
+              <input type="text" class="search-input" placeholder="Search members by name, email, or ID..." data-table-search="rcpMembersTable" />
+            </div>
+          </div>
           <div class="table-responsive">
-            <table class="dash-table">
+            <table class="dash-table" id="rcpMembersTable">
               <thead>
                 <tr>
-                  <th>Member</th>
-                  <th>Contact</th>
-                  <th>Package</th>
-                  <th>Expiration</th>
+                  <th>Member ID &amp; Name</th>
+                  <th>Contact Info</th>
+                  <th>Physical Stats</th>
+                  <th>Status</th>
                   <th>Action</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Dineth Perera</strong></td>
-                  <td>+94 77 123 4567</td>
-                  <td><span class="badge badge-lime">VIP Diamond</span></td>
-                  <td>2025-01-01</td>
-                  <td>
-                    <button class="btn btn-secondary" style="padding:4px 10px;font-size:11px;" onclick="showToast('Member details opened')">View Card 💳</button>
-                  </td>
-                </tr>
-              </tbody>
+              <tbody></tbody>
             </table>
           </div>
         </div>
       </section>
 
-      <!-- LOCKERS -->
+      <!-- view: locker desk -->
       <section id="view-lockers" class="dash-section">
         <div class="section-header">
           <div class="section-title">
             <h1>Front Desk Locker Keys</h1>
             <p>Issue temporary daily keys or verify permanent locker assignments.</p>
           </div>
+          <div class="section-actions">
+            <button class="btn btn-primary" data-modal-target="modalAssignLocker">+ Add New Locker</button>
+          </div>
         </div>
 
+        <!-- locker count overview -->
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 20px;">
+          <div class="dash-panel" style="margin-bottom:0; padding: 16px; text-align:center;">
+            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight:700; margin-bottom:4px;">Total Lockers</div>
+            <div id="rcpLockersTotal" style="font-size: 24px; font-weight: 800; color: #fff;">0</div>
+          </div>
+          <div class="dash-panel" style="margin-bottom:0; padding: 16px; text-align:center; border-left: 3px solid var(--success);">
+            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight:700; margin-bottom:4px;">Available (Vacant)</div>
+            <div id="rcpLockersAvailable" style="font-size: 24px; font-weight: 800; color: var(--success);">0</div>
+          </div>
+          <div class="dash-panel" style="margin-bottom:0; padding: 16px; text-align:center; border-left: 3px solid var(--danger);">
+            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight:700; margin-bottom:4px;">Occupied (In Use)</div>
+            <div id="rcpLockersOccupied" style="font-size: 24px; font-weight: 800; color: var(--danger);">0</div>
+          </div>
+        </div>
+
+        <!-- interactive floor rack -->
         <div class="dash-panel">
-          <div class="lockers-grid">
-            <div class="locker-card occupied">
-              <div class="locker-num">#01</div>
-              <div class="locker-status" style="color:var(--danger)">Dineth P.</div>
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">Front Desk Key Rack</h3>
+              <p class="panel-subtitle">Click an available locker to issue key to a member, or click occupied to release key</p>
             </div>
-            <div class="locker-card available" onclick="showToast('Issued temporary key for Locker #02')">
-              <div class="locker-num">#02</div>
-              <div class="locker-status" style="color:var(--success)">Issue Key +</div>
+          </div>
+          <div class="lockers-grid" id="rcpLockersGrid"></div>
+        </div>
+
+        <!-- locker assignment list -->
+        <div class="dash-panel" style="margin-top: 24px;">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">Front Desk Key Assignments</h3>
+              <p class="panel-subtitle">Manage locker status (AVAILABLE, OCCUPIED, DELETED) and member assignments</p>
             </div>
+          </div>
+          <div class="table-responsive">
+            <table class="dash-table" id="tableRcpLockers">
+              <thead>
+                <tr>
+                  <th>Locker Number</th>
+                  <th>Current Status</th>
+                  <th>Assigned Member</th>
+                  <th style="text-align:center;">Actions</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
           </div>
         </div>
       </section>
 
-      <!-- POS -->
+      <!-- view: front desk pos billing -->
       <section id="view-pos" class="dash-section">
         <div class="section-header">
           <div class="section-title">
-            <h1>Front Desk POS & Payments</h1>
-            <p>Process walk-in day passes, energy drinks, and merchandise.</p>
+            <h1>Front Desk POS &amp; Counter Billing</h1>
+            <p>Sell walk-in day passes, energy drinks, protein shakes, and gym supplements at the front desk register.</p>
+          </div>
+          <div class="section-actions">
+            <button class="btn btn-secondary" id="btnPosResetRegister" style="padding:8px 14px; font-size:12px;">🔄 New Sale / Clear Ticket</button>
           </div>
         </div>
 
-        <div class="dash-panel">
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-            <button class="btn btn-secondary" style="padding: 20px; font-size: 15px;" onclick="showToast('Day pass (Rs. 1,000) collected')">
-              🎟️ Issue Single Day Pass (Rs. 1,000)
-            </button>
-            <button class="btn btn-secondary" style="padding: 20px; font-size: 15px;" onclick="showToast('Energy drink sold (Rs. 450)')">
-              🥤 Sell Energy Drink / Water (Rs. 450)
-            </button>
+        <!-- pos sales summary -->
+        <div class="stats-grid" style="margin-bottom:20px;">
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Today's Counter Revenue</span>
+              <div class="stat-icon">💵</div>
+            </div>
+            <div class="stat-val" id="posStatTotalRevenue">Rs. 0</div>
+            <div class="stat-trend up" id="posStatRevenueTrend">Front Desk Register</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Counter Transactions</span>
+              <div class="stat-icon">🧾</div>
+            </div>
+            <div class="stat-val" id="posStatTxCount">0</div>
+            <div class="stat-trend neutral">Processed Today</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Day Passes Sold</span>
+              <div class="stat-icon">🎟️</div>
+            </div>
+            <div class="stat-val" id="posStatDayPassCount">0</div>
+            <div class="stat-trend up">Walk-In Athletes</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Drawer Balance (Cash)</span>
+              <div class="stat-icon">🏦</div>
+            </div>
+            <div class="stat-val" id="posStatCashInDrawer">Rs. 0</div>
+            <div class="stat-trend up">Cash Collected</div>
+          </div>
+        </div>
+
+        <!-- pos product catalog & register ticket -->
+        <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px; align-items: start;">
+          <!-- product selection -->
+          <div class="dash-panel">
+            <div class="panel-header" style="flex-wrap:wrap; gap:12px;">
+              <div>
+                <h3 class="panel-title">🛒 Quick Tap Register</h3>
+                <p class="panel-subtitle">Click items to add to the current customer sale</p>
+              </div>
+              <div style="display:flex; gap:6px; flex-wrap:wrap;" id="posCategoryFilters">
+                <button class="btn btn-primary btn-sm pos-filter-btn active" data-cat="ALL" style="padding:4px 10px; font-size:11px;">All Items</button>
+                <button class="btn btn-secondary btn-sm pos-filter-btn" data-cat="PASS" style="padding:4px 10px; font-size:11px;">🎟️ Passes &amp; Services</button>
+                <button class="btn btn-secondary btn-sm pos-filter-btn" data-cat="DRINKS" style="padding:4px 10px; font-size:11px;">🥤 Drinks &amp; Nutrition</button>
+                <button class="btn btn-secondary btn-sm pos-filter-btn" data-cat="STORE" style="padding:4px 10px; font-size:11px;">📦 Gym Supplements</button>
+              </div>
+            </div>
+
+            <div style="margin-bottom: 16px;">
+              <input type="text" id="posSearchInput" class="form-control" placeholder="🔍 Search items by name (e.g. Day Pass, Energy Drink, Creatine)..." style="font-size:13px;" />
+            </div>
+
+            <div id="posItemsGrid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; max-height: 480px; overflow-y: auto; padding-right: 4px;"></div>
+          </div>
+
+          <!-- order checkout ticket -->
+          <div class="dash-panel" style="border: 1px solid rgba(215,255,0,0.25); position: sticky; top: 80px;">
+            <div class="panel-header" style="border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:12px;">
+              <h3 class="panel-title" style="display:flex; align-items:center; gap:8px;">
+                <span>🧾 Current Ticket</span>
+                <span class="badge badge-lime" id="posTicketItemCount">0 Items</span>
+              </h3>
+            </div>
+
+            <div class="form-group" style="margin-top:12px; margin-bottom:14px;">
+              <label class="form-label" style="font-size:11px;">Customer Type / Member</label>
+              <select id="posCustomerSelect" class="form-control" style="font-size:12px;">
+                <option value="WALK_IN">🚶 Walk-In Guest (General Counter Sale)</option>
+              </select>
+            </div>
+
+            <div style="min-height:160px; max-height:220px; overflow-y:auto; border-top:1px solid rgba(255,255,255,0.06); border-bottom:1px solid rgba(255,255,255,0.06); padding:8px 0;" id="posTicketList">
+              <div style="text-align:center; padding:40px 10px; color:var(--text-muted); font-size:12px;">
+                Ticket is empty.<br>Tap items from the left to start sale.
+              </div>
+            </div>
+
+            <div style="padding-top: 14px;">
+              <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:13px; color:var(--text-muted);">
+                <span>Subtotal:</span>
+                <strong style="color:#fff;" id="posSubtotal">Rs. 0</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:12px; font-size:13px; color:var(--text-muted);">
+                <span>Discount (LKR):</span>
+                <input type="number" id="posDiscountInput" class="form-control" value="0" min="0" style="width:90px; height:26px; padding:2px 6px; font-size:12px; text-align:right;" />
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:rgba(215,255,0,0.08); border:1px solid rgba(215,255,0,0.25); border-radius:8px; margin-bottom:14px;">
+                <span style="font-weight:700; color:#fff; font-size:14px;">Payable Total:</span>
+                <strong style="font-size:20px; color:var(--lime); font-weight:900;" id="posGrandTotal">Rs. 0</strong>
+              </div>
+
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;">
+                <button type="button" class="btn btn-primary pos-pay-method-btn" data-method="CASH" style="font-size:12px; padding:8px 6px; font-weight:700;">💵 Cash Payment</button>
+                <button type="button" class="btn btn-secondary pos-pay-method-btn" data-method="CARD" style="font-size:12px; padding:8px 6px; font-weight:700;">💳 Card / Online</button>
+              </div>
+
+              <div id="posCashCalculatorWrap" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px;">
+                <div>
+                  <label class="form-label" style="font-size:11px;">Cash Received</label>
+                  <input type="number" id="posCashTendered" class="form-control" placeholder="Rs. 0" style="font-size:13px; font-weight:700; color:var(--lime);" />
+                </div>
+                <div>
+                  <label class="form-label" style="font-size:11px;">Change to Return</label>
+                  <input type="text" id="posChangeReturn" class="form-control" value="Rs. 0" readonly style="font-size:13px; font-weight:700; color:#00e5ff; background:rgba(0,0,0,0.3);" />
+                </div>
+              </div>
+
+              <button class="btn btn-primary" id="btnPosCompleteSale" style="width:100%; padding:12px; font-size:14px; font-weight:800; letter-spacing:0.5px;" disabled>
+                Complete Sale &amp; Issue Receipt 🧾
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- pos transactions register -->
+        <div class="dash-panel" style="margin-top:24px;">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">📋 Today's Counter Sales Register</h3>
+              <p class="panel-subtitle">Audited record of all walk-in and counter transactions processed today</p>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="dash-table" id="tablePosTransactions">
+              <thead>
+                <tr>
+                  <th>Receipt #</th>
+                  <th>Customer</th>
+                  <th>Items Sold</th>
+                  <th>Method</th>
+                  <th>Total Amount</th>
+                  <th>Time</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
           </div>
         </div>
       </section>
 
+      <!-- view: membership package approvals -->
+      <section id="view-memberships" class="dash-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>Membership Approvals &amp; Subscriptions</h1>
+            <p>Verify payment and approve member package requests at the counter.</p>
+          </div>
+        </div>
+
+        <div class="dash-panel" style="border-top: 3px solid var(--warning); margin-bottom: 24px;">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">⏳ Pending Member Package Requests</h3>
+              <p class="panel-subtitle">Collect payment at counter and click Approve to activate membership instantly</p>
+            </div>
+            <span class="badge badge-warning" id="pendingMembershipCount">0 Requests</span>
+          </div>
+          <div class="table-responsive">
+            <table class="dash-table" id="tablePendingMemberships">
+              <thead>
+                <tr>
+                  <th>Member</th>
+                  <th>Requested Package</th>
+                  <th>Package Price</th>
+                  <th>Duration</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="dash-panel">
+          <div class="panel-header">
+            <h3 class="panel-title">Active Memberships</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="dash-table" id="tableAdminMemberships">
+              <thead>
+                <tr>
+                  <th>Member</th>
+                  <th>Plan Name</th>
+                  <th>Start Date</th>
+                  <th>Renewal / Expiry Date</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
     </main>
   </div>
 
-  <!-- MODAL: ADD MEMBER -->
+  <!-- modals collection -->
+
+  <!-- modal: add member -->
   <div class="modal-backdrop" id="modalAddMember">
     <div class="modal-box">
       <div class="modal-header">
         <h3>Fast Member Registration</h3>
-        <button class="modal-close">&times;</button>
+        <button class="modal-close" data-modal-close>&times;</button>
       </div>
-      <form onsubmit="event.preventDefault(); showToast('Member registered!'); closeModal('modalAddMember');">
+      <form id="formRcpAddMember">
         <div class="modal-body">
           <div class="form-group">
-            <label class="form-label">Full Name</label>
-            <input type="text" class="form-control" placeholder="e.g. Kasun Fernando" required />
+            <label class="form-label">Full Name *</label>
+            <input type="text" id="rcpMemberFullName" class="form-control" placeholder="e.g. Kasun Fernando" required />
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label">Phone</label>
-              <input type="tel" class="form-control" placeholder="+94 77 ..." required />
+              <label class="form-label">Email Address *</label>
+              <input type="email" id="rcpMemberEmail" class="form-control" placeholder="kasun@gmail.com" required />
+              <small style="color: var(--lime); font-size: 11px; margin-top: 4px; display: block;">
+                🔑 Login credentials will be automatically generated and emailed to this member.
+              </small>
             </div>
             <div class="form-group">
-              <label class="form-label">Package</label>
-              <select class="form-control">
-                <option>Elite Pro (Monthly)</option>
-                <option>Standard (Monthly)</option>
-                <option>VIP Diamond (Annual)</option>
+              <label class="form-label">Phone Number *</label>
+              <input type="tel" id="rcpMemberPhone" class="form-control" placeholder="+94 77 123 4567" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Age</label>
+              <input type="number" id="rcpMemberAge" class="form-control" placeholder="25" min="10" max="100" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Gender</label>
+              <select id="rcpMemberGender" class="form-control">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
               </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Height (cm)</label>
+              <input type="number" step="0.1" id="rcpMemberHeight" class="form-control" placeholder="175" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Weight (kg)</label>
+              <input type="number" step="0.1" id="rcpMemberWeight" class="form-control" placeholder="70" />
             </div>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
-          <button type="submit" class="btn btn-primary">Complete & Print Receipt</button>
+          <button type="submit" class="btn btn-primary" id="btnSaveRcpMember">Register &amp; Email Credentials 🚀</button>
         </div>
       </form>
     </div>
   </div>
 
+  <!-- modal: edit member -->
+  <div class="modal-backdrop" id="modalEditMember">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Update Member Profile</h3>
+        <button class="modal-close" data-modal-close>&times;</button>
+      </div>
+      <form id="formEditMember">
+        <input type="hidden" id="editMemberId" />
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" id="editMemberFullName" class="form-control" required />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" id="editMemberEmail" class="form-control" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input type="tel" id="editMemberPhone" class="form-control" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Gender</label>
+              <select id="editMemberGender" class="form-control">
+                <option value="MALE">Male</option>
+                <option value="FEMALE">Female</option>
+                <option value="OTHER">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Age</label>
+              <input type="number" id="editMemberAge" class="form-control" placeholder="25" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Height (cm)</label>
+              <input type="number" id="editMemberHeight" class="form-control" placeholder="175" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Weight (kg)</label>
+              <input type="number" id="editMemberWeight" class="form-control" placeholder="70" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Account Status</label>
+            <select id="editMemberStatus" class="form-control">
+              <option value="ACTIVE">ACTIVE</option>
+              <option value="INACTIVE">INACTIVE</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btnUpdateMember">Update Member ✓</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- modal: create locker -->
+  <div class="modal-backdrop" id="modalAssignLocker">
+    <div class="modal-box" style="max-width: 520px;">
+      <div class="modal-header">
+        <h3>Add New Locker</h3>
+        <button class="modal-close" data-modal-close>&times;</button>
+      </div>
+      <form id="formAssignLocker">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Locker Number *</label>
+              <input type="text" id="addLockerNum" class="form-control" placeholder="e.g. 01, 15, L-101" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Locker Status *</label>
+              <select id="addLockerStatus" class="form-control" required>
+                <option value="AVAILABLE" selected>AVAILABLE (Vacant)</option>
+                <option value="OCCUPIED">OCCUPIED (In Use)</option>
+                <option value="DELETED">DELETED</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Select Registered Member (Optional)</label>
+              <select id="addLockerMemberSelect" class="form-control">
+                <option value="">-- No Member Assigned (Vacant) --</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Or Member ID (Optional)</label>
+              <input type="number" id="addLockerMemberId" class="form-control" placeholder="e.g. 1" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btnSaveLocker">Save Locker ✓</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- modal: edit locker -->
+  <div class="modal-backdrop" id="modalEditLocker">
+    <div class="modal-box" style="max-width: 520px;">
+      <div class="modal-header">
+        <h3>Edit Locker Allocation</h3>
+        <button class="modal-close" data-modal-close>&times;</button>
+      </div>
+      <form id="formEditLocker">
+        <input type="hidden" id="editLockerId" />
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Locker Number *</label>
+              <input type="text" id="editLockerNum" class="form-control" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Locker Status *</label>
+              <select id="editLockerStatus" class="form-control" required>
+                <option value="AVAILABLE">AVAILABLE (Vacant)</option>
+                <option value="OCCUPIED">OCCUPIED (Assigned)</option>
+                <option value="DELETED">DELETED (Decommissioned)</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Select Registered Member</label>
+              <select id="editLockerMemberSelect" class="form-control">
+                <option value="">-- No Member Assigned (Vacant) --</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Or Member ID</label>
+              <input type="number" id="editLockerMemberId" class="form-control" placeholder="e.g. 1" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btnUpdateLocker">Update Locker ✓</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- modal: quick key issue -->
+  <div class="modal-backdrop" id="modalQuickAllocateLocker">
+    <div class="modal-box" style="max-width: 480px;">
+      <div class="modal-header">
+        <h3 id="quickAllocateLockerTitle">Assign Locker Key</h3>
+        <button class="modal-close" data-modal-close>&times;</button>
+      </div>
+      <form id="formQuickAllocateLocker">
+        <input type="hidden" id="quickAllocateLockerId" />
+        <input type="hidden" id="quickAllocateLockerNum" />
+        <div class="modal-body">
+          <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">
+            Select a registered member to assign this locker key. Status will automatically update to <strong style="color:var(--danger)">OCCUPIED</strong>.
+          </p>
+          <div class="form-group">
+            <label class="form-label">Select Registered Member *</label>
+            <select id="quickAllocateMemberSelect" class="form-control" required>
+              <option value="">-- Choose Member --</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btnConfirmQuickAllocate">Allocate Key 🔑</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- modal: member pass card -->
+  <div class="modal-backdrop" id="modalMemberDigitalCard">
+    <div class="modal-box" style="max-width: 520px; background: #0e0f14; border: 1px solid rgba(215,255,0,0.3); box-shadow: 0 25px 60px rgba(0,0,0,0.9);">
+      <div class="modal-header" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding: 16px 20px;">
+        <h3 style="display:flex; align-items:center; gap:8px; font-size:16px;">
+          <span>🪪 Member Access Pass &amp; ID Card</span>
+        </h3>
+        <button class="modal-close" data-modal-close>&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 20px;">
+        <!-- printable card surface -->
+        <div id="printableMemberCard" style="background: linear-gradient(135deg, #171821 0%, #0c0d11 100%); border: 2px solid var(--lime); border-radius: 16px; padding: 22px; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(215,255,0,0.12);">
+          <div style="position:absolute; right:-15px; bottom:-25px; font-size:110px; font-weight:900; opacity:0.04; color:var(--lime); pointer-events:none; user-select:none; font-family:'Inter',sans-serif;">FLEX</div>
+          
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:18px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="width:36px; height:36px; border-radius:8px; background:var(--lime); color:#000; font-weight:900; display:flex; align-items:center; justify-content:center; font-size:18px;">F</div>
+              <div>
+                <strong style="font-size:16px; letter-spacing:1px; color:#fff;">FLEX<span style="color:var(--lime)">GYM</span></strong>
+                <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Official Member Access Pass</div>
+              </div>
+            </div>
+            <span class="badge badge-success" id="cardMemberStatusBadge" style="font-size:11px; padding:4px 10px;">ACTIVE</span>
+          </div>
+
+          <div style="display:flex; gap:16px; align-items:center; margin-bottom:18px;">
+            <div id="cardMemberAvatar" style="width:62px; height:62px; border-radius:14px; background: linear-gradient(135deg, #252632, #121318); border:2px solid var(--lime); display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; color:var(--lime); box-shadow:0 4px 12px rgba(0,0,0,0.4);">AS</div>
+            <div>
+              <h2 id="cardMemberName" style="font-size:19px; font-weight:800; color:#fff; margin-bottom:3px;">Anil Silva</h2>
+              <div style="font-size:13px; color:var(--lime); font-weight:700;" id="cardMemberId">MEM-1</div>
+              <div style="font-size:12px; color:var(--text-muted);" id="cardMemberEmail">anil@gmail.com</div>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:12px; margin-bottom:16px;">
+            <div>
+              <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase;">Phone</div>
+              <strong style="font-size:12px; color:#fff;" id="cardMemberPhone">0748512863</strong>
+            </div>
+            <div>
+              <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase;">Physical Stats</div>
+              <strong style="font-size:12px; color:#fff;" id="cardMemberStats">Male / 35 yrs</strong>
+            </div>
+            <div>
+              <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase;">Package Plan</div>
+              <strong style="font-size:12px; color:var(--lime);" id="cardMemberPlan">VIP Pro Quarterly</strong>
+            </div>
+            <div>
+              <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase;">Locker Assigned</div>
+              <strong style="font-size:12px; color:#fff;" id="cardMemberLocker">#L-003</strong>
+            </div>
+          </div>
+
+          <div style="text-align:center; padding-top:8px; border-top:1px dashed rgba(255,255,255,0.1);">
+            <div style="letter-spacing:5px; font-family:monospace; font-size:18px; color:var(--lime); font-weight:700;" id="cardMemberBarcode">||| | |||| || ||| |||| |</div>
+            <small style="color:var(--text-muted); font-size:10px; letter-spacing:1px;" id="cardMemberTurnstileCode">TURNSTILE ACCESS CODE: MEM-1</small>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="border-top:1px solid rgba(255,255,255,0.08); padding:14px 20px; display:flex; justify-content:space-between;">
+        <button type="button" class="btn btn-secondary" id="btnPrintMemberCard">Print Pass 🖨️</button>
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="btn btn-secondary" data-modal-close>Close</button>
+          <button type="button" class="btn btn-primary" id="btnCardQuickCheckIn">Scan Turnstile ⚡</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- modal: thermal receipt printer -->
+  <div class="modal-backdrop" id="modalPosReceipt">
+    <div class="modal-box" style="max-width: 420px; background: #0c0d11; border: 1px solid rgba(215,255,0,0.3); box-shadow: 0 20px 50px rgba(0,0,0,0.9);">
+      <div class="modal-header" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding: 14px 18px;">
+        <h3 style="font-size:15px; display:flex; align-items:center; gap:6px;">
+          <span>🧾 POS Counter Sales Receipt</span>
+        </h3>
+        <button class="modal-close" data-modal-close>&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 16px;">
+        <!-- printable thermal slip -->
+        <div id="printablePosReceipt" style="background: #fff; color: #000; padding: 18px; border-radius: 8px; font-family: 'Courier New', Courier, monospace; font-size: 12px; line-height: 1.4; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+          <div style="text-align:center; border-bottom:1px dashed #000; padding-bottom:8px; margin-bottom:8px;">
+            <strong style="font-size:16px; font-family:'Inter',sans-serif; letter-spacing:1px;">FLEX GYM FITNESS</strong><br>
+            <small>Front Desk Counter POS &amp; Registration</small><br>
+            <small>Tel: +94 11 234 5678 • flexgym.lk</small>
+          </div>
+
+          <div style="margin-bottom:8px; font-size:11px;">
+            <div><strong>Receipt No :</strong> <span id="posReceiptNo">#POS-001</span></div>
+            <div><strong>Date / Time:</strong> <span id="posReceiptTime">2026-09-08 19:55</span></div>
+            <div><strong>Customer   :</strong> <span id="posReceiptCustomer">Walk-In Guest</span></div>
+            <div><strong>Cashier    :</strong> <span id="posReceiptCashier">Front Desk Reception</span></div>
+          </div>
+
+          <table style="width:100%; border-top:1px dashed #000; border-bottom:1px dashed #000; margin-bottom:8px; text-align:left; font-size:11px;">
+            <thead>
+              <tr>
+                <th style="padding:4px 0;">Item</th>
+                <th style="text-align:center;">Qty</th>
+                <th style="text-align:right;">Price</th>
+                <th style="text-align:right;">Total</th>
+              </tr>
+            </thead>
+            <tbody id="posReceiptItemsBody"></tbody>
+          </table>
+
+          <div style="margin-bottom:8px; font-size:11px;">
+            <div style="display:flex; justify-content:space-between;">
+              <span>Subtotal:</span>
+              <strong id="posReceiptSubtotal">Rs. 1,450</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span>Discount:</span>
+              <span id="posReceiptDiscount">Rs. 0</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:14px; font-weight:bold; border-top:1px solid #000; padding-top:4px; margin-top:4px;">
+              <span>TOTAL PAID:</span>
+              <span id="posReceiptGrandTotal">Rs. 1,450</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-top:4px;">
+              <span>Payment Mode:</span>
+              <strong id="posReceiptMethod">CASH</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between;" id="posReceiptCashRow">
+              <span>Cash Tendered:</span>
+              <span id="posReceiptTendered">Rs. 2,000</span>
+            </div>
+            <div style="display:flex; justify-content:space-between;" id="posReceiptChangeRow">
+              <span>Change Returned:</span>
+              <span id="posReceiptChange">Rs. 550</span>
+            </div>
+          </div>
+
+          <div style="text-align:center; border-top:1px dashed #000; padding-top:8px; font-size:10px;">
+            <strong>Thank you for choosing Flex Gym! 💪</strong><br>
+            <span>Train hard. Stay strong. Have a great session!</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="border-top: 1px solid rgba(255,255,255,0.08); padding: 12px 18px; display:flex; justify-content:space-between;">
+        <button type="button" class="btn btn-secondary" data-modal-close>Done / Close</button>
+        <button type="button" class="btn btn-primary" id="btnPrintPosReceipt">Print Thermal Receipt 🖨️</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- client runtime scripts -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="JS/api.js"></script>
   <script src="JS/dashboard.js"></script>
 </body>
 </html>

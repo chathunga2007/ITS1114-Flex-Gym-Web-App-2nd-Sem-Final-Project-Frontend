@@ -24,7 +24,11 @@ $(document).ready(function () {
 
     $("#forgotPassword").off("click").on("click", function (e) {
         e.preventDefault();
-        alert("Please contact gym administration or front desk to reset your password.");
+        if (window.FlexAlert) {
+            FlexAlert.info("Reset Password", "Please contact gym administration or front desk to reset your account credentials.");
+        } else {
+            alert("Please contact gym administration or front desk to reset your password.");
+        }
     });
 });
 
@@ -39,17 +43,30 @@ function handleLogin() {
     let rememberMe = $("#rememberMe").is(":checked");
 
     if (!email) {
-        alert("Please enter Username / Email.");
+        if (window.FlexAlert) {
+            FlexAlert.warning("Missing Email", "Please enter your Username or Email address.");
+        } else {
+            alert("Please enter Username / Email.");
+        }
         $("#loginEmail, #email").first().focus();
         return;
     }
     if (!password) {
-        alert("Please enter Password.");
+        if (window.FlexAlert) {
+            FlexAlert.warning("Missing Password", "Please enter your account password.");
+        } else {
+            alert("Please enter Password.");
+        }
         $("#loginPassword, #password").first().focus();
         return;
     }
 
     isLoggingIn = true;
+
+    let obj = JSON.stringify({
+        "email": email,
+        "password": password
+    });
 
     const btn = $("#loginButton");
     btn.prop("disabled", true).text("SIGNING IN...");
@@ -63,10 +80,7 @@ function handleLogin() {
         url: "http://localhost:8080/api/users/login",
         type: "POST",
         contentType: "application/json",
-        data: JSON.stringify({
-            "email": email,
-            "password": password
-        }),
+        data: obj,
         success: function (response) {
             console.log("Login Response:", response);
 
@@ -81,7 +95,6 @@ function handleLogin() {
                 localStorage.setItem("userId", userId);
                 localStorage.setItem("flexGymToken", token);
                 localStorage.setItem("flexGymUserId", userId);
-
                 if (memberId) {
                     localStorage.setItem("memberId", memberId);
                     localStorage.setItem("flexGymMemberId", memberId);
@@ -93,7 +106,7 @@ function handleLogin() {
 
                 const claims = parseJwt(token);
                 let role = apiRole || (claims ? claims.role : "ROLE_MEMBER");
-                let userEmail = response.body.email || (claims ? (claims.username || claims.sub) : email);
+                let userEmail = (response.body.email) || (claims ? (claims.username || claims.sub) : email);
 
                 localStorage.setItem("userRole", role);
                 localStorage.setItem("flexGymRole", role);
@@ -103,6 +116,8 @@ function handleLogin() {
                 if (rememberMe) {
                     localStorage.setItem("flexGymRemember", "true");
                 }
+
+                console.log("Stored JWT & User Profile for:", userEmail);
 
                 $.ajax({
                     url: "http://localhost:8080/api/users/getUser/" + userId,
@@ -126,16 +141,32 @@ function handleLogin() {
                             }
                         }
                         isLoggingIn = false;
-                        redirectUser(role);
+                        if (window.FlexAlert) {
+                            FlexAlert.success("Welcome Back! ⚡", "Login successful. Redirecting to your dashboard...", { timer: 1400 }).then(() => {
+                                redirectUser(role);
+                            });
+                        } else {
+                            redirectUser(role);
+                        }
                     },
                     error: function () {
                         isLoggingIn = false;
-                        redirectUser(role);
+                        if (window.FlexAlert) {
+                            FlexAlert.success("Welcome Back! ⚡", "Login successful. Redirecting to your dashboard...", { timer: 1400 }).then(() => {
+                                redirectUser(role);
+                            });
+                        } else {
+                            redirectUser(role);
+                        }
                     }
                 });
             } else {
                 isLoggingIn = false;
-                alert("Login failed: Authentication token was not returned by the server.");
+                if (window.FlexAlert) {
+                    FlexAlert.error("Authentication Error", "Authentication token was not returned by the server.");
+                } else {
+                    alert("Login failed: Authentication token was not returned by the server.");
+                }
                 btn.prop("disabled", false).text("SIGN IN TO FLEX →");
             }
         },
@@ -145,17 +176,29 @@ function handleLogin() {
             btn.prop("disabled", false).text("SIGN IN TO FLEX →");
 
             if (response.status === 401 || response.status === 403) {
-                alert("Invalid Credentials");
+                if (window.FlexAlert) {
+                    FlexAlert.error("Invalid Credentials", "Incorrect email or password. Please verify your login details.");
+                } else {
+                    alert("Invalid Credentials");
+                }
                 if (messageEl.length) {
                     messageEl.addClass("show error").text("Invalid email or password.");
                 }
             } else if (response.status === 404) {
-                alert("No account found with this email address.");
+                if (window.FlexAlert) {
+                    FlexAlert.warning("Account Not Found", "No registered account found with this email address.");
+                } else {
+                    alert("No account found with this email address.");
+                }
                 if (messageEl.length) {
                     messageEl.addClass("show error").text("No account found with this email.");
                 }
             } else {
-                alert("Login failed. Please verify that the backend server is running on http://localhost:8080.");
+                if (window.FlexAlert) {
+                    FlexAlert.error("Connection Failed", "Unable to connect to backend server. Please verify that Spring Boot is active on port 8080.");
+                } else {
+                    alert("Login failed. Please verify that the backend server is running on http://localhost:8080.");
+                }
                 if (messageEl.length) {
                     messageEl.addClass("show error").text("Unable to connect to server.");
                 }

@@ -1,5 +1,5 @@
 (function () {
-    const GEMINI_API_KEY = "AQ.Ab8RN6JsnPbD5nhEbWCrbp9OhEmYnEa0fg_vEQJZQQ5aCWPsMg";
+    const GEMINI_API_KEY = "Enter you gemini api key";
     const GEMINI_MODEL = "gemini-2.5-flash";
 
     const SYSTEM_INSTRUCTION = `

@@ -39,11 +39,14 @@ html {
 }
 
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     background: var(--black);
     color: var(--white);
     line-height: 1.6;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 }
 
 body,
@@ -51,7 +54,7 @@ button,
 input,
 textarea,
 select {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 a {
@@ -111,7 +114,7 @@ main {
     font-size: clamp(36px, 5vw, 68px);
     line-height: 0.98;
 
-    letter-spacing: -3px;
+    letter-spacing: -0.3px;
 
     font-weight: 900;
 }
@@ -520,7 +523,7 @@ main {
 
     line-height: 0.85;
 
-    letter-spacing: -7px;
+    letter-spacing: -0.3px;
 
     font-weight: 900;
 
@@ -975,7 +978,7 @@ main {
 
     line-height: 0.9;
 
-    letter-spacing: -5px;
+    letter-spacing: -0.3px;
 
     font-weight: 900;
 }
@@ -1118,7 +1121,7 @@ main {
 
     line-height: 0.95;
 
-    letter-spacing: -3px;
+    letter-spacing: -0.3px;
 
     font-weight: 900;
 }
@@ -1335,7 +1338,7 @@ main {
     .hero-title {
         font-size: clamp(54px, 15vw, 80px);
 
-        letter-spacing: -4px;
+        letter-spacing: -0.3px;
     }
 
     .hero-description {
@@ -1401,7 +1404,7 @@ main {
 
     .section-heading h2,
     .section-content h2 {
-        letter-spacing: -2px;
+        letter-spacing: -0.3px;
     }
 
     .features-grid {
@@ -1417,7 +1420,7 @@ main {
     }
 
     .cta-content h2 {
-        letter-spacing: -3px;
+        letter-spacing: -0.3px;
     }
 
     .cta-buttons {
@@ -1502,7 +1505,7 @@ main {
     .hero-title {
         font-size: 51px;
 
-        letter-spacing: -3px;
+        letter-spacing: -0.3px;
     }
 
     .hero-badge {
@@ -1611,7 +1614,7 @@ body {
     width: var(--sidebar-w);
     background: #0d120f;
     border-right: 1px solid var(--border);
-    padding: 28px 16px;
+    padding: 24px 14px;
     position: fixed;
     top: 0;
     bottom: 0;
@@ -1620,7 +1623,8 @@ body {
     flex-direction: column;
     z-index: 100;
     overflow-y: auto;
-    transition: var(--transition);
+    overflow-x: hidden;
+    transition: transform var(--transition);
 }
 
 .dash-sidebar::-webkit-scrollbar {
@@ -1636,28 +1640,31 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 0 12px 28px;
+    padding: 0 10px 24px;
     text-decoration: none;
     color: var(--text-main);
+    flex-shrink: 0;
 }
 
 .brand-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
     background: var(--lime);
     color: #0b0f0d;
     display: grid;
     place-items: center;
     font-weight: 900;
-    font-size: 20px;
+    font-size: 18px;
     box-shadow: 0 0 20px var(--lime-glow);
+    flex-shrink: 0;
 }
 
 .brand-title {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 800;
     letter-spacing: -0.8px;
+    white-space: nowrap;
 }
 
 .brand-title span {
@@ -1670,7 +1677,8 @@ body {
     font-weight: 800;
     letter-spacing: 1.6px;
     text-transform: uppercase;
-    padding: 10px 14px 6px;
+    padding: 8px 12px 6px;
+    flex-shrink: 0;
 }
 
 .dash-nav {
@@ -1678,13 +1686,14 @@ body {
     flex-direction: column;
     gap: 4px;
     flex: 1;
+    min-height: min-content;
 }
 
 .dash-nav-item {
     display: flex;
     align-items: center;
-    gap: 13px;
-    padding: 11px 14px;
+    gap: 11px;
+    padding: 10px 12px;
     border-radius: var(--radius-md);
     color: var(--text-muted);
     text-decoration: none;
@@ -1696,6 +1705,17 @@ body {
     background: transparent;
     width: 100%;
     text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    min-width: 0;
+}
+
+.dash-nav-item > span:not(.nav-icon):not(.nav-badge) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 0;
 }
 
 .dash-nav-item:hover {
@@ -1712,11 +1732,12 @@ body {
 }
 
 .nav-icon {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     display: grid;
     place-items: center;
     font-size: 15px;
+    flex-shrink: 0;
 }
 
 .dash-nav-item.active .nav-icon {
@@ -1731,6 +1752,8 @@ body {
     color: var(--text-muted);
     padding: 2px 7px;
     border-radius: var(--radius-pill);
+    flex-shrink: 0;
+    line-height: 1.4;
 }
 
 .dash-nav-item.active .nav-badge {
@@ -1739,9 +1762,10 @@ body {
 }
 
 .sidebar-bottom {
-    padding-top: 18px;
-    margin-top: 15px;
+    padding-top: 14px;
+    margin-top: 12px;
     border-top: 1px solid var(--border);
+    flex-shrink: 0;
 }
 
 .user-profile-pill {
@@ -1983,12 +2007,13 @@ body {
 }
 
 .section-title h1 {
-    font-size: clamp(24px, 3vw, 34px);
+    font-size: clamp(24px, 3vw, 32px);
     font-weight: 800;
-    letter-spacing: -1.2px;
+    letter-spacing: -0.2px;
     color: var(--text-main);
-    line-height: 1.1;
+    line-height: 1.25;
     margin-bottom: 6px;
+    -webkit-font-smoothing: antialiased;
 }
 
 .section-title p {
@@ -2647,7 +2672,7 @@ body {
 .about-hero-content h1 {
     font-size: clamp(58px, 8vw, 120px);
     line-height: .88;
-    letter-spacing: -6px;
+    letter-spacing: -0.3px;
     font-weight: 900;
     margin-top: 22px;
 }
@@ -2717,7 +2742,7 @@ body {
 .about-content h2 {
     font-size: clamp(38px, 4vw, 64px);
     line-height: .95;
-    letter-spacing: -3px;
+    letter-spacing: -0.3px;
     font-weight: 900;
     margin-top: 18px;
 }
@@ -2767,7 +2792,7 @@ body {
 .section-heading h2 {
     font-size: clamp(40px, 5vw, 72px);
     line-height: .95;
-    letter-spacing: -4px;
+    letter-spacing: -0.3px;
     font-weight: 900;
     margin-top: 18px;
 }
@@ -2846,7 +2871,7 @@ body {
     color: var(--accent);
     font-size: 42px;
     font-weight: 900;
-    letter-spacing: -2px;
+    letter-spacing: -0.3px;
 }
 
 .experience-item span {
@@ -2878,7 +2903,7 @@ body {
 .about-cta h2 {
     font-size: clamp(40px, 5vw, 72px);
     line-height: .92;
-    letter-spacing: -4px;
+    letter-spacing: -0.3px;
     font-weight: 900;
     margin-top: 18px;
 }
@@ -2932,7 +2957,7 @@ body {
     }
 
     .about-hero-content h1 {
-        letter-spacing: -3px;
+        letter-spacing: -0.3px;
     }
 
     .about-section,
@@ -2986,7 +3011,7 @@ body {
     font-size: clamp(40px, 6vw, 75px);
     line-height: .95;
     font-weight: 950;
-    letter-spacing: -3px;
+    letter-spacing: -0.3px;
     text-transform: uppercase;
     margin-top: 10px;
 }
@@ -3198,7 +3223,7 @@ body {
 .auth-visual-content h1 {
     font-size: clamp(55px, 7vw, 95px);
     line-height: .88;
-    letter-spacing: -5px;
+    letter-spacing: -0.3px;
     font-weight: 900;
 }
 
@@ -3240,7 +3265,7 @@ body {
 .auth-heading h2 {
     font-size: 42px;
     line-height: 1;
-    letter-spacing: -2px;
+    letter-spacing: -0.3px;
     font-weight: 900;
 }
 
@@ -3525,7 +3550,7 @@ body {
 
     font-weight: 950;
     text-transform: uppercase;
-    letter-spacing: -4px;
+    letter-spacing: -0.3px;
 }
 
 .membership-hero h1 span {
@@ -3572,7 +3597,7 @@ body {
     font-weight: 950;
 
     text-transform: uppercase;
-    letter-spacing: -2px;
+    letter-spacing: -0.3px;
 }
 
 .section-title p {
@@ -3710,7 +3735,7 @@ body {
     font-size: 52px;
     font-weight: 950;
 
-    letter-spacing: -2px;
+    letter-spacing: -0.3px;
 }
 
 .plan-price small {
@@ -3988,7 +4013,7 @@ body {
     }
 
     .membership-hero h1 {
-        letter-spacing: -2px;
+        letter-spacing: -0.3px;
     }
 
     .membership-grid {
@@ -4026,7 +4051,7 @@ body {
     font-size: clamp(40px, 6vw, 80px);
     line-height: .95;
     font-weight: 950;
-    letter-spacing: -3px;
+    letter-spacing: -0.3px;
     text-transform: uppercase;
     margin-top: 10px;
 }
@@ -4290,7 +4315,7 @@ body {
 
     line-height: .88;
 
-    letter-spacing: -5px;
+    letter-spacing: -0.3px;
 
     font-weight: 900;
 }
@@ -4385,7 +4410,7 @@ body {
 
     line-height: 1;
 
-    letter-spacing: -2px;
+    letter-spacing: -0.3px;
 
     font-weight: 900;
 }
@@ -4715,7 +4740,7 @@ body {
 .trainer-hero-content h1 {
     font-size: clamp(58px, 8vw, 115px);
     line-height: .88;
-    letter-spacing: -6px;
+    letter-spacing: -0.3px;
     font-weight: 900;
     margin-top: 22px;
 }
@@ -4746,7 +4771,7 @@ body {
 .trainer-heading h2 {
     font-size: clamp(42px, 5vw, 75px);
     line-height: .95;
-    letter-spacing: -4px;
+    letter-spacing: -0.3px;
     font-weight: 900;
     margin-top: 18px;
 }
@@ -4828,7 +4853,7 @@ body {
 .trainer-details h3 {
     font-size: 25px;
     font-weight: 900;
-    letter-spacing: -1px;
+    letter-spacing: -0.2px;
     margin-top: 12px;
 }
 
@@ -4877,7 +4902,7 @@ body {
 .trainer-cta h2 {
     font-size: clamp(42px, 5vw, 75px);
     line-height: .92;
-    letter-spacing: -4px;
+    letter-spacing: -0.3px;
     font-weight: 900;
     margin-top: 18px;
 }
@@ -4957,7 +4982,7 @@ body {
     margin-top: 20px;
     font-size: clamp(50px, 8vw, 105px);
     line-height: .9;
-    letter-spacing: -5px;
+    letter-spacing: -0.3px;
     font-weight: 900;
 }
 
@@ -4988,7 +5013,7 @@ body {
     margin-top: 18px;
     font-size: clamp(40px, 5vw, 70px);
     line-height: .95;
-    letter-spacing: -4px;
+    letter-spacing: -0.3px;
     font-weight: 900;
 }
 

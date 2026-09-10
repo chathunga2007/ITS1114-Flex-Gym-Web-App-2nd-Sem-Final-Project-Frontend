@@ -158,10 +158,10 @@ function initSearchAndFilters() {
 }
 
 function syncUserProfile() {
-    const email = localStorage.getItem('email') || localStorage.getItem('flexGymEmail') || 'trainer@flexgym.com';
-    const fullName = localStorage.getItem('userFullName') || localStorage.getItem('flexGymFullName') || 'Coach Alex';
+    const email = localStorage.getItem('email') || localStorage.getItem('flexGymEmail') || '';
+    const fullName = localStorage.getItem('userFullName') || localStorage.getItem('flexGymFullName') || 'Trainer';
 
-    $('#dashUserEmail').text(fullName || email);
+    $('#dashUserEmail').text(fullName || email || 'Trainer');
     $('#dashUserRole').text('Trainer');
 
     let initials = 'TR';
@@ -180,7 +180,7 @@ function loadTrainerProfileData() {
     const email = localStorage.getItem('email') || localStorage.getItem('flexGymEmail') || '';
     const fullName = localStorage.getItem('userFullName') || localStorage.getItem('flexGymFullName') || '';
     const trainerId = localStorage.getItem('trainerId');
-    const bio = localStorage.getItem('flex_trainer_bio') || "Certified personal trainer specializing in hypertrophy, body recomposition, and progressive overload strength systems.";
+    const bio = localStorage.getItem('flex_trainer_bio') || "";
 
     if (fullName) $('#inputTrainerFullName').val(fullName);
     if (email) $('#inputTrainerEmail').val(email);
@@ -222,7 +222,7 @@ function loadTrainerProfileData() {
             }
         },
         error: function () {
-            if (!$('#inputTrainerPhone').val()) $('#inputTrainerPhone').val("0771234567");
+            if (!$('#inputTrainerPhone').val()) $('#inputTrainerPhone').val("");
         }
     });
 }
@@ -244,40 +244,12 @@ function getTrainerScheduleList() {
         const stored = localStorage.getItem("flex_trainer_schedule");
         if (stored) {
             const parsed = JSON.parse(stored);
-            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+            if (Array.isArray(parsed)) return parsed;
         }
     } catch (e) {
         console.error("Error reading trainer schedule:", e);
     }
-
-    const members = window.flexTrainerClientsCache.members || [];
-    const seed = [
-        {
-            id: "slot_1",
-            memberId: members[0] ? members[0].memberId : 1,
-            memberName: members[0] ? (members[0].memberFullName || "Anil Silva") : "Anil Silva",
-            day: "Monday",
-            time: "09:00 AM - 10:00 AM",
-            focus: "Chest & Triceps Hypertrophy",
-            zone: "Main Floor (Free Weights)",
-            status: "COMPLETED",
-            notes: "Focus on form and tempo"
-        },
-        {
-            id: "slot_2",
-            memberId: members[1] ? members[1].memberId : 2,
-            memberName: members[1] ? (members[1].memberFullName || "Nimal Perera") : "Nimal Perera",
-            day: "Monday",
-            time: "04:30 PM - 05:30 PM",
-            focus: "Back & Deadlift Check",
-            zone: "Powerlifting & Squat Racks",
-            status: "UPCOMING",
-            notes: "Warm up with hip mobility"
-        }
-    ];
-
-    localStorage.setItem("flex_trainer_schedule", JSON.stringify(seed));
-    return seed;
+    return [];
 }
 
 function saveTrainerScheduleList(list) {
@@ -609,7 +581,7 @@ function renderTrainerScheduleViews() {
     $('#statScheduleTotal').text(list.length);
     $('#statScheduleToday').text(todaySessions.length);
     $('#statScheduleCompleted').text(completedSessions.length);
-    $('.dash-nav-item[data-section="sessions"] .nav-badge, #badgeNavSessions').text(list.length);
+    $('.dash-nav-item[data-section="sessions"] .nav-badge, #badgeNavSessions, #trainerNavSessionsBadge').text(list.length).toggle(list.length > 0);
 
     const tbody = $('#tableTrainerSchedule tbody');
     if (tbody.length) {
@@ -871,21 +843,21 @@ function renderTrainerViews() {
     const assignments = window.flexTrainerClientsCache.assignments || [];
     const attendance = window.flexTrainerClientsCache.attendance || [];
 
-    const activeMembers = members.filter(m => m.memberStatus === 'ACTIVE');
+    const activeMembers = members.filter(m => (m.memberStatus !== 'INACTIVE' && m.memberStatus !== 'SUSPENDED' && m.memberStatus !== 'DELETED'));
     const todayStr = new Date().toISOString().slice(0, 10);
     const todayLogs = attendance.filter(a => a.checkInTime && a.checkInTime.startsWith(todayStr));
-    const todayCount = todayLogs.length > 0 ? todayLogs.length : Math.min(members.length, 3);
+    const todayCount = todayLogs.length;
 
     $('#trainerStatClients').text(members.length);
     $('#trainerStatClientsTrend').text(`${activeMembers.length} Active • Registered Members`);
-    $('.dash-nav-item[data-section="clients"] .nav-badge').text(members.length);
+    $('.dash-nav-item[data-section="clients"] .nav-badge, #trainerNavClientsBadge').text(members.length).toggle(members.length > 0);
 
     $('#trainerStatTodaySessions').text(`${todayCount} Trainees`);
     $('#trainerStatTodaySessionsTrend').text(`${attendance.length} Total Verification Sessions`);
 
     $('#trainerStatRoutines').text(`${plans.length} Plans`);
     $('#trainerStatRoutinesTrend').text(`Master Workout Templates`);
-    $('.dash-nav-item[data-section="workouts"] .nav-badge').text(plans.length);
+    $('.dash-nav-item[data-section="workouts"] .nav-badge, #trainerNavWorkoutsBadge').text(plans.length).toggle(plans.length > 0);
 
     const tbodyClients = $('#tableTrainerClients tbody, #view-clients table tbody');
     if (tbodyClients.length) {
@@ -980,22 +952,32 @@ function renderTrainerViews() {
         }
     }
 
-    const tbodyOverview = $('#view-overview table tbody');
+    const tbodyOverview = $('#view-overview table tbody, #trainerTodaySessionsBody');
     if (tbodyOverview.length) {
         tbodyOverview.empty();
         const scheduleList = getTrainerScheduleList();
         const sampleSessions = scheduleList.slice(0, 4);
 
-        sampleSessions.forEach(s => {
-            tbodyOverview.append(`
+        if (sampleSessions.length === 0) {
+            tbodyOverview.html(`
                 <tr>
-                    <td><span class="badge badge-lime" style="font-size:10px; margin-right:4px;">${s.day}</span> <strong>${s.time}</strong></td>
-                    <td><strong>${s.memberName}</strong> <span style="font-size:11px; color:var(--text-dim);">(MEM-${s.memberId})</span></td>
-                    <td>${s.focus}</td>
-                    <td><span class="badge ${s.status === 'COMPLETED' ? 'badge-success' : 'badge-warning'}">${s.status === 'COMPLETED' ? 'Completed ✓' : 'Upcoming'}</span></td>
+                    <td colspan="4" style="text-align:center; padding:24px; color:var(--text-muted);">
+                        No personal training sessions scheduled for today.
+                    </td>
                 </tr>
             `);
-        });
+        } else {
+            sampleSessions.forEach(s => {
+                tbodyOverview.append(`
+                    <tr>
+                        <td><span class="badge badge-lime" style="font-size:10px; margin-right:4px;">${s.day}</span> <strong>${s.time}</strong></td>
+                        <td><strong>${s.memberName}</strong> <span style="font-size:11px; color:var(--text-dim);">(MEM-${s.memberId})</span></td>
+                        <td>${s.focus}</td>
+                        <td><span class="badge ${s.status === 'COMPLETED' ? 'badge-success' : 'badge-warning'}">${s.status === 'COMPLETED' ? 'Completed ✓' : 'Upcoming'}</span></td>
+                    </tr>
+                `);
+            });
+        }
     }
 
     renderTrainerScheduleViews();

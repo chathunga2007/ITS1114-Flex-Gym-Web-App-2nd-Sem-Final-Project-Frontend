@@ -40,11 +40,15 @@
           <span class="nav-icon">📅</span>
           <span>Training Schedule</span>
         </a>
+        <a href="#profile" class="dash-nav-item" data-section="profile">
+          <span class="nav-icon">👤</span>
+          <span>My Profile</span>
+        </a>
       </nav>
 
       <!-- coach account info -->
       <div class="sidebar-bottom">
-        <div class="user-profile-pill">
+        <div class="user-profile-pill" style="cursor: pointer;" data-section-target="#profile" title="View / Edit Profile">
           <div class="user-avatar" id="dashUserAvatar">KR</div>
           <div class="user-info">
             <strong id="dashUserEmail">Kasun Rajapaksha</strong>
@@ -303,6 +307,83 @@
               </thead>
               <tbody></tbody>
             </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- view: coach profile & password security -->
+      <section id="view-profile" class="dash-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>Coach Profile &amp; Account Settings</h1>
+            <p>Manage your professional coaching credentials, contact info, and security credentials.</p>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px; align-items: start;">
+          <!-- coach profile details form -->
+          <div class="dash-panel">
+            <div class="panel-header">
+              <h3 class="panel-title">👤 Personal Details &amp; Coaching Profile</h3>
+            </div>
+            <form id="trainerProfileForm">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Full Name</label>
+                  <input type="text" id="inputTrainerFullName" class="form-control" placeholder="e.g. Kasun Rajapaksha" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Email Address</label>
+                  <input type="email" id="inputTrainerEmail" class="form-control" placeholder="e.g. kasun@flexgym.com" required />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Phone Number</label>
+                  <input type="tel" id="inputTrainerPhone" class="form-control" placeholder="e.g. +94 77 123 4567" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Specialization</label>
+                  <select id="inputTrainerSpec" class="form-control">
+                    <option value="Strength &amp; Hypertrophy">Strength &amp; Hypertrophy</option>
+                    <option value="Bodybuilding &amp; Conditioning">Bodybuilding &amp; Conditioning</option>
+                    <option value="HIIT &amp; Fat Loss">HIIT &amp; Fat Loss</option>
+                    <option value="Functional Fitness &amp; CrossFit">Functional Fitness &amp; CrossFit</option>
+                    <option value="Mobility &amp; Physical Rehabilitation">Mobility &amp; Physical Rehabilitation</option>
+                    <option value="Powerlifting &amp; Olympic Weightlifting">Powerlifting &amp; Olympic Weightlifting</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Professional Bio / Philosophy</label>
+                <textarea id="inputTrainerBio" class="form-control" rows="3" placeholder="Certified personal trainer specializing in hypertrophy, body recomposition, and progressive overload strength systems."></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary" id="btnSaveTrainerProfile" style="margin-top:10px;">Save Profile Changes ✓</button>
+            </form>
+          </div>
+
+          <!-- password change card -->
+          <div class="dash-panel" style="border-top: 3px solid var(--lime);">
+            <div class="panel-header">
+              <h3 class="panel-title">🔐 Change Password</h3>
+            </div>
+            <form id="formTrainerChangePassword">
+              <div class="form-group">
+                <label class="form-label">New Password</label>
+                <input type="password" id="inputTrainerNewPassword" class="form-control" placeholder="Enter new password (min 6 chars)" minlength="6" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Confirm New Password</label>
+                <input type="password" id="inputTrainerConfirmPassword" class="form-control" placeholder="Confirm new password" minlength="6" required />
+              </div>
+              <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5;">
+                💡 Keep your password secure. Once updated, your new password will be required for subsequent logins to the Trainer Portal.
+              </p>
+              <button type="submit" class="btn btn-primary" id="btnUpdateTrainerPassword" style="width: 100%;">Update Password 🔒</button>
+            </form>
           </div>
         </div>
       </section>
@@ -678,8 +759,10 @@
 
   <!-- client runtime scripts -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="JS/alerts.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="JS/api.js"></script>
-  <script src="JS/dashboard.js"></script>
+  <script src="JS/trainer-dashboard.js"></script>
 </body>
 </html>

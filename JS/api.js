@@ -154,8 +154,14 @@ function redirectByRole(role) {
 // route protection helper for dashboard pages
 function checkAuth(allowedRoles) {
     if (!isLoggedIn()) {
-        alert("Please sign in to access this portal.");
-        window.location.href = "login.html";
+        if (window.FlexAlert) {
+            FlexAlert.warning("Access Required", "Please sign in to access this portal.").then(() => {
+                window.location.href = "login.html";
+            });
+        } else {
+            alert("Please sign in to access this portal.");
+            window.location.href = "login.html";
+        }
         return false;
     }
 
@@ -166,28 +172,32 @@ function checkAuth(allowedRoles) {
     return true;
 }
 
-// clean toast popup notification
+// Central alert & notification trigger using SweetAlert2
 window.showToast = function(message, type = 'success') {
-    let container = document.querySelector('.toast-container');
-    if (!container) {
-        container = document.createElement('div');
-        container.className = 'toast-container';
-        document.body.appendChild(container);
+    if (window.FlexAlert) {
+        if (type === 'error') {
+            FlexAlert.error('Error Occurred', message);
+        } else if (type === 'warning') {
+            FlexAlert.warning('Attention', message);
+        } else if (type === 'info') {
+            FlexAlert.info('Information', message);
+        } else {
+            FlexAlert.success('Success! 🎉', message);
+        }
+    } else if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            background: '#141414',
+            color: '#ffffff',
+            confirmButtonColor: '#c9ff00',
+            icon: type === 'error' ? 'error' : type === 'warning' ? 'warning' : type === 'info' ? 'info' : 'success',
+            title: type === 'success' ? 'Success! 🎉' : type === 'error' ? 'Error' : 'Notice',
+            text: message,
+            timer: 2200,
+            timerProgressBar: true
+        });
+    } else {
+        alert(message);
     }
-
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
-    toast.innerHTML = `<span>${icon}</span> <div>${message}</div>`;
-
-    container.appendChild(toast);
-
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateX(50px)';
-        toast.style.transition = 'all 0.3s ease';
-        setTimeout(() => toast.remove(), 300);
-    }, 3500);
 };
 
 // global export

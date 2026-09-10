@@ -142,11 +142,11 @@ function initSearchAndFilters() {
 }
 
 function syncUserProfile() {
-    const email = localStorage.getItem('email') || localStorage.getItem('flexGymEmail') || 'member@flexgym.com';
+    const email = localStorage.getItem('email') || localStorage.getItem('flexGymEmail') || '';
     const fullName = localStorage.getItem('userFullName') || localStorage.getItem('flexGymFullName') || '';
 
-    let displayName = fullName || email;
-    let initials = fullName ? fullName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : email.substring(0, 2).toUpperCase();
+    let displayName = fullName || email || 'Member';
+    let initials = fullName ? fullName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : (email ? email.substring(0, 2).toUpperCase() : 'MB');
 
     $('#dashUserEmail').text(displayName);
     $('#dashUserRole').text('Member');
@@ -340,7 +340,7 @@ function initMemberDashboard() {
                     const planName = activeOrPending.packageName || 'Active Membership';
                     $('#overviewMemberPlan').text(planName).css('color', 'var(--lime)');
                     $('#overviewMemberPlanExpiry').text(`Valid: ${activeOrPending.startDate || ''} to ${activeOrPending.endDate || ''}`);
-                    $('#sidebarPlanBadge').text(planName.split(' ')[0].toUpperCase());
+                    $('#sidebarPlanBadge').text(planName.split(' ')[0].toUpperCase()).show();
                     $('#memberPassPlan').text(planName);
 
                     $('#myMembershipPlanName').text(planName);
@@ -355,7 +355,7 @@ function initMemberDashboard() {
                     const planName = activeOrPending.packageName || 'Requested Package';
                     $('#overviewMemberPlan').text(planName).css('color', 'var(--warning)');
                     $('#overviewMemberPlanExpiry').text('Pending Front-Desk Approval');
-                    $('#sidebarPlanBadge').text('PENDING');
+                    $('#sidebarPlanBadge').text('PENDING').show();
                     $('#memberPassPlan').text(`Pending: ${planName}`);
 
                     $('#myMembershipPlanName').text(planName);
@@ -372,7 +372,7 @@ function initMemberDashboard() {
                 } else {
                     $('#overviewMemberPlan').text('No Active Plan').css('color', 'var(--text-muted)');
                     $('#overviewMemberPlanExpiry').text('Request a package below');
-                    $('#sidebarPlanBadge').text('NONE');
+                    $('#sidebarPlanBadge').hide();
                     $('#memberPassPlan').text('No Active Membership');
 
                     $('#myMembershipPlanName').text('No Active Plan');
@@ -496,7 +496,7 @@ function initMemberDashboard() {
                 if (assignedLocker) {
                     const lNum = assignedLocker.lockerNumber || '01';
                     $('#overviewMemberLocker').text(`Locker #${lNum}`);
-                    $('#sidebarLockerBadge').text(`#${lNum}`);
+                    $('#sidebarLockerBadge').text(`#${lNum}`).show();
                     $('#myLockerBigIcon').text(`#${lNum}`);
                     $('#myLockerTitle').text(`Locker No. ${lNum}`);
                     $('#myLockerSubtitle').text(`Assigned to ${fullName} (MEM-${mId})`);
@@ -509,7 +509,7 @@ function initMemberDashboard() {
                     `);
                 } else {
                     $('#overviewMemberLocker').text('No Locker');
-                    $('#sidebarLockerBadge').text('--');
+                    $('#sidebarLockerBadge').hide();
                     $('#myLockerBigIcon').text('🔒');
                     $('#myLockerTitle').text('No Locker Assigned');
                     $('#myLockerSubtitle').text('Claim an available locker below.');
@@ -932,39 +932,32 @@ function loadMemberWorkoutRoutine(mId) {
 }
 
 function renderMemberWorkoutView(mId, activePlan, myAssignment, allMasterPlans) {
-    const fallbackTemplates = [
-        {
-            planId: 1,
-            planName: "Beginner Flexibility & Mobility",
-            difficultyLevelStatus: "BEGINNER",
-            description: "Gentle stretching and mobility routines designed to improve joint health, posture, and active recovery.",
-            planStatus: "ACTIVE"
-        },
-        {
-            planId: 2,
-            planName: "Intermediate PPL Split",
-            difficultyLevelStatus: "INTERMEDIATE",
-            description: "Classic Push-Pull-Legs routine focused on balanced muscle hypertrophy and progressive overload.",
-            planStatus: "ACTIVE"
-        },
-        {
-            planId: 3,
-            planName: "Advanced HIIT Shredder",
-            difficultyLevelStatus: "ADVANCED",
-            description: "High-intensity metabolic conditioning combined with explosive plyometrics for rapid fat burning.",
-            planStatus: "ACTIVE"
-        },
-        {
-            planId: 4,
-            planName: "Core & Functional Strength",
-            difficultyLevelStatus: "INTERMEDIATE",
-            description: "Targeted abdominal, rotational, and posterior chain power exercises to build raw functional stamina.",
-            planStatus: "ACTIVE"
-        }
-    ];
+    const plans = (Array.isArray(allMasterPlans) && allMasterPlans.length > 0) ? allMasterPlans : [];
+    const currentPlan = activePlan || plans[0] || null;
 
-    const displayPlans = (allMasterPlans && allMasterPlans.length > 0) ? allMasterPlans : fallbackTemplates;
-    const currentPlan = activePlan || displayPlans[0];
+    if (!currentPlan) {
+        $('#overviewMemberRoutine').text('No Workout Routine');
+        $('#overviewMemberRoutineDay').text('Not Assigned');
+
+        $('#memberWorkoutHeaderTitle').text('My Workout Routine');
+        $('#memberActiveRoutineName').text('No Workout Routine Assigned');
+        $('#memberRoutineDiffBadge').text('N/A');
+        $('#memberActiveRoutineDesc').text('No coaching routine has been assigned yet. Choose or request a program below.');
+        $('#memberRoutineAssignedDate').text('--');
+        $('#memberRoutineStatusBadge').text('NOT ASSIGNED').attr('class', 'badge badge-muted');
+
+        $('#memberRoutineDaysGrid').html(`
+            <div style="grid-column: 1 / -1; text-align:center; padding:32px; background:var(--bg-surface-2); border-radius:var(--radius-md); border:1px dashed var(--border);">
+                <p style="color:var(--text-muted); margin:0;">No exercises or workout routine assigned yet.</p>
+            </div>
+        `);
+        $('#memberAvailableWorkoutsGrid').html(`
+            <div style="grid-column: 1 / -1; text-align:center; padding:32px; background:var(--bg-surface-2); border-radius:var(--radius-md); border:1px dashed var(--border);">
+                <p style="color:var(--text-muted); margin:0;">No workout programs available in catalog.</p>
+            </div>
+        `);
+        return;
+    }
 
     $('#overviewMemberRoutine').text(currentPlan.planName);
     $('#overviewMemberRoutineDay').text((currentPlan.difficultyLevelStatus || 'INTERMEDIATE') + ' Level');
@@ -1049,7 +1042,7 @@ function renderMemberWorkoutView(mId, activePlan, myAssignment, allMasterPlans) 
     const availableGrid = $('#memberAvailableWorkoutsGrid');
     availableGrid.empty();
 
-    displayPlans.forEach(p => {
+    plans.forEach(p => {
         const isCurrent = String(p.planId) === String(currentPlan.planId) || p.planName === currentPlan.planName;
         const diffBadge = p.difficultyLevelStatus === 'BEGINNER' ? 'badge-info' :
                           (p.difficultyLevelStatus === 'ADVANCED' ? 'badge-danger' : 'badge-lime');

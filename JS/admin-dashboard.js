@@ -172,13 +172,24 @@ function initSearchAndFilters() {
 }
 
 function syncUserProfile() {
-    const email = localStorage.getItem('email') || localStorage.getItem('flexGymEmail') || 'admin@flexgym.com';
+    const email = localStorage.getItem('email') || localStorage.getItem('flexGymEmail') || '';
+    const fullName = localStorage.getItem('userFullName') || localStorage.getItem('flexGymFullName') || 'Administrator';
     const rawRole = localStorage.getItem('userRole') || localStorage.getItem('flexGymRole') || 'ADMIN';
     const role = rawRole.replace('ROLE_', '');
 
-    $('#dashUserEmail').text(email);
-    $('#dashUserRole').text(role);
-    $('#dashUserAvatar').text('AD');
+    $('#dashUserEmail').text(fullName || email || 'Administrator');
+    $('#dashUserRole').text(role || 'Administrator');
+
+    let initials = 'AD';
+    if (fullName && fullName !== 'Administrator') {
+        const parts = fullName.trim().split(/\s+/);
+        if (parts.length >= 2) {
+            initials = (parts[0][0] + parts[1][0]).toUpperCase();
+        } else if (parts.length === 1 && parts[0].length >= 2) {
+            initials = parts[0].substring(0, 2).toUpperCase();
+        }
+    }
+    $('#dashUserAvatar').text(initials);
 }
 
 function initLogout() {
@@ -359,10 +370,14 @@ function syncAdminAnalytics() {
                 const storedStatus = localStorage.getItem("flex_member_status_" + m.memberId);
                 if (storedStatus) m.memberStatus = storedStatus;
             });
-            const activeMembers = members.filter(m => (m.memberStatus || 'ACTIVE') === 'ACTIVE').length;
+            const activeMembers = members.filter(m => (m.memberStatus !== 'INACTIVE' && m.memberStatus !== 'SUSPENDED' && m.memberStatus !== 'DELETED')).length;
             $('#adminStatActiveMembers').text(activeMembers.toLocaleString());
             $('#adminStatActiveMembersTrend').text(`Total Registered: ${members.length} Members`);
-            $('.dash-nav-item[data-section="members"] .nav-badge').text(members.length);
+            $('.dash-nav-item[data-section="members"] .nav-badge, #adminNavMembersBadge').text(members.length).toggle(members.length > 0);
+        },
+        error: function () {
+            $('#adminStatActiveMembers').text('0');
+            $('#adminStatActiveMembersTrend').text('0 Registered Members');
         }
     });
 
@@ -387,22 +402,37 @@ function syncAdminAnalytics() {
                 }
             });
 
-            if (monthlyTotals[currentMonthIdx] > 0) {
-                for (let i = 0; i < currentMonthIdx; i++) {
-                    if (monthlyTotals[i] === 0) {
-                        monthlyTotals[i] = Math.round(monthlyTotals[currentMonthIdx] * (0.4 + (i / currentMonthIdx) * 0.5));
+            FlexAPI.ajax({
+                url: "/orders/getAllOrders",
+                type: "GET",
+                success: function (orders) {
+                    if (Array.isArray(orders)) {
+                        orders.forEach(o => {
+                            if (o.orderStatus === 'COMPLETED' || o.orderStatus === 'PAID') {
+                                totalRevenue += Number(o.totalAmount || o.amount || 0);
+                            }
+                        });
+                        $('.dash-nav-item[data-section="orders"] .nav-badge, #adminNavOrdersBadge').text(orders.length).toggle(orders.length > 0);
                     }
+                    $('#adminStatMonthlyRevenue').text(`Rs. ${totalRevenue.toLocaleString()}`);
+                    $('#adminStatMonthlyRevenueTrend').text(`${payments.length} Recorded Transactions`);
+                },
+                error: function () {
+                    $('#adminStatMonthlyRevenue').text(`Rs. ${totalRevenue.toLocaleString()}`);
+                    $('#adminStatMonthlyRevenueTrend').text(`${payments.length} Recorded Transactions`);
                 }
-            }
+            });
 
-            $('#adminStatMonthlyRevenue').text(`Rs. ${totalRevenue.toLocaleString()}`);
-            $('#adminStatMonthlyRevenueTrend').text(`${payments.length} Recorded Transactions`);
-            $('.dash-nav-item[data-section="payments"] .nav-badge').text(payments.length);
+            $('.dash-nav-item[data-section="payments"] .nav-badge, #adminNavPaymentsBadge').text(payments.length).toggle(payments.length > 0);
 
             if (window.flexCharts && window.flexCharts.revenue) {
                 window.flexCharts.revenue.data.datasets[0].data = monthlyTotals;
                 window.flexCharts.revenue.update();
             }
+        },
+        error: function () {
+            $('#adminStatMonthlyRevenue').text('Rs. 0');
+            $('#adminStatMonthlyRevenueTrend').text('0 Transactions');
         }
     });
 
@@ -417,7 +447,7 @@ function syncAdminAnalytics() {
 
             $('#adminStatTodayAttendance').text(todayCount);
             $('#adminStatTodayAttendanceTrend').text(`${attendance.length} Total Turnstile Scans`);
-            $('.dash-nav-item[data-section="attendance"] .nav-badge').text(attendance.length);
+            $('.dash-nav-item[data-section="attendance"] .nav-badge, #adminNavAttendanceBadge').text(attendance.length).toggle(attendance.length > 0);
 
             const timeSlots = ['06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00'];
             const slotCounts = new Array(timeSlots.length).fill(0);
@@ -446,6 +476,10 @@ function syncAdminAnalytics() {
                 window.flexCharts.attendance.data.datasets[0].data = slotCounts;
                 window.flexCharts.attendance.update();
             }
+        },
+        error: function () {
+            $('#adminStatTodayAttendance').text('0');
+            $('#adminStatTodayAttendanceTrend').text('0 Turnstile Scans');
         }
     });
 
@@ -462,7 +496,25 @@ function syncAdminAnalytics() {
 
             $('#adminStatLockerOccupancy').text(`${occPct}%`);
             $('#adminStatLockerOccupancyTrend').text(`${avail} Available / ${total} Total Lockers`);
-            $('.dash-nav-item[data-section="lockers"] .nav-badge').text(total);
+            $('.dash-nav-item[data-section="lockers"] .nav-badge, #adminNavLockersBadge').text(total).toggle(total > 0);
+        }
+    });
+
+    FlexAPI.ajax({
+        url: "/trainers/getAllTrainers",
+        type: "GET",
+        success: function (trainers) {
+            if (!Array.isArray(trainers)) trainers = [];
+            $('.dash-nav-item[data-section="trainers"] .nav-badge, #adminNavTrainersBadge').text(trainers.length).toggle(trainers.length > 0);
+        }
+    });
+
+    FlexAPI.ajax({
+        url: "/workout-plans/getAllWorkoutPlans",
+        type: "GET",
+        success: function (plans) {
+            if (!Array.isArray(plans)) plans = [];
+            $('.dash-nav-item[data-section="workouts"] .nav-badge, #adminNavWorkoutsBadge').text(plans.length).toggle(plans.length > 0);
         }
     });
 
@@ -476,8 +528,9 @@ function syncAdminAnalytics() {
                 type: "GET",
                 success: function (memberships) {
                     if (!Array.isArray(memberships)) memberships = [];
-                    const pkgCounts = {};
+                    $('.dash-nav-item[data-section="memberships"] .nav-badge, #adminNavMembershipsBadge').text(memberships.length).toggle(memberships.length > 0);
 
+                    const pkgCounts = {};
                     packages.forEach(p => {
                         if (p.packageName) pkgCounts[p.packageName] = 0;
                     });
@@ -550,8 +603,10 @@ function loadAdminMembers() {
                 `);
             });
 
-            $('.dash-nav-item[data-section="members"] .nav-badge').text(members.length);
-            $('#view-overview .stat-card:first .stat-val').text(members.length);
+            const activeMembers = members.filter(m => (m.memberStatus !== 'INACTIVE' && m.memberStatus !== 'SUSPENDED' && m.memberStatus !== 'DELETED')).length;
+            $('#adminStatActiveMembers').text(activeMembers.toLocaleString());
+            $('#adminStatActiveMembersTrend').text(`Total Registered: ${members.length} Members`);
+            $('.dash-nav-item[data-section="members"] .nav-badge, #adminNavMembersBadge').text(members.length).toggle(members.length > 0);
         }
     });
 }
@@ -1005,6 +1060,48 @@ function loadAdminAttendance() {
                                 <td>${checkOutHtml}</td>
                                 <td>Main Turnstile</td>
                                 <td>${statusBadge}</td>
+                            </tr>
+                        `);
+                    });
+                }
+            }
+
+            const recentCheckinsBody = $('#adminRecentCheckinsBody');
+            if (recentCheckinsBody.length) {
+                recentCheckinsBody.empty();
+                if (logs.length === 0) {
+                    recentCheckinsBody.html(`
+                        <tr>
+                            <td colspan="4" style="text-align:center; padding:24px; color:var(--text-muted);">
+                                No attendance check-ins recorded today.
+                            </td>
+                        </tr>
+                    `);
+                } else {
+                    const recentLogs = logs.slice(0, 5);
+                    recentLogs.forEach(l => {
+                        let time = 'Just Now';
+                        if (l.checkInTime) {
+                            const str = String(l.checkInTime).replace('T', ' ');
+                            const parts = str.split(' ');
+                            if (parts.length >= 2) time = parts[1].substring(0, 5);
+                            else if (str.length >= 16) time = str.substring(11, 16);
+                        }
+                        const initials = l.memberFullName ? l.memberFullName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'MB';
+                        recentCheckinsBody.append(`
+                            <tr>
+                                <td>
+                                    <div class="cell-member">
+                                        <div class="member-avatar">${initials}</div>
+                                        <div class="member-meta">
+                                            <strong>${l.memberFullName || ('Member #' + l.memberId)}</strong>
+                                            <span>MEM-${l.memberId}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-lime">${l.packageName || 'Standard'}</span></td>
+                                <td><strong style="color:var(--lime);">${time}</strong></td>
+                                <td><span class="badge badge-success">${l.attendanceStatus || 'Checked In'}</span></td>
                             </tr>
                         `);
                     });
@@ -1861,10 +1958,21 @@ function loadAdminTrainers() {
         type: "GET",
         success: function (trainers) {
             if (!Array.isArray(trainers)) return;
-            const tbody = $('#view-trainers table tbody');
+            const tbody = $('#view-trainers table tbody, #adminTrainersTableBody');
             if (!tbody.length) return;
 
             tbody.empty();
+            if (trainers.length === 0) {
+                tbody.html(`
+                    <tr>
+                        <td colspan="6" style="text-align:center; padding:32px; color:var(--text-muted);">
+                            No coaches or personal trainers registered yet. Click "+ Add Trainer" to register one!
+                        </td>
+                    </tr>
+                `);
+                return;
+            }
+
             trainers.forEach(t => {
                 tbody.append(`
                     <tr>

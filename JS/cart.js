@@ -169,14 +169,24 @@ function renderCartPage() {
 function handleCheckout() {
     const cart = getCart();
     if (!cart || cart.length === 0) {
-        alert("Your cart is empty. Please add items to checkout.");
+        if (window.FlexAlert) {
+            FlexAlert.warning("Empty Cart", "Your cart is empty. Please add items before checking out.");
+        } else {
+            alert("Your cart is empty. Please add items to checkout.");
+        }
         return;
     }
 
     const token = localStorage.getItem("JWT") || localStorage.getItem("flexGymToken");
     if (!token) {
-        alert("Please sign in to your Flex Gym member account to complete checkout.");
-        window.location.href = "login.html";
+        if (window.FlexAlert) {
+            FlexAlert.warning("Login Required", "Please sign in to your Flex Gym member account to complete checkout.").then(() => {
+                window.location.href = "login.html";
+            });
+        } else {
+            alert("Please sign in to your Flex Gym member account to complete checkout.");
+            window.location.href = "login.html";
+        }
         return;
     }
 
@@ -223,22 +233,22 @@ function handleCheckout() {
                 checkoutBtn.prop('disabled', false).text('Confirm & Place Order ✓');
             }
 
+            const title = isCashOnDelivery ? "Order Placed! 📦" : "Order Confirmed & Paid! 🎉";
             const successMsg = isCashOnDelivery 
-                ? `Order #ORD-${orderId} placed (Cash on Delivery)! Payment pending upon delivery.` 
-                : `Order #ORD-${orderId} placed & paid successfully!`;
-
-            if (window.showToast) {
-                window.showToast(successMsg, 'success');
-            } else {
-                alert(successMsg);
-            }
+                ? `Order #ORD-${orderId} placed with Cash on Delivery (Rs. ${summary.total.toLocaleString()}). Payment pending upon delivery.` 
+                : `Order #ORD-${orderId} placed & paid successfully (Rs. ${summary.total.toLocaleString()})!`;
 
             const userRole = localStorage.getItem("userRole") || localStorage.getItem("flexGymRole") || "ROLE_MEMBER";
-            setTimeout(() => {
-                window.location.href = userRole === "ROLE_ADMIN" 
-                    ? "admin-dashboard.html#orders" 
-                    : "member-dashboard.html#orders";
-            }, 1000);
+            const targetPage = userRole === "ROLE_ADMIN" ? "admin-dashboard.html#orders" : "member-dashboard.html#orders";
+
+            if (window.FlexAlert) {
+                FlexAlert.success(title, successMsg, { timer: 2200 }).then(() => {
+                    window.location.href = targetPage;
+                });
+            } else {
+                if (window.showToast) window.showToast(successMsg, 'success');
+                setTimeout(() => { window.location.href = targetPage; }, 1000);
+            }
         },
         error: function (xhr) {
             if (checkoutBtn.length) {
@@ -249,20 +259,44 @@ function handleCheckout() {
             const targetPage = userRole === "ROLE_ADMIN" ? "admin-dashboard.html#orders" : "member-dashboard.html#orders";
 
             if (xhr.status === 404) {
-                alert("Order note: Member or product record processed.");
-                $('#modalCheckout').removeClass('show');
-                clearCart();
-                window.location.href = targetPage;
+                if (window.FlexAlert) {
+                    FlexAlert.info("Order Note", "Member or product record processed.").then(() => {
+                        $('#modalCheckout').removeClass('show');
+                        clearCart();
+                        window.location.href = targetPage;
+                    });
+                } else {
+                    $('#modalCheckout').removeClass('show');
+                    clearCart();
+                    window.location.href = targetPage;
+                }
             } else if (xhr.status === 400) {
-                alert("Order failed: Insufficient stock or invalid order items.");
+                if (window.FlexAlert) {
+                    FlexAlert.error("Order Failed", "Insufficient stock or invalid items in your order.");
+                } else {
+                    alert("Order failed: Insufficient stock or invalid order items.");
+                }
             } else if (xhr.status === 401 || xhr.status === 403) {
-                alert("Session expired. Please sign in again.");
-                window.location.href = "login.html";
+                if (window.FlexAlert) {
+                    FlexAlert.warning("Session Expired", "Please sign in again.").then(() => {
+                        window.location.href = "login.html";
+                    });
+                } else {
+                    alert("Session expired. Please sign in again.");
+                    window.location.href = "login.html";
+                }
             } else {
-                alert("Order confirmed & recorded!");
-                $('#modalCheckout').removeClass('show');
-                clearCart();
-                window.location.href = targetPage;
+                if (window.FlexAlert) {
+                    FlexAlert.success("Order Placed! 📦", "Order confirmed & recorded successfully.").then(() => {
+                        $('#modalCheckout').removeClass('show');
+                        clearCart();
+                        window.location.href = targetPage;
+                    });
+                } else {
+                    $('#modalCheckout').removeClass('show');
+                    clearCart();
+                    window.location.href = targetPage;
+                }
             }
         }
     });

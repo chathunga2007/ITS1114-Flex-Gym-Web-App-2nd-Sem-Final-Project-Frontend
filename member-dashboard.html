@@ -145,34 +145,12 @@
             <div class="panel-header">
               <div>
                 <h3 class="panel-title">Today's Workout Preview</h3>
-                <p class="panel-subtitle">Day 3: Quad & Hamstring Dominance</p>
+                <p class="panel-subtitle" id="overviewTodayWorkoutSubtitle">Today's Training Focus</p>
               </div>
               <a href="#workouts" class="btn btn-primary" style="font-size: 11px; padding: 6px 14px;">Open Routine →</a>
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 12px;">
-              <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--bg-surface-2); border-radius:var(--radius-md);">
-                <div>
-                  <strong>Barbell Back Squat</strong>
-                  <div style="font-size: 11px; color:var(--text-muted);">4 Sets × 6-8 Reps (Heavy)</div>
-                </div>
-                <span class="badge badge-lime">Compound</span>
-              </div>
-              <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--bg-surface-2); border-radius:var(--radius-md);">
-                <div>
-                  <strong>Romanian Deadlift (Dumbbells)</strong>
-                  <div style="font-size: 11px; color:var(--text-muted);">3 Sets × 10 Reps</div>
-                </div>
-                <span class="badge badge-info">Hamstrings</span>
-              </div>
-              <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--bg-surface-2); border-radius:var(--radius-md);">
-                <div>
-                  <strong>Leg Press &amp; Calf Raise Superset</strong>
-                  <div style="font-size: 11px; color:var(--text-muted);">4 Sets × 12 Reps</div>
-                </div>
-                <span class="badge badge-muted">Machine</span>
-              </div>
-            </div>
+            <div id="overviewWorkoutList" style="display: flex; flex-direction: column; gap: 12px;"></div>
           </div>
 
           <!-- digital check-in badge -->
@@ -573,6 +551,6 @@
   <script src="JS/alerts.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="JS/api.js"></script>
-  <script src="JS/dashboard.js"></script>
+  <script src="JS/member-dashboard.js"></script>
 </body>
 </html>

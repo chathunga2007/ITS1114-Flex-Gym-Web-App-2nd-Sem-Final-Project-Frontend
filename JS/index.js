@@ -133,8 +133,16 @@ function renderNavbarAuthState() {
 
     $(document).off('click', '.logout-nav-btn').on('click', '.logout-nav-btn', function (e) {
         e.preventDefault();
-        if (confirm("Are you sure you want to sign out?")) {
-            FlexAPI.logout();
+        if (window.FlexAlert) {
+            FlexAlert.confirm("Sign Out", "Are you sure you want to log out of Flex Gym?", "Yes, Sign Out", "Stay Signed In").then((confirmed) => {
+                if (confirmed) {
+                    FlexAPI.logout();
+                }
+            });
+        } else {
+            if (confirm("Are you sure you want to sign out?")) {
+                FlexAPI.logout();
+            }
         }
     });
 }

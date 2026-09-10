@@ -30,15 +30,17 @@
         <a href="#clients" class="dash-nav-item" data-section="clients">
           <span class="nav-icon">👥</span>
           <span>Assigned Clients</span>
-          <span class="nav-badge">18</span>
+          <span class="nav-badge" id="trainerNavClientsBadge" style="display:none;">0</span>
         </a>
         <a href="#workouts" class="dash-nav-item" data-section="workouts">
           <span class="nav-icon">📋</span>
           <span>Workout Programs</span>
+          <span class="nav-badge" id="trainerNavWorkoutsBadge" style="display:none;">0</span>
         </a>
         <a href="#sessions" class="dash-nav-item" data-section="sessions">
           <span class="nav-icon">📅</span>
           <span>Training Schedule</span>
+          <span class="nav-badge" id="trainerNavSessionsBadge" style="display:none;">0</span>
         </a>
         <a href="#profile" class="dash-nav-item" data-section="profile">
           <span class="nav-icon">👤</span>
@@ -143,18 +145,9 @@
                   <th>Status</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="trainerTodaySessionsBody">
                 <tr>
-                  <td>10:00 AM - 11:00 AM</td>
-                  <td><strong>Dineth Perera</strong></td>
-                  <td>Leg Hypertrophy</td>
-                  <td><span class="badge badge-success">Completed ✓</span></td>
-                </tr>
-                <tr>
-                  <td>04:00 PM - 05:00 PM</td>
-                  <td><strong>Saman Kumara</strong></td>
-                  <td>Back &amp; Deadlifts</td>
-                  <td><span class="badge badge-warning">Upcoming</span></td>
+                  <td colspan="4" style="text-align:center; color:var(--text-muted); padding:24px;">No personal training sessions scheduled for today.</td>
                 </tr>
               </tbody>
             </table>

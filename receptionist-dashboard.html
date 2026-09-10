@@ -30,10 +30,12 @@
         <a href="#members" class="dash-nav-item" data-section="members">
           <span class="nav-icon">👥</span>
           <span>Member Lookup</span>
+          <span class="nav-badge" id="rcpNavMemberBadge" style="display:none;">0</span>
         </a>
         <a href="#lockers" class="dash-nav-item" data-section="lockers">
           <span class="nav-icon">🔒</span>
           <span>Locker Desk</span>
+          <span class="nav-badge" id="rcpNavLockerBadge" style="display:none;">0</span>
         </a>
         <a href="#pos" class="dash-nav-item" data-section="pos">
           <span class="nav-icon">💵</span>
@@ -42,6 +44,7 @@
         <a href="#memberships" class="dash-nav-item" data-section="memberships">
           <span class="nav-icon">💳</span>
           <span>Membership Requests</span>
+          <span class="nav-badge" id="rcpNavPendingBadge" style="display:none;background:var(--warning);color:#000;">0</span>
         </a>
       </nav>
 
@@ -872,8 +875,10 @@
 
   <!-- client runtime scripts -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="JS/alerts.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="JS/api.js"></script>
-  <script src="JS/dashboard.js"></script>
+  <script src="JS/receptionist-dashboard.js"></script>
 </body>
 </html>

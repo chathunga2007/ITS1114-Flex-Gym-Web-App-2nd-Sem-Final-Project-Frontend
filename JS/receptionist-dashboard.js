@@ -164,10 +164,10 @@ function initSearchAndFilters() {
 }
 
 function syncUserProfile() {
-    const email = localStorage.getItem('email') || localStorage.getItem('flexGymEmail') || 'reception@flexgym.com';
+    const email = localStorage.getItem('email') || localStorage.getItem('flexGymEmail') || '';
     const fullName = localStorage.getItem('userFullName') || localStorage.getItem('flexGymFullName') || 'Front Desk Staff';
 
-    $('#dashUserEmail').text(fullName || email);
+    $('#dashUserEmail').text(fullName || email || 'Front Desk Staff');
     $('#dashUserRole').text('Receptionist');
     $('#dashUserAvatar').text('FD');
 }

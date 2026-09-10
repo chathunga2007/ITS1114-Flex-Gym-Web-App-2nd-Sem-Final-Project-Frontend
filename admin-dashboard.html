@@ -30,19 +30,22 @@
         <a href="#members" class="dash-nav-item" data-section="members">
           <span class="nav-icon">👥</span>
           <span>Members</span>
-          <span class="nav-badge">1,248</span>
+          <span class="nav-badge" id="adminNavMembersBadge" style="display:none;">0</span>
         </a>
         <a href="#memberships" class="dash-nav-item" data-section="memberships">
           <span class="nav-icon">💳</span>
           <span>Memberships</span>
+          <span class="nav-badge" id="adminNavMembershipsBadge" style="display:none;">0</span>
         </a>
         <a href="#attendance" class="dash-nav-item" data-section="attendance">
           <span class="nav-icon">⏱️</span>
           <span>Attendance</span>
+          <span class="nav-badge" id="adminNavAttendanceBadge" style="display:none;">0</span>
         </a>
         <a href="#workouts" class="dash-nav-item" data-section="workouts">
           <span class="nav-icon">📋</span>
           <span>Workout Plans</span>
+          <span class="nav-badge" id="adminNavWorkoutsBadge" style="display:none;">0</span>
         </a>
         <a href="#products" class="dash-nav-item" data-section="products">
           <span class="nav-icon">📦</span>
@@ -52,7 +55,7 @@
         <a href="#orders" class="dash-nav-item" data-section="orders">
           <span class="nav-icon">🛒</span>
           <span>Orders</span>
-          <span class="nav-badge" style="background:var(--warning);color:#000;">5</span>
+          <span class="nav-badge" id="adminNavOrdersBadge" style="display:none;background:var(--warning);color:#000;">0</span>
         </a>
         <a href="#equipment" class="dash-nav-item" data-section="equipment">
           <span class="nav-icon">⚙️</span>
@@ -62,14 +65,17 @@
         <a href="#lockers" class="dash-nav-item" data-section="lockers">
           <span class="nav-icon">🔒</span>
           <span>Lockers</span>
+          <span class="nav-badge" id="adminNavLockersBadge" style="display:none;">0</span>
         </a>
         <a href="#trainers" class="dash-nav-item" data-section="trainers">
           <span class="nav-icon">🏋️</span>
           <span>Trainers</span>
+          <span class="nav-badge" id="adminNavTrainersBadge" style="display:none;">0</span>
         </a>
         <a href="#payments" class="dash-nav-item" data-section="payments">
           <span class="nav-icon">💰</span>
           <span>Payments</span>
+          <span class="nav-badge" id="adminNavPaymentsBadge" style="display:none;">0</span>
         </a>
       </nav>
 
@@ -149,8 +155,8 @@
               <span class="stat-label">Total Active Members</span>
               <div class="stat-icon">👥</div>
             </div>
-            <div class="stat-val" id="adminStatActiveMembers">--</div>
-            <div class="stat-trend up" id="adminStatActiveMembersTrend">Loading members...</div>
+            <div class="stat-val" id="adminStatActiveMembers">0</div>
+            <div class="stat-trend up" id="adminStatActiveMembersTrend">Registered Members</div>
           </div>
           <div class="stat-card">
             <div class="stat-top">
@@ -239,48 +245,9 @@
                     <th>Status</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="adminRecentCheckinsBody">
                   <tr>
-                    <td>
-                      <div class="cell-member">
-                        <div class="member-avatar">DN</div>
-                        <div class="member-meta">
-                          <strong>Dineth Perera</strong>
-                          <span>MEM-8921</span>
-                        </div>
-                      </div>
-                    </td>
-                    <td><span class="badge badge-lime">Elite Pro</span></td>
-                    <td>10:42 AM</td>
-                    <td><span class="badge badge-success">Checked In</span></td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div class="cell-member">
-                        <div class="member-avatar">SM</div>
-                        <div class="member-meta">
-                          <strong>Saman Kumara</strong>
-                          <span>MEM-7312</span>
-                        </div>
-                      </div>
-                    </td>
-                    <td><span class="badge badge-info">Standard</span></td>
-                    <td>10:35 AM</td>
-                    <td><span class="badge badge-success">Checked In</span></td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div class="cell-member">
-                        <div class="member-avatar">KR</div>
-                        <div class="member-meta">
-                          <strong>Kavindu Rathsara</strong>
-                          <span>MEM-9014</span>
-                        </div>
-                      </div>
-                    </td>
-                    <td><span class="badge badge-lime">VIP Diamond</span></td>
-                    <td>09:50 AM</td>
-                    <td><span class="badge badge-muted">Checked Out</span></td>
+                    <td colspan="4" style="text-align:center; color:var(--text-muted); padding:24px;">No attendance check-ins recorded today.</td>
                   </tr>
                 </tbody>
               </table>
@@ -349,7 +316,7 @@
             <table class="dash-table" id="membersTable">
               <thead>
                 <tr>
-                  <th>Member ID & Name</th>
+                  <th>Member</th>
                   <th>Contact Info</th>
                   <th>Joined Date</th>
                   <th>Package</th>
@@ -357,90 +324,9 @@
                   <th>Actions</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="adminMembersTableBody">
                 <tr>
-                  <td>
-                    <div class="cell-member">
-                      <div class="member-avatar">DN</div>
-                      <div class="member-meta">
-                        <strong>Dineth Perera</strong>
-                        <span>ID: MEM-1048</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td>dineth@gmail.com<br><small style="color:var(--text-muted)">+94 77 123 4567</small></td>
-                  <td>2024-01-15</td>
-                  <td><span class="badge badge-lime">Elite Pro</span></td>
-                  <td><span class="badge badge-success">Active</span></td>
-                  <td>
-                    <div class="action-btns">
-                      <button class="btn-icon" title="Edit" onclick="showToast('Edit Member modal opened')">✏️</button>
-                      <button class="btn-icon danger" title="Delete" onclick="showToast('Member deleted', 'error')">🗑️</button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="cell-member">
-                      <div class="member-avatar">SM</div>
-                      <div class="member-meta">
-                        <strong>Saman Kumara</strong>
-                        <span>ID: MEM-1049</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td>saman.k@yahoo.com<br><small style="color:var(--text-muted)">+94 71 889 2314</small></td>
-                  <td>2024-02-10</td>
-                  <td><span class="badge badge-info">Standard</span></td>
-                  <td><span class="badge badge-success">Active</span></td>
-                  <td>
-                    <div class="action-btns">
-                      <button class="btn-icon" title="Edit">✏️</button>
-                      <button class="btn-icon danger" title="Delete">🗑️</button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="cell-member">
-                      <div class="member-avatar">KR</div>
-                      <div class="member-meta">
-                        <strong>Kavindu Rathsara</strong>
-                        <span>ID: MEM-1050</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td>kavindu.r@gmail.com<br><small style="color:var(--text-muted)">+94 76 554 9901</small></td>
-                  <td>2023-11-20</td>
-                  <td><span class="badge badge-lime">VIP Diamond</span></td>
-                  <td><span class="badge badge-warning">Pending</span></td>
-                  <td>
-                    <div class="action-btns">
-                      <button class="btn-icon" title="Edit">✏️</button>
-                      <button class="btn-icon danger" title="Delete">🗑️</button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="cell-member">
-                      <div class="member-avatar">AN</div>
-                      <div class="member-meta">
-                        <strong>Anusha Wickramasinghe</strong>
-                        <span>ID: MEM-1051</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td>anusha.w@gmail.com<br><small style="color:var(--text-muted)">+94 70 334 1122</small></td>
-                  <td>2023-08-05</td>
-                  <td><span class="badge badge-muted">Basic</span></td>
-                  <td><span class="badge badge-danger">Expired</span></td>
-                  <td>
-                    <div class="action-btns">
-                      <button class="btn-icon" title="Edit">✏️</button>
-                      <button class="btn-icon danger" title="Delete">🗑️</button>
-                    </div>
-                  </td>
+                  <td colspan="6" style="text-align:center; color:var(--text-muted); padding:24px;">No members registered yet.</td>
                 </tr>
               </tbody>
             </table>
@@ -661,69 +547,9 @@
                   <th>Actions</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="adminProductsTableBody">
                 <tr>
-                  <td>
-                    <div class="cell-member">
-                      <img src="https://images.unsplash.com/photo-1579722821273-0f6c7d44362f?auto=format&fit=crop&w=100&q=80" style="width:36px;height:36px;border-radius:6px;object-fit:cover;" alt="Whey" />
-                      <div class="member-meta">
-                        <strong>HydroPure Isolate Whey (2kg)</strong>
-                        <span>SKU: SUPP-001</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td><span class="badge badge-lime">Supplements</span></td>
-                  <td>Rs. 18,500</td>
-                  <td>28 units</td>
-                  <td><span class="badge badge-success">In Stock</span></td>
-                  <td>
-                    <div class="action-btns">
-                      <button class="btn-icon" title="Edit">✏️</button>
-                      <button class="btn-icon danger" title="Delete">🗑️</button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="cell-member">
-                      <img src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=100&q=80" style="width:36px;height:36px;border-radius:6px;object-fit:cover;" alt="Straps" />
-                      <div class="member-meta">
-                        <strong>Pro Lifting Straps & Wrist Wraps</strong>
-                        <span>SKU: GEAR-102</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td><span class="badge badge-info">Gear</span></td>
-                  <td>Rs. 3,200</td>
-                  <td>45 units</td>
-                  <td><span class="badge badge-success">In Stock</span></td>
-                  <td>
-                    <div class="action-btns">
-                      <button class="btn-icon">✏️</button>
-                      <button class="btn-icon danger">🗑️</button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="cell-member">
-                      <img src="https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=100&q=80" style="width:36px;height:36px;border-radius:6px;object-fit:cover;" alt="Creatine" />
-                      <div class="member-meta">
-                        <strong>Pure Micronized Creatine 300g</strong>
-                        <span>SKU: SUPP-004</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td><span class="badge badge-lime">Supplements</span></td>
-                  <td>Rs. 6,800</td>
-                  <td>4 units</td>
-                  <td><span class="badge badge-warning">Low Stock</span></td>
-                  <td>
-                    <div class="action-btns">
-                      <button class="btn-icon">✏️</button>
-                      <button class="btn-icon danger">🗑️</button>
-                    </div>
-                  </td>
+                  <td colspan="6" style="text-align:center; color:var(--text-muted); padding:24px;">No products found in inventory.</td>
                 </tr>
               </tbody>
             </table>
@@ -754,28 +580,9 @@
                   <th>Action</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="adminOrdersTableBody">
                 <tr>
-                  <td><strong>#ORD-9821</strong></td>
-                  <td>Dineth Perera</td>
-                  <td>1x HydroPure Whey, 1x Straps</td>
-                  <td>Rs. 21,700</td>
-                  <td><span class="badge badge-success">Paid (Card)</span></td>
-                  <td><span class="badge badge-warning">Processing</span></td>
-                  <td>
-                    <button class="btn btn-secondary" style="padding:4px 10px;font-size:11px;" onclick="showToast('Order marked as Completed')">Ship Order 🚚</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>#ORD-9820</strong></td>
-                  <td>Saman Kumara</td>
-                  <td>1x Creatine 300g</td>
-                  <td>Rs. 6,800</td>
-                  <td><span class="badge badge-success">Paid</span></td>
-                  <td><span class="badge badge-success">Delivered</span></td>
-                  <td>
-                    <button class="btn btn-secondary" style="padding:4px 10px;font-size:11px;">Invoice 📄</button>
-                  </td>
+                  <td colspan="7" style="text-align:center; color:var(--text-muted); padding:24px;">No store orders placed yet.</td>
                 </tr>
               </tbody>
             </table>
@@ -822,45 +629,9 @@
                   <th>Actions</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="adminEquipmentTableBody">
                 <tr>
-                  <td><strong>EQ-1</strong></td>
-                  <td><strong>Olympic Power Rack #1</strong></td>
-                  <td>2</td>
-                  <td><span class="badge badge-success">Working</span></td>
-                  <td>2024-02-14</td>
-                  <td>
-                    <div class="action-btns">
-                      <button class="btn-icon" title="Edit">✏️</button>
-                      <button class="btn-icon danger" title="Delete">🗑️</button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>EQ-2</strong></td>
-                  <td><strong>Matrix Cable Crossover Dual</strong></td>
-                  <td>1</td>
-                  <td><span class="badge badge-warning">Under Repair</span></td>
-                  <td>2024-02-10</td>
-                  <td>
-                    <div class="action-btns">
-                      <button class="btn-icon" title="Edit">✏️</button>
-                      <button class="btn-icon danger" title="Delete">🗑️</button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>EQ-3</strong></td>
-                  <td><strong>LifeFitness Treadmill T5</strong></td>
-                  <td>4</td>
-                  <td><span class="badge badge-danger">Out of Order</span></td>
-                  <td>2024-02-01</td>
-                  <td>
-                    <div class="action-btns">
-                      <button class="btn-icon" title="Edit">✏️</button>
-                      <button class="btn-icon danger" title="Delete">🗑️</button>
-                    </div>
-                  </td>
+                  <td colspan="6" style="text-align:center; color:var(--text-muted); padding:24px;">No equipment registered yet.</td>
                 </tr>
               </tbody>
             </table>
@@ -956,38 +727,9 @@
                   <th>Status</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="adminTrainersTableBody">
                 <tr>
-                  <td>
-                    <div class="cell-member">
-                      <div class="member-avatar">KR</div>
-                      <div class="member-meta">
-                        <strong>Kasun Rajapaksha</strong>
-                        <span>Senior Strength Coach</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td><span class="badge badge-lime">Hypertrophy & Power</span></td>
-                  <td>kasun.r@flexgym.com</td>
-                  <td>18 / 20 Clients</td>
-                  <td>Rs. 3,500 / hr</td>
-                  <td><span class="badge badge-success">On Duty</span></td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="cell-member">
-                      <div class="member-avatar">NF</div>
-                      <div class="member-meta">
-                        <strong>Nadeesha Fernando</strong>
-                        <span>Yoga & Mobility Expert</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td><span class="badge badge-info">Flexibility & Core</span></td>
-                  <td>nadeesha.f@flexgym.com</td>
-                  <td>12 / 15 Clients</td>
-                  <td>Rs. 3,000 / hr</td>
-                  <td><span class="badge badge-success">On Duty</span></td>
+                  <td colspan="6" style="text-align:center; color:var(--text-muted); padding:24px;">No trainers registered yet.</td>
                 </tr>
               </tbody>
             </table>

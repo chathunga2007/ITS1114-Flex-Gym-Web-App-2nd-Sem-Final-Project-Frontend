@@ -24,11 +24,7 @@ $(document).ready(function () {
 
     $("#forgotPassword").off("click").on("click", function (e) {
         e.preventDefault();
-        if (window.FlexAlert) {
-            FlexAlert.info("Reset Password", "Please contact gym administration or front desk to reset your account credentials.");
-        } else {
-            alert("Please contact gym administration or front desk to reset your password.");
-        }
+        window.location.href = "forgot-password.html";
     });
 });
 

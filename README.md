@@ -15,6 +15,11 @@ The **Flex Gym Management System Frontend** provides a complete user interface f
 
 ### 🔐 1. Authentication & Role-Based Access Control
 - **JWT Authentication:** Secure token storage with automatic session validation.
+- **Account Recovery / Forgot Password (`forgot-password.html`):**
+  - Intuitive 3-step password recovery wizard:
+    1. **Request OTP:** Sends a 6-digit recovery PIN to registered email address (`POST /api/users/forgot-password`).
+    2. **Verify OTP:** Validates PIN with live 60-second cooldown timer and resend capability (`POST /api/users/verify-otp`).
+    3. **Reset Password:** Allows setting a new secure password with live password strength meter and match validation (`POST /api/users/reset-password`).
 - **Smart Role Routing:** Automatically redirects users to their designated dashboard based on role:
   - `ROLE_ADMIN` ➔ **Admin Dashboard**
   - `ROLE_TRAINER` ➔ **Trainer Dashboard**
@@ -80,6 +85,7 @@ Flex-Gym-Management-System-Frontend/
 │   ├── auth.js                   # Authentication & role redirection
 │   ├── cart.js                   # Cart management & localStorage sync
 │   ├── chatbot.js                # Virtual assistant widget
+│   ├── forgot-password.js        # Account recovery & OTP reset handler
 │   ├── index.js                  # Landing page interactions
 │   ├── inventory-alerts.js       # Low-stock notification utilities
 │   ├── locker.js                 # Locker booking & status
@@ -100,6 +106,7 @@ Flex-Gym-Management-System-Frontend/
 ├── about.html                    # About page
 ├── admin-dashboard.html          # Admin management portal
 ├── cart.html                     # Shopping cart & checkout
+├── forgot-password.html          # Password recovery & reset page
 ├── index.html                    # Main landing page
 ├── login.html                    # Login page
 ├── member-dashboard.html         # Member personal portal
@@ -132,7 +139,7 @@ const API_BASE_URL = "http://localhost:8080/api";
 ### 3. Running the Project
 1. Clone or download the repository:
    ```bash
-   git clone https://github.com/chathunga2007/ITS1114-Flex-Gym-Management-System-2nd-Sem-Final-Project-Frontend.git
+   git clone https://github.com/chathunga2007/ITS1114-Flex-Gym-Web-App-2nd-Sem-Final-Project-Frontend.git
    ```
 2. Open the project folder in **VS Code**.
 3. Right-click on `index.html` and select **"Open with Live Server"** (or open `index.html` directly in your browser).

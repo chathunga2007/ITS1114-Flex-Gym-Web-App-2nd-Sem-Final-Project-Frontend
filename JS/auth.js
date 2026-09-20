@@ -35,7 +35,7 @@ $(document).ready(function() {
 
     $("#forgotPassword").on("click", function(e) {
         e.preventDefault();
-        alert("Please contact gym administration or reception to reset your account credentials.");
+        window.location.href = "forgot-password.html";
     });
 });
 

@@ -5489,10 +5489,6 @@ body {
     background: #c9ff00 !important;
 }
 
-/* ===================================================
-   FLEXBOT AI CHATBOT WIDGET STYLES
-   =================================================== */
-
 /* Floating Trigger Button */
 .flexbot-floating-btn {
     position: fixed;
@@ -5602,11 +5598,15 @@ body {
     border: 1px solid rgba(215, 255, 0, 0.28);
     border-radius: 22px;
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(215, 255, 0, 0.15);
-    display: flex;
+    display: none;
     flex-direction: column;
     overflow: hidden;
     z-index: 10000;
     animation: flexbotSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.flexbot-chat-window.active {
+    display: flex;
 }
 
 @keyframes flexbotSlideUp {

@@ -223,6 +223,73 @@
         </div>
     </footer>
 
+    <!-- Floating Trigger Button -->
+    <div class="flexbot-floating-btn" id="flexbot-toggle-btn" title="Chat with FlexBot AI" role="button" aria-label="Open AI Chatbot">
+        <div class="flexbot-btn-pulse"></div>
+        <div class="flexbot-btn-icon">
+            <span class="bot-emoji">🤖</span>
+            <span class="bot-sparkle">✨</span>
+        </div>
+        <span class="flexbot-badge">AI Assistant</span>
+    </div>
+
+    <!-- Chat Window -->
+    <div class="flexbot-chat-window" id="flexbot-window">
+        <!-- Chat Header -->
+        <div class="flexbot-header">
+            <div class="flexbot-header-left">
+                <div class="flexbot-avatar-wrap">
+                    <div class="flexbot-avatar">🤖</div>
+                    <div class="flexbot-status-dot"></div>
+                </div>
+                <div class="flexbot-title-info">
+                    <h4>FlexBot AI <span>⚡</span></h4>
+                    <span class="flexbot-subtitle">Online • Gym Assistant</span>
+                </div>
+            </div>
+            <div class="flexbot-header-actions">
+                <button type="button" class="flexbot-header-btn" id="flexbot-clear-btn" title="Reset Chat">
+                    ↺
+                </button>
+                <button type="button" class="flexbot-header-btn" id="flexbot-close-btn" title="Close">
+                    ✕
+                </button>
+            </div>
+        </div>
+
+        <!-- Messages Area -->
+        <div class="flexbot-messages" id="chat-messages">
+            <div class="flexbot-msg flexbot-msg-bot">
+                <div class="flexbot-msg-avatar">🤖</div>
+                <div class="flexbot-msg-content">
+                    <p>Hello! 👋 I'm <strong>FlexBot</strong>, your personal AI fitness assistant.</p>
+                    <p>How can I help you today? Feel free to ask about our memberships, workout plans, trainers, or store supplements!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Suggestion Chips -->
+        <div class="flexbot-chips-wrap">
+            <div class="flexbot-chips">
+                <button type="button" class="flexbot-chip" data-prompt="What membership packages do you offer?">💳 Packages</button>
+                <button type="button" class="flexbot-chip" data-prompt="Can you recommend a workout plan for beginners?">🏋️ Workout Plans</button>
+                <button type="button" class="flexbot-chip" data-prompt="What supplements and products are in your shop?">🥤 Shop Items</button>
+                <button type="button" class="flexbot-chip" data-prompt="Tell me about the personal trainers at Flex Gym.">👟 Trainers</button>
+                <button type="button" class="flexbot-chip" data-prompt="What are Flex Gym opening hours?">⏰ Opening Hours</button>
+            </div>
+        </div>
+
+        <!-- Footer Input -->
+        <div class="flexbot-footer">
+            <form class="flexbot-form" id="flexbot-form" onsubmit="return false;">
+                <input type="text" class="flexbot-input" id="chat-input" placeholder="Ask FlexBot anything..." autocomplete="off">
+                <button type="submit" class="flexbot-send-btn" id="send-btn" title="Send Message">
+                    ➤
+                </button>
+            </form>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="JS/alerts.js"></script>

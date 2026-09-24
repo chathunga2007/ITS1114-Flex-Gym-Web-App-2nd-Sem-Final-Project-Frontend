@@ -4,12 +4,60 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Your Shopping Cart | Flex Gym</title>
+  <link rel="icon" type="image/png" href="assets/flex-gym-logo.png">
 
   <!-- typography & main stylesheet -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="CSS/style.css">
+  <style>
+    .payment-method-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .payment-option-card {
+      border: 1px solid var(--border);
+      background: var(--bg-surface-2);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .payment-option-card.active {
+      border-color: var(--lime);
+      background: rgba(204, 255, 0, 0.08);
+    }
+    .payment-option-card input[type="radio"] {
+      accent-color: var(--lime);
+    }
+    .card-simulator-box {
+      background: linear-gradient(145deg, #18202f, #0d131f);
+      border: 1px solid rgba(204, 255, 0, 0.3);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-top: 10px;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .card-preview-chip {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 8px;
+    }
+  </style>
 </head>
 <body>
   <div class="cart-page">
@@ -17,7 +65,9 @@
     <header class="navbar" id="navbar">
       <div class="nav-container">
         <a href="index.html" class="brand">
-          <div class="brand-icon">F</div>
+          <div class="brand-icon" style="padding:0;overflow:hidden;border:none;background:transparent;">
+            <img src="assets/flex-gym-logo.png" alt="Flex Gym" style="width:36px;height:36px;object-fit:cover;border-radius:8px;">
+          </div>
           <div class="brand-text">
             <span class="brand-name">FLEX</span>
             <span class="brand-subtitle">FITNESS CLUB</span>
@@ -115,40 +165,115 @@
 
   <!-- checkout delivery & payment modal -->
   <div class="modal-backdrop" id="modalCheckout">
-    <div class="modal-box">
+    <div class="modal-box" style="max-width: 580px;">
       <div class="modal-header">
         <h3>Complete Your Order</h3>
         <button class="modal-close" onclick="document.getElementById('modalCheckout').classList.remove('show')">&times;</button>
       </div>
       <form id="formCheckout">
-        <div class="modal-body">
+        <div class="modal-body" style="max-height: 75vh; overflow-y: auto;">
+          <!-- Customer & Contact -->
+          <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--lime); margin-bottom: 10px; letter-spacing: 1px;">
+            1. Shipping & Contact Information
+          </div>
           <div class="form-group">
             <label class="form-label">Full Name</label>
-            <input type="text" id="checkoutFullName" class="form-control" value="Member Customer" required />
+            <input type="text" id="checkoutFullName" class="form-control" value="Member Customer" placeholder="Recipient's Name" required />
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label">Phone</label>
-              <input type="tel" id="checkoutPhone" class="form-control" value="+94 77 123 4567" required />
+              <label class="form-label">Phone Number</label>
+              <input type="tel" id="checkoutPhone" class="form-control" value="+94 77 123 4567" placeholder="+94 7X XXX XXXX" required />
             </div>
             <div class="form-group">
               <label class="form-label">Delivery City</label>
-              <input type="text" id="checkoutCity" class="form-control" value="Colombo 03" required />
+              <input type="text" id="checkoutCity" class="form-control" value="Colombo 03" placeholder="City (e.g. Colombo, Kandy)" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group" style="flex:2;">
+              <label class="form-label">Delivery Address</label>
+              <input type="text" id="checkoutAddress" class="form-control" value="No. 45, Galle Road, Colombo 03" placeholder="Street Address" required />
+            </div>
+            <div class="form-group" style="flex:1;">
+              <label class="form-label">Postal Code</label>
+              <input type="text" id="checkoutPostalCode" class="form-control" value="00300" placeholder="Postal Code" />
             </div>
           </div>
           <div class="form-group">
-            <label class="form-label">Delivery Address</label>
-            <textarea id="checkoutAddress" class="form-control" rows="2" required>No. 45, Galle Road, Colombo 03</textarea>
+            <label class="form-label">Delivery Instructions / Notes (Optional)</label>
+            <input type="text" id="checkoutNotes" class="form-control" placeholder="e.g. Leave with security / Call before delivery" />
           </div>
-          <div class="form-group">
-            <label class="form-label">Payment Method</label>
-            <select id="checkoutPaymentMethod" class="form-control">
-              <option value="CASH">Cash on Delivery (Islandwide)</option>
-              <option value="CARD">Credit / Debit Card (Visa, Master)</option>
-              <option value="ACCOUNT">Flex Member Account Balance</option>
-            </select>
+
+          <!-- Payment Method Selection -->
+          <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--lime); margin: 18px 0 10px; letter-spacing: 1px;">
+            2. Choose Payment Method
+          </div>
+          <div class="payment-method-selector">
+            <label class="payment-option-card active" id="labelMethodCOD">
+              <input type="radio" name="paymentChoice" value="CASH_ON_DELIVERY" checked>
+              <div>
+                <strong style="display:block; font-size:13px; color:#fff;">Cash on Delivery</strong>
+                <span style="font-size:11px; color:var(--text-muted);">Islandwide • Pay on receipt</span>
+              </div>
+            </label>
+
+            <label class="payment-option-card" id="labelMethodCard">
+              <input type="radio" name="paymentChoice" value="CREDIT_CARD">
+              <div>
+                <strong style="display:block; font-size:13px; color:#fff;">Credit / Debit Card</strong>
+                <span style="font-size:11px; color:var(--text-muted);">Visa, MasterCard, Amex</span>
+              </div>
+            </label>
+          </div>
+
+          <!-- Dynamic Card Simulator -->
+          <div id="cardDetailsContainer" class="card-simulator-box" style="display: none;">
+            <div class="card-preview-chip">
+              <span style="font-size: 12px; color: var(--lime); font-weight: 700;">💳 Secure Card Payment Simulation</span>
+              <span id="cardBrandBadge" style="font-size: 11px; background: rgba(255,255,255,0.15); padding: 2px 8px; border-radius: 4px; color:#fff; font-weight:700;">VISA</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" style="font-size: 11px;">Cardholder Name</label>
+              <input type="text" id="cardHolderName" class="form-control" placeholder="NAME AS PRINTED ON CARD" style="text-transform: uppercase;" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" style="font-size: 11px;">Card Number</label>
+              <div style="position: relative;">
+                <input type="text" id="cardNumber" class="form-control" placeholder="4242 •••• •••• 4242" maxlength="19" autocomplete="cc-number" />
+                <span id="cardIcon" style="position: absolute; right: 12px; top: 10px; font-size: 16px;">💳</span>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" style="font-size: 11px;">Expiry Date</label>
+                <input type="text" id="cardExpiry" class="form-control" placeholder="MM/YY" maxlength="5" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" style="font-size: 11px;">Security Code (CVV)</label>
+                <input type="password" id="cardCvv" class="form-control" placeholder="CVC" maxlength="4" />
+              </div>
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted); display:flex; align-items:center; gap:6px;">
+              <span>🔒 256-Bit SSL Encrypted &amp; Mock 3D-Secure Authorized</span>
+            </div>
+          </div>
+
+          <!-- Order Summary in Modal -->
+          <div style="background: var(--bg-surface-2); border-radius: 8px; padding: 12px 16px; margin-top: 18px; border: 1px solid var(--border);">
+            <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
+              <span style="color:var(--text-muted);">Amount Payable:</span>
+              <strong id="modalPayableAmount" style="color:var(--lime); font-size:15px;">Rs. 0</strong>
+            </div>
+            <div style="font-size:11px; color:var(--text-muted);" id="modalPaymentNote">
+              📦 Islandwide courier dispatch within 24 hours. Tracking ID generated immediately.
+            </div>
           </div>
         </div>
+
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" onclick="document.getElementById('modalCheckout').classList.remove('show')">Cancel</button>
           <button type="submit" class="btn btn-primary" id="btnConfirmOrder">Confirm & Place Order ✓</button>
@@ -160,11 +285,22 @@
   <!-- checkout modal helper -->
   <script>
     function openCheckoutModal() {
-      if (window.UIView && typeof UIView.openModal === 'function') {
-        UIView.openModal('modalCheckout');
-      } else {
-        document.getElementById('modalCheckout').classList.add('show');
+      const summary = typeof FlexCart !== 'undefined' && FlexCart.getCartSummary ? FlexCart.getCartSummary() : { total: 0 };
+      const totalText = 'Rs. ' + Number(summary.total || 0).toLocaleString();
+      document.getElementById('modalPayableAmount').innerText = totalText;
+
+      // Auto populate user info if logged in
+      const storedName = localStorage.getItem("userFullName") || localStorage.getItem("flexGymFullName");
+      const storedPhone = localStorage.getItem("memberPhone") || localStorage.getItem("flexGymPhone");
+      if (storedName && document.getElementById('checkoutFullName')) {
+        document.getElementById('checkoutFullName').value = storedName;
       }
+      if (storedPhone && document.getElementById('checkoutPhone')) {
+        document.getElementById('checkoutPhone').value = storedPhone;
+      }
+
+      const modal = document.getElementById('modalCheckout');
+      if (modal) modal.classList.add('show');
     }
   </script>
 
@@ -180,7 +316,6 @@
 
   <!-- Chat Window -->
   <div class="flexbot-chat-window" id="flexbot-window">
-    <!-- Chat Header -->
     <div class="flexbot-header">
       <div class="flexbot-header-left">
         <div class="flexbot-avatar-wrap">
@@ -193,16 +328,11 @@
         </div>
       </div>
       <div class="flexbot-header-actions">
-        <button type="button" class="flexbot-header-btn" id="flexbot-clear-btn" title="Reset Chat">
-          ↺
-        </button>
-        <button type="button" class="flexbot-header-btn" id="flexbot-close-btn" title="Close">
-          ✕
-        </button>
+        <button type="button" class="flexbot-header-btn" id="flexbot-clear-btn" title="Reset Chat">↺</button>
+        <button type="button" class="flexbot-header-btn" id="flexbot-close-btn" title="Close">✕</button>
       </div>
     </div>
 
-    <!-- Messages Area -->
     <div class="flexbot-messages" id="chat-messages">
       <div class="flexbot-msg flexbot-msg-bot">
         <div class="flexbot-msg-avatar">🤖</div>
@@ -213,7 +343,6 @@
       </div>
     </div>
 
-    <!-- Suggestion Chips -->
     <div class="flexbot-chips-wrap">
       <div class="flexbot-chips">
         <button type="button" class="flexbot-chip" data-prompt="What membership packages do you offer?">💳 Packages</button>
@@ -224,13 +353,10 @@
       </div>
     </div>
 
-    <!-- Footer Input -->
     <div class="flexbot-footer">
       <form class="flexbot-form" id="flexbot-form" onsubmit="return false;">
         <input type="text" class="flexbot-input" id="chat-input" placeholder="Ask FlexBot anything..." autocomplete="off">
-        <button type="submit" class="flexbot-send-btn" id="send-btn" title="Send Message">
-          ➤
-        </button>
+        <button type="submit" class="flexbot-send-btn" id="send-btn" title="Send Message">➤</button>
       </form>
     </div>
   </div>
@@ -240,6 +366,7 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="JS/alerts.js"></script>
   <script src="JS/api.js"></script>
+  <script src="JS/order.js"></script>
   <script src="JS/cart.js"></script>
   <script src="JS/index.js"></script>
   <script src="JS/chatbot.js"></script>

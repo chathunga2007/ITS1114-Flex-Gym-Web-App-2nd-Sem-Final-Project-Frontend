@@ -6039,4 +6039,111 @@ body {
     }
 }
 
+/* ==========================================================================
+   ORDER TRACKING TIMELINE & STEPPER STYLES
+   ========================================================================== */
+.order-tracker-container {
+    background: var(--bg-surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 24px 20px;
+    margin-bottom: 20px;
+}
+
+.order-stepper {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin: 20px 0 10px;
+}
+
+.order-stepper::before {
+    content: '';
+    position: absolute;
+    top: 22px;
+    left: 24px;
+    right: 24px;
+    height: 3px;
+    background: var(--border);
+    z-index: 1;
+}
+
+.stepper-progress-bar {
+    position: absolute;
+    top: 22px;
+    left: 24px;
+    height: 3px;
+    background: var(--lime);
+    box-shadow: 0 0 10px rgba(204, 255, 0, 0.6);
+    z-index: 2;
+    transition: width 0.4s ease;
+}
+
+.stepper-step {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    flex: 1;
+}
+
+.stepper-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--bg-surface);
+    border: 2px solid var(--border);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+
+.stepper-step.completed .stepper-circle {
+    background: rgba(204, 255, 0, 0.15);
+    border-color: var(--lime);
+    color: var(--lime);
+    box-shadow: 0 0 14px rgba(204, 255, 0, 0.4);
+}
+
+.stepper-step.active .stepper-circle {
+    background: var(--lime);
+    border-color: var(--lime);
+    color: #000;
+    box-shadow: 0 0 16px rgba(204, 255, 0, 0.8);
+    animation: stepPulse 1.5s infinite;
+}
+
+@keyframes stepPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+}
+
+.stepper-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stepper-step.completed .stepper-label,
+.stepper-step.active .stepper-label {
+    color: #fff;
+}
+
+.stepper-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+
 

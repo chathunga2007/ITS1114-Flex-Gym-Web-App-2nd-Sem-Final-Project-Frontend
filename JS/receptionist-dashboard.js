@@ -1,6 +1,9 @@
 window.flexCharts = window.flexCharts || {};
 
 $(document).ready(function () {
+    if (!checkAuth(['ROLE_RECEPTIONIST', 'RECEPTIONIST', 'ROLE_ADMIN', 'ADMIN'])) {
+        return;
+    }
     if ($(".dash-layout").length > 0) {
         syncUserProfile();
         initDashboardRouting();

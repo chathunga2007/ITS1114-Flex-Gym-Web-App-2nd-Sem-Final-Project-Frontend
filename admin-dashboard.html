@@ -3,7 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Page | Flex Gym</title>
+  <title>Admin Portal | Flex Gym</title>
+  <link rel="icon" type="image/png" href="assets/flex-gym-logo.png">
+
+  <!-- Immediate Head Security Guard -->
+  <script>
+    (function () {
+      try {
+        var token = localStorage.getItem("JWT") || localStorage.getItem("flexGymToken");
+        var role = localStorage.getItem("userRole") || localStorage.getItem("flexGymRole") || "";
+        if (!token) {
+          window.location.replace("login.html");
+          return;
+        }
+        var cleanRole = String(role).toUpperCase().replace("ROLE_", "");
+        if (cleanRole !== "ADMIN") {
+          window.location.replace(
+            cleanRole === "TRAINER" ? "trainer-dashboard.html" :
+            (cleanRole === "RECEPTIONIST" ? "receptionist-dashboard.html" : "member-dashboard.html")
+          );
+        }
+      } catch (e) {}
+    })();
+  </script>
 
   <!-- fonts & core stylesheet -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,7 +38,9 @@
     <!-- sidebar navigation -->
     <aside class="dash-sidebar">
       <a href="index.html" class="dash-brand">
-        <div class="brand-icon">F</div>
+        <div class="brand-icon" style="padding:0;overflow:hidden;border:none;background:transparent;">
+          <img src="assets/flex-gym-logo.png" alt="Flex Gym" style="width:36px;height:36px;object-fit:cover;border-radius:8px;">
+        </div>
         <div class="brand-title">FLEX<span>GYM</span></div>
       </a>
 
@@ -71,6 +95,11 @@
           <span class="nav-icon">🏋️</span>
           <span>Trainers</span>
           <span class="nav-badge" id="adminNavTrainersBadge" style="display:none;">0</span>
+        </a>
+        <a href="#pt-bookings" class="dash-nav-item" data-section="pt-bookings">
+          <span class="nav-icon">📅</span>
+          <span>PT Bookings</span>
+          <span class="nav-badge" id="adminNavBookingsBadge" style="display:none;background:var(--lime);color:#000;">0</span>
         </a>
         <a href="#payments" class="dash-nav-item" data-section="payments">
           <span class="nav-icon">💰</span>
@@ -559,36 +588,132 @@
 
       <!-- view: orders & shipments -->
       <section id="view-orders" class="dash-section">
-        <div class="section-header">
+        <div class="section-header" style="flex-wrap:wrap; gap:12px;">
           <div class="section-title">
-            <h1>Orders & Fulfillment</h1>
-            <p>Track store merchandise and supplement orders.</p>
+            <h1>Orders & Fulfillment Center</h1>
+            <p>Track store merchandise, assign courier shipping, and dispatch customer orders.</p>
+          </div>
+          <div class="section-actions" style="display:flex; gap:10px;">
+            <button class="btn btn-secondary" onclick="loadAdminOrders()">🔄 Refresh Orders</button>
+          </div>
+        </div>
+
+        <!-- Filter bar -->
+        <div class="dash-panel" style="padding:14px 18px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+          <div style="display:flex; gap:8px; flex-wrap:wrap;" id="adminOrderFilterTabs">
+            <button class="btn btn-primary btn-sm admin-order-filter active" data-filter="ALL">All Orders (<span id="countOrdersAll">0</span>)</button>
+            <button class="btn btn-secondary btn-sm admin-order-filter" data-filter="PENDING">Pending (<span id="countOrdersPending">0</span>)</button>
+            <button class="btn btn-secondary btn-sm admin-order-filter" data-filter="CONFIRMED">Confirmed (<span id="countOrdersConfirmed">0</span>)</button>
+            <button class="btn btn-secondary btn-sm admin-order-filter" data-filter="SHIPPED">Dispatched (<span id="countOrdersShipped">0</span>)</button>
+            <button class="btn btn-secondary btn-sm admin-order-filter" data-filter="DELIVERED">Delivered (<span id="countOrdersDelivered">0</span>)</button>
+          </div>
+          <div style="min-width:240px;">
+            <input type="text" id="inputSearchAdminOrders" class="form-control" placeholder="🔍 Search Order ID, Customer, Tracking..." style="padding:6px 12px; font-size:12px;">
           </div>
         </div>
 
         <div class="dash-panel">
           <div class="table-responsive">
-            <table class="dash-table">
+            <table class="dash-table" id="tableAdminOrders">
               <thead>
                 <tr>
                   <th>Order ID</th>
-                  <th>Customer</th>
+                  <th>Date</th>
+                  <th>Customer &amp; Phone</th>
                   <th>Items Ordered</th>
-                  <th>Total Amount</th>
+                  <th>Total</th>
                   <th>Payment</th>
-                  <th>Fulfillment Status</th>
-                  <th>Action</th>
+                  <th>Fulfillment &amp; Courier</th>
+                  <th style="text-align:center;">Action</th>
                 </tr>
               </thead>
               <tbody id="adminOrdersTableBody">
                 <tr>
-                  <td colspan="7" style="text-align:center; color:var(--text-muted); padding:24px;">No store orders placed yet.</td>
+                  <td colspan="8" style="text-align:center; color:var(--text-muted); padding:30px;">Loading customer orders...</td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
       </section>
+
+      <!-- Modal: Manage Order Fulfillment & Tracking -->
+      <div class="modal-backdrop" id="modalManageOrder">
+        <div class="modal-box" style="max-width: 620px;">
+          <div class="modal-header">
+            <div>
+              <h3 style="margin:0;">Fulfill &amp; Manage Order</h3>
+              <span id="manageModalOrderRef" style="font-size:12px; color:var(--lime); font-family:monospace;">#ORD-000</span>
+            </div>
+            <button class="modal-close" onclick="document.getElementById('modalManageOrder').classList.remove('show')">&times;</button>
+          </div>
+          <form id="formManageOrder">
+            <div class="modal-body" style="padding:20px; max-height:75vh; overflow-y:auto;">
+              <!-- Customer & Shipping Summary Card -->
+              <div style="background:var(--bg-surface-2); border:1px solid var(--border); border-radius:var(--radius-md); padding:14px 16px; margin-bottom:16px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                  <strong style="color:#fff;" id="manageCustomerName">Customer Name</strong>
+                  <span style="color:var(--lime); font-weight:700;" id="manageTotalAmount">Rs. 0</span>
+                </div>
+                <div style="font-size:12px; color:var(--text-muted); line-height:1.5;">
+                  <div>📞 Phone: <span id="manageCustomerPhone" style="color:#fff;">--</span></div>
+                  <div>📍 Address: <span id="manageShippingAddress" style="color:#fff;">--</span></div>
+                  <div>📝 Customer Notes: <span id="manageOrderNotes" style="color:#fff; font-style:italic;">None</span></div>
+                </div>
+              </div>
+
+              <!-- Ordered Items -->
+              <div style="margin-bottom:16px;">
+                <strong style="font-size:12px; text-transform:uppercase; color:var(--text-muted); display:block; margin-bottom:6px;">Package Contents:</strong>
+                <div id="manageItemsList" style="max-height:120px; overflow-y:auto; display:flex; flex-direction:column; gap:4px;"></div>
+              </div>
+
+              <hr style="border:none; border-top:1px solid var(--border); margin:16px 0;">
+
+              <!-- Status Updates -->
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Fulfillment Status</label>
+                  <select id="manageOrderStatus" class="form-control" required>
+                    <option value="PENDING">PENDING (Awaiting Review)</option>
+                    <option value="CONFIRMED">CONFIRMED (Payment Verified / COD Approved)</option>
+                    <option value="PROCESSING">PROCESSING (Packing in Warehouse)</option>
+                    <option value="SHIPPED">SHIPPED (Handed to Courier - Triggers Email 🚀)</option>
+                    <option value="DELIVERED">DELIVERED (Customer Received 🎉)</option>
+                    <option value="CANCELLED">CANCELLED (Order Revoked)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Payment Status</label>
+                  <select id="managePaymentStatus" class="form-control" required>
+                    <option value="PAID">PAID</option>
+                    <option value="PENDING">PENDING</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Courier Partner</label>
+                  <input type="text" id="manageCourierName" class="form-control" placeholder="e.g. Flex Express Logistics / Prompt Xpress" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Tracking Number</label>
+                  <input type="text" id="manageTrackingNumber" class="form-control" placeholder="e.g. FLX-TRK-784920" required />
+                </div>
+              </div>
+
+              <div style="font-size:11px; color:var(--text-muted); background:rgba(204,255,0,0.08); border:1px solid rgba(204,255,0,0.2); padding:10px 14px; border-radius:6px; margin-top:10px;">
+                💡 <strong>Automated Email Notification:</strong> When you set the status to <strong>SHIPPED</strong>, the system will immediately send an automated dispatch email to the member with this tracking number!
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" onclick="document.getElementById('modalManageOrder').classList.remove('show')">Cancel</button>
+              <button type="submit" class="btn btn-primary" id="btnSaveOrderFulfillment">Save Fulfillment &amp; Update ✓</button>
+            </div>
+          </form>
+        </div>
+      </div>
 
       <!-- view: gym equipment maintenance -->
       <section id="view-equipment" class="dash-section">
@@ -730,6 +855,102 @@
               <tbody id="adminTrainersTableBody">
                 <tr>
                   <td colspan="6" style="text-align:center; color:var(--text-muted); padding:24px;">No trainers registered yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- view: personal training session bookings -->
+      <section id="view-pt-bookings" class="dash-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>Personal Training (PT) Bookings 🏋️</h1>
+            <p>Master management of 1-on-1 coach session bookings, schedule coordination, and session statuses.</p>
+          </div>
+          <div class="section-actions">
+            <button class="btn btn-outline" onclick="loadAdminBookings()" style="font-size:12px; padding:7px 14px;">↻ Refresh Bookings</button>
+          </div>
+        </div>
+
+        <!-- Bookings Overview KPIs -->
+        <div class="stats-grid" style="margin-bottom: 20px;">
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Total Reservations</span>
+              <div class="stat-icon">📅</div>
+            </div>
+            <div class="stat-val" id="adminBookingsTotalCount">0</div>
+            <div class="stat-trend up">All-Time Bookings</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Upcoming / Active</span>
+              <div class="stat-icon">⏳</div>
+            </div>
+            <div class="stat-val" id="adminBookingsActiveCount" style="color:var(--lime);">0</div>
+            <div class="stat-trend up">Scheduled &amp; Confirmed</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Completed Sessions</span>
+              <div class="stat-icon">✅</div>
+            </div>
+            <div class="stat-val" id="adminBookingsCompletedCount">0</div>
+            <div class="stat-trend neutral">Conducted by Coaches</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Cancelled Sessions</span>
+              <div class="stat-icon">✖️</div>
+            </div>
+            <div class="stat-val" id="adminBookingsCancelledCount">0</div>
+            <div class="stat-trend neutral">Member / Coach Cancelled</div>
+          </div>
+        </div>
+
+        <!-- Filters & Search -->
+        <div class="dash-panel" style="margin-bottom: 16px; padding: 14px 20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div style="display:flex; align-items:center; gap:10px; flex:1; max-width:400px;">
+              <input type="text" id="adminBookingsSearchInput" class="form-control" placeholder="🔍 Search by member, coach, or focus..." style="padding:6px 12px; font-size:13px;" oninput="filterAdminBookingsTable()" />
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <label style="font-size:12px; color:var(--text-muted); margin:0;">Status:</label>
+              <select id="adminBookingsStatusFilter" class="form-control" style="width:auto; padding:6px 12px; font-size:12px;" onchange="filterAdminBookingsTable()">
+                <option value="ALL">All Statuses</option>
+                <option value="SCHEDULED">Scheduled</option>
+                <option value="CONFIRMED">Confirmed</option>
+                <option value="COMPLETED">Completed</option>
+                <option value="CANCELLED">Cancelled</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bookings Master Table -->
+        <div class="dash-panel">
+          <div class="table-responsive">
+            <table class="dash-table" id="tableAdminBookings">
+              <thead>
+                <tr>
+                  <th>Booking ID</th>
+                  <th>Member / Client</th>
+                  <th>Assigned Coach</th>
+                  <th>Session Date &amp; Time</th>
+                  <th>Focus Area</th>
+                  <th>Member Goal / Notes</th>
+                  <th>Status</th>
+                  <th style="text-align:center;">Admin Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminBookingsTbody">
+                <tr>
+                  <td colspan="8" style="text-align:center; color:var(--text-muted); padding:30px;">Loading 1-on-1 personal training bookings...</td>
                 </tr>
               </tbody>
             </table>
@@ -1671,6 +1892,8 @@
   <script src="JS/alerts.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="JS/api.js"></script>
+  <script src="JS/order.js"></script>
+  <script src="JS/booking.js"></script>
   <script src="JS/inventory-alerts.js"></script>
   <script src="JS/admin-dashboard.js"></script>
 </body>

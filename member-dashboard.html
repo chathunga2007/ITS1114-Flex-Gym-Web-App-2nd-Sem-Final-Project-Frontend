@@ -4,6 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Member Portal | Flex Gym</title>
+  <link rel="icon" type="image/png" href="assets/flex-gym-logo.png">
+
+  <!-- Immediate Head Security Guard -->
+  <script>
+    (function () {
+      try {
+        var token = localStorage.getItem("JWT") || localStorage.getItem("flexGymToken");
+        if (!token) {
+          window.location.replace("login.html");
+          return;
+        }
+      } catch (e) {}
+    })();
+  </script>
 
   <!-- typography & portal stylesheet -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,7 +30,9 @@
     <!-- member sidebar navigation -->
     <aside class="dash-sidebar">
       <a href="index.html" class="dash-brand">
-        <div class="brand-icon">F</div>
+        <div class="brand-icon" style="padding:0;overflow:hidden;border:none;background:transparent;">
+          <img src="assets/flex-gym-logo.png" alt="Flex Gym" style="width:36px;height:36px;object-fit:cover;border-radius:8px;">
+        </div>
         <div class="brand-title">FLEX<span>GYM</span></div>
       </a>
 
@@ -44,6 +60,16 @@
         <a href="#attendance" class="dash-nav-item" data-section="attendance">
           <span class="nav-icon">⏱️</span>
           <span>My Attendance</span>
+        </a>
+        <a href="#training" class="dash-nav-item" data-section="training">
+          <span class="nav-icon">🏋️</span>
+          <span>Personal Training</span>
+          <span class="nav-badge" id="memberNavTrainingBadge" style="display:none;">0</span>
+        </a>
+        <a href="#progress" class="dash-nav-item" data-section="progress">
+          <span class="nav-icon">📈</span>
+          <span>Body Transformation</span>
+          <span class="nav-badge" id="memberNavProgressBadge" style="display:none; background:var(--cyan); color:#000;">PRO</span>
         </a>
         <a href="#orders" class="dash-nav-item" data-section="orders">
           <span class="nav-icon">🛍️</span>
@@ -437,6 +463,172 @@
         </div>
       </section>
 
+      <!-- view: personal training sessions -->
+      <section id="view-training" class="dash-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>Personal Training (PT) Sessions</h1>
+            <p>Book and manage 1-on-1 private training sessions with certified Flex Gym coaches.</p>
+          </div>
+          <div class="section-actions">
+            <button class="btn btn-primary" onclick="openBookSessionModal()">
+              <span>+</span> Book 1-on-1 Session
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Stats Banner -->
+        <div class="stats-grid" style="margin-bottom: 24px;">
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Upcoming Sessions</span>
+              <div class="stat-icon">📅</div>
+            </div>
+            <div class="stat-val" id="countMemberUpcomingBookings">0</div>
+            <div class="stat-trend up" style="color:var(--lime);">Reserved with Coach</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Completed Sessions</span>
+              <div class="stat-icon">🎉</div>
+            </div>
+            <div class="stat-val" id="countMemberCompletedBookings">0</div>
+            <div class="stat-trend neutral">Personal Records Hit</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Coaching Partner</span>
+              <div class="stat-icon">🏋️</div>
+            </div>
+            <div class="stat-val" id="memberPrimaryCoachName" style="font-size:16px;">Flex Pro Team</div>
+            <div class="stat-trend up">Certified Coach</div>
+          </div>
+        </div>
+
+        <div class="dash-panel">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">My Scheduled &amp; Past Sessions</h3>
+              <p class="panel-subtitle">Review your upcoming private workout sessions, time slots, and coach notes.</p>
+            </div>
+            <button class="btn btn-outline" onclick="loadMemberBookings()" style="font-size:12px; padding:6px 12px;">↻ Refresh</button>
+          </div>
+          
+          <div id="memberBookingsContainer" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:18px; margin-top:16px;">
+            <div style="grid-column: 1 / -1; text-align:center; padding:40px; color:var(--text-muted);">
+              Loading your scheduled personal training sessions...
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- view: body transformation & fitness progress -->
+      <section id="view-progress" class="dash-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h1>Body Transformation &amp; Fitness Analytics 📈</h1>
+            <p>Track body weight, body composition, BMI, and physical measurements over your fitness journey.</p>
+          </div>
+          <div class="section-actions">
+            <button class="btn btn-outline" onclick="loadMemberProgress()" style="margin-right: 8px; font-size:12px; padding:7px 12px;">↻ Refresh</button>
+            <button class="btn btn-primary" onclick="openLogProgressModal()">
+              <span>+</span> Log Check-In
+            </button>
+          </div>
+        </div>
+
+        <!-- Transformation Metrics Summary -->
+        <div class="stats-grid" style="margin-bottom: 24px;">
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Current Weight</span>
+              <div class="stat-icon">⚖️</div>
+            </div>
+            <div class="stat-val" id="metricCurrentWeight" style="color:var(--lime);">-- kg</div>
+            <div class="stat-trend" id="metricWeightDiff">-- compared to start</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Body Mass Index (BMI)</span>
+              <div class="stat-icon">📊</div>
+            </div>
+            <div class="stat-val" id="metricCurrentBmi">--</div>
+            <div class="stat-trend" id="metricBmiCategory">
+              <span class="badge badge-lime" style="font-size:11px;">Healthy Weight</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Body Fat / Muscle</span>
+              <div class="stat-icon">💪</div>
+            </div>
+            <div class="stat-val" id="metricBodyFatMuscle" style="font-size:17px;">-- % Fat • -- kg Muscle</div>
+            <div class="stat-trend up">Body Recomposition</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Active Milestone</span>
+              <div class="stat-icon">🏆</div>
+            </div>
+            <div class="stat-val" id="metricMilestoneBadge" style="font-size:15px; color:#facc15;">First Check-In 🎯</div>
+            <div class="stat-trend neutral">Consistency Streak</div>
+          </div>
+        </div>
+
+        <!-- Trajectory Visual Graph Panel -->
+        <div class="dash-panel" style="margin-bottom: 24px;">
+          <div class="panel-header" style="margin-bottom: 16px;">
+            <div>
+              <h3 class="panel-title">📉 Body Weight Transformation Curve</h3>
+              <p class="panel-subtitle">Visual timeline illustrating your progress across recorded weigh-ins.</p>
+            </div>
+            <div style="font-size:12px; color:var(--text-muted); display:flex; align-items:center; gap:6px;">
+              <span style="display:inline-block; width:10px; height:10px; background:var(--lime); border-radius:50%;"></span>
+              <span>Weight (kg)</span>
+            </div>
+          </div>
+          <div style="height: 260px; position:relative;">
+            <canvas id="chartBodyTransformation"></canvas>
+          </div>
+        </div>
+
+        <!-- Measurements History Table -->
+        <div class="dash-panel">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">📋 Transformation Check-In Logs</h3>
+              <p class="panel-subtitle">Detailed log of weigh-ins, body fat %, muscle mass, and circumferences.</p>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="dash-table" id="tableMemberProgress">
+              <thead>
+                <tr>
+                  <th>Check-In Date</th>
+                  <th>Weight (kg)</th>
+                  <th>Net Change</th>
+                  <th>Body Fat %</th>
+                  <th>Muscle Mass (kg)</th>
+                  <th>Waist / Chest / Arms</th>
+                  <th>BMI Status</th>
+                  <th>Milestone Badge</th>
+                  <th style="text-align:center;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="memberProgressTbody">
+                <tr>
+                  <td colspan="9" style="text-align:center; color:var(--text-muted); padding:30px;">Loading transformation logs...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
       <!-- view: merchandise order history -->
       <section id="view-orders" class="dash-section">
         <div class="section-header">
@@ -455,17 +647,373 @@
               <thead>
                 <tr>
                   <th>Order Ref</th>
-                  <th>Items</th>
-                  <th>Total</th>
                   <th>Date</th>
-                  <th>Status</th>
+                  <th>Items Summary</th>
+                  <th>Total Amount</th>
+                  <th>Payment Method</th>
+                  <th>Fulfillment Status</th>
+                  <th style="text-align:center;">Actions</th>
                 </tr>
               </thead>
-              <tbody></tbody>
+              <tbody id="memberOrdersTbody">
+                <tr>
+                  <td colspan="7" style="text-align:center; color:var(--text-muted); padding:30px;">Loading your store orders...</td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>
       </section>
+
+      <!-- Order Tracking Modal -->
+      <div class="modal-backdrop" id="modalOrderTracking">
+        <div class="modal-box" style="max-width: 650px;">
+          <div class="modal-header">
+            <div>
+              <h3 style="margin:0;">Live Order Tracking</h3>
+              <span id="trackModalOrderRef" style="font-size:12px; color:var(--lime); font-family:monospace;">#ORD-000</span>
+            </div>
+            <button class="modal-close" onclick="document.getElementById('modalOrderTracking').classList.remove('show')">&times;</button>
+          </div>
+          <div class="modal-body" style="padding: 20px 24px;">
+            <!-- Courier & Tracking Badge -->
+            <div style="background:var(--bg-surface-2); border:1px solid var(--border); border-radius:var(--radius-md); padding:14px 18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+              <div>
+                <span style="font-size:11px; color:var(--text-muted); text-transform:uppercase;">Courier Partner:</span>
+                <strong style="display:block; color:#fff; font-size:14px;" id="trackCourierName">Flex Express Logistics</strong>
+              </div>
+              <div style="text-align:right;">
+                <span style="font-size:11px; color:var(--text-muted); text-transform:uppercase;">Tracking Code:</span>
+                <span style="display:block; font-family:monospace; background:rgba(204,255,0,0.15); color:var(--lime); font-weight:800; padding:2px 8px; border-radius:4px; font-size:13px;" id="trackTrackingNumber">FLX-TRK-000000</span>
+              </div>
+            </div>
+
+            <!-- Visual 5-Step Stepper -->
+            <div class="order-tracker-container">
+              <div class="order-stepper" id="orderTrackingStepper">
+                <div class="stepper-progress-bar" id="stepperProgressBar" style="width: 25%;"></div>
+                
+                <div class="stepper-step completed" id="step-placed">
+                  <div class="stepper-circle">📝</div>
+                  <span class="stepper-label">Placed</span>
+                  <span class="stepper-sub" id="stepDatePlaced">Confirmed</span>
+                </div>
+
+                <div class="stepper-step" id="step-confirmed">
+                  <div class="stepper-circle">💳</div>
+                  <span class="stepper-label">Payment</span>
+                  <span class="stepper-sub" id="stepPaymentSub">Verified</span>
+                </div>
+
+                <div class="stepper-step" id="step-processing">
+                  <div class="stepper-circle">📦</div>
+                  <span class="stepper-label">Packing</span>
+                  <span class="stepper-sub">Warehouse</span>
+                </div>
+
+                <div class="stepper-step" id="step-shipped">
+                  <div class="stepper-circle">🚚</div>
+                  <span class="stepper-label">Dispatched</span>
+                  <span class="stepper-sub">In Transit</span>
+                </div>
+
+                <div class="stepper-step" id="step-delivered">
+                  <div class="stepper-circle">🎉</div>
+                  <span class="stepper-label">Delivered</span>
+                  <span class="stepper-sub">Completed</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Shipping & Delivery Meta -->
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; font-size:12px; margin-top:16px;">
+              <div style="background:var(--bg-surface-2); padding:12px 14px; border-radius:6px; border:1px solid var(--border);">
+                <strong style="color:#fff; display:block; margin-bottom:4px;">📍 Destination Address:</strong>
+                <span id="trackShippingAddress" style="color:var(--text-muted); line-height:1.4;">--</span>
+              </div>
+              <div style="background:var(--bg-surface-2); padding:12px 14px; border-radius:6px; border:1px solid var(--border);">
+                <strong style="color:#fff; display:block; margin-bottom:4px;">⏱️ Estimated Delivery:</strong>
+                <span id="trackEstimatedDelivery" style="color:var(--lime); font-weight:700;">2-4 Business Days</span>
+              </div>
+            </div>
+
+            <!-- Items Snapshot -->
+            <div style="margin-top:18px;">
+              <strong style="font-size:12px; text-transform:uppercase; color:var(--text-muted); display:block; margin-bottom:8px;">Items In This Package:</strong>
+              <div id="trackItemsList" style="max-height:140px; overflow-y:auto; display:flex; flex-direction:column; gap:6px;"></div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="document.getElementById('modalOrderTracking').classList.remove('show')">Close Tracking</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal: Book Personal Training Session -->
+      <div class="modal-backdrop" id="modalBookSession">
+        <div class="modal-box" style="max-width: 580px;">
+          <div class="modal-header">
+            <div>
+              <h3 style="margin:0;">Book 1-on-1 PT Session</h3>
+              <span style="font-size:12px; color:var(--lime);">Private Coaching &amp; Workout Split</span>
+            </div>
+            <button class="modal-close" onclick="document.getElementById('modalBookSession').classList.remove('show')">&times;</button>
+          </div>
+          <form id="formBookSession" onsubmit="handleBookSessionSubmit(event)">
+            <div class="modal-body" style="padding: 20px 24px;">
+              <div class="form-group" style="margin-bottom: 16px;">
+                <label class="form-label">Select Personal Trainer</label>
+                <select id="bookTrainerSelect" class="form-control" required>
+                  <option value="">-- Choose Your Coach --</option>
+                  <option value="1">Alex Morgan (Strength &amp; Conditioning Coach)</option>
+                  <option value="2">Sarah Williams (Personal Trainer &amp; Fat Loss)</option>
+                  <option value="3">Marcus Chen (Functional Mobility &amp; Calisthenics)</option>
+                </select>
+              </div>
+
+              <div class="form-row" style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-bottom: 16px;">
+                <div class="form-group">
+                  <label class="form-label">Session Date</label>
+                  <input type="date" id="bookSessionDate" class="form-control" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Preferred Time Slot</label>
+                  <select id="bookTimeSlot" class="form-control" required>
+                    <option value="06:00 AM - 07:00 AM">06:00 AM - 07:00 AM (Early Bird)</option>
+                    <option value="07:00 AM - 08:00 AM">07:00 AM - 08:00 AM (Morning Push)</option>
+                    <option value="08:30 AM - 09:30 AM">08:30 AM - 09:30 AM (Morning Fit)</option>
+                    <option value="05:00 PM - 06:00 PM">05:00 PM - 06:00 PM (Evening Prime)</option>
+                    <option value="06:00 PM - 07:00 PM">06:00 PM - 07:00 PM (Power Hour)</option>
+                    <option value="07:30 PM - 08:30 PM">07:30 PM - 08:30 PM (Night Grind)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 16px;">
+                <label class="form-label">Target Focus Area</label>
+                <select id="bookFocusArea" class="form-control" required>
+                  <option value="Hypertrophy (Chest &amp; Arms)">Hypertrophy (Chest &amp; Arms)</option>
+                  <option value="Back &amp; Biceps Functional Pull">Back &amp; Biceps Functional Pull</option>
+                  <option value="Squats, Legs &amp; Posterior Chain">Squats, Legs &amp; Posterior Chain</option>
+                  <option value="Fat Loss &amp; Metabolic Conditioning">Fat Loss &amp; Metabolic Conditioning</option>
+                  <option value="Core, Posture &amp; Injury Prevention">Core, Posture &amp; Injury Prevention</option>
+                </select>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 16px;">
+                <label class="form-label">Your Goals / Specific Notes (Optional)</label>
+                <textarea id="bookMemberNotes" class="form-control" rows="2" placeholder="e.g. Focus on deadlift form, recovering from slight shoulder strain..."></textarea>
+              </div>
+
+              <div style="font-size:11px; color:var(--text-muted); background:rgba(204,255,0,0.08); border:1px solid rgba(204,255,0,0.2); padding:10px 14px; border-radius:6px;">
+                💡 <strong>Instant Confirmation:</strong> Your slot is reserved immediately. A confirmation receipt will be sent to your registered email address.
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" onclick="document.getElementById('modalBookSession').classList.remove('show')">Cancel</button>
+              <button type="submit" class="btn btn-primary" id="btnSubmitBooking">Confirm PT Reservation ✓</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Printable Order Invoice Modal -->
+      <div class="modal-backdrop" id="modalOrderInvoice">
+        <div class="modal-box" style="max-width: 600px; background:#fff; color:#111827;">
+          <div class="modal-header" style="border-bottom:1px solid #e5e7eb;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <img src="assets/flex-gym-logo.png" style="width:32px;height:32px;border-radius:6px;" alt="Logo">
+              <h3 style="margin:0; color:#111827;">FLEX GYM INVOICE</h3>
+            </div>
+            <button class="modal-close" style="color:#6b7280;" onclick="document.getElementById('modalOrderInvoice').classList.remove('show')">&times;</button>
+          </div>
+          <div class="modal-body" id="invoicePrintArea" style="padding: 24px; font-size:13px; line-height:1.6;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:16px;">
+              <div>
+                <strong style="font-size:16px; color:#111827;">Flex Fitness Club</strong><br>
+                <span>No. 45, Galle Road, Colombo 03</span><br>
+                <span>Phone: +94 11 234 5678</span>
+              </div>
+              <div style="text-align:right;">
+                <strong id="invOrderRef" style="font-size:14px; color:#111827;">INVOICE #ORD-000</strong><br>
+                <span id="invDate">Date: 2026-09-24</span><br>
+                <span id="invStatusBadge" style="background:#dcfce7; color:#166534; padding:2px 8px; border-radius:4px; font-weight:bold; font-size:11px;">PAID</span>
+              </div>
+            </div>
+            <hr style="border:none; border-top:1px solid #e5e7eb; margin:14px 0;">
+            <div style="margin-bottom:16px;">
+              <strong>Billed & Shipped To:</strong><br>
+              <span id="invCustomerName">Customer Name</span><br>
+              <span id="invCustomerPhone">+94 77 123 4567</span><br>
+              <span id="invAddress">Destination Address</span>
+            </div>
+            <table style="width:100%; border-collapse:collapse; margin-bottom:16px;">
+              <thead>
+                <tr style="background:#f3f4f6; text-align:left;">
+                  <th style="padding:8px 12px; border-bottom:1px solid #e5e7eb;">Item</th>
+                  <th style="padding:8px 12px; border-bottom:1px solid #e5e7eb; text-align:center;">Qty</th>
+                  <th style="padding:8px 12px; border-bottom:1px solid #e5e7eb; text-align:right;">Price</th>
+                  <th style="padding:8px 12px; border-bottom:1px solid #e5e7eb; text-align:right;">Subtotal</th>
+                </tr>
+              </thead>
+              <tbody id="invItemsTbody"></tbody>
+            </table>
+            <div style="text-align:right; font-size:14px; margin-top:12px;">
+              <p style="margin:2px 0;">Shipping Fee: <span id="invShipping">Rs. 500</span></p>
+              <h3 style="margin:6px 0 0; color:#111827;">Grand Total: <span id="invTotal" style="color:#0f172a;">Rs. 0</span></h3>
+            </div>
+          </div>
+          <div class="modal-footer" style="background:#f9fafb; border-top:1px solid #e5e7eb;">
+            <button type="button" class="btn btn-secondary" onclick="document.getElementById('modalOrderInvoice').classList.remove('show')">Close</button>
+            <button type="button" class="btn btn-primary" onclick="window.print()">🖨️ Print Invoice</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1-on-1 Personal Training Booking Modal -->
+      <div class="modal-backdrop" id="modalBookSession">
+        <div class="modal-box" style="max-width: 580px;">
+          <div class="modal-header">
+            <div>
+              <h3 style="margin:0; font-size:18px;">Book 1-on-1 Personal Training 🏋️</h3>
+              <p style="margin:4px 0 0; font-size:12px; color:var(--text-muted);">Reserve a private workout session with a certified Flex Gym coach.</p>
+            </div>
+            <button class="modal-close" onclick="closeModal('modalBookSession')">&times;</button>
+          </div>
+          <form id="formBookSession">
+            <div class="modal-body" style="padding: 22px 24px; display: flex; flex-direction: column; gap: 16px;">
+              <div class="form-group">
+                <label class="form-label">Select Certified Trainer <span style="color:var(--lime);">*</span></label>
+                <select id="bookTrainerSelect" class="form-control" required>
+                  <option value="" disabled selected>Loading available trainers...</option>
+                </select>
+              </div>
+
+              <div class="form-row" style="display:grid; grid-template-columns: 1fr 1fr; gap:14px;">
+                <div class="form-group">
+                  <label class="form-label">Session Date <span style="color:var(--lime);">*</span></label>
+                  <input type="date" id="bookSessionDate" class="form-control" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Preferred Time Slot <span style="color:var(--lime);">*</span></label>
+                  <select id="bookTimeSlot" class="form-control" required>
+                    <option value="" disabled selected>Select time slot</option>
+                    <option value="06:00 AM - 07:00 AM">🌅 06:00 AM - 07:00 AM (Early Bird)</option>
+                    <option value="07:00 AM - 08:00 AM">🌅 07:00 AM - 08:00 AM</option>
+                    <option value="08:00 AM - 09:00 AM">☀️ 08:00 AM - 09:00 AM</option>
+                    <option value="09:00 AM - 10:00 AM">☀️ 09:00 AM - 10:00 AM</option>
+                    <option value="04:00 PM - 05:00 PM">🌇 04:00 PM - 05:00 PM (Afternoon)</option>
+                    <option value="05:00 PM - 06:00 PM">🌇 05:00 PM - 06:00 PM (Peak)</option>
+                    <option value="06:00 PM - 07:00 PM">🌙 06:00 PM - 07:00 PM (Peak)</option>
+                    <option value="07:00 PM - 08:00 PM">🌙 07:00 PM - 08:00 PM (Evening)</option>
+                    <option value="08:00 PM - 09:00 PM">🌙 08:00 PM - 09:00 PM (Night)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Primary Training Focus / Target Area <span style="color:var(--lime);">*</span></label>
+                <select id="bookFocusArea" class="form-control" required>
+                  <option value="" disabled selected>Select workout focus</option>
+                  <option value="Hypertrophy & Muscle Building">💪 Hypertrophy &amp; Muscle Building</option>
+                  <option value="Strength & Powerlifting (Squat/Bench/Deadlift)">🏋️ Strength &amp; Powerlifting</option>
+                  <option value="Fat Loss, HIIT & Conditioning">🔥 Fat Loss, HIIT &amp; Conditioning</option>
+                  <option value="Form Correction & Technique Analysis">🎯 Form Correction &amp; Technique</option>
+                  <option value="Mobility, Core & Functional Rehab">🧘 Mobility, Core &amp; Functional Rehab</option>
+                  <option value="Endurance & Athletic Performance">⚡ Endurance &amp; Athletic Performance</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Notes for Coach (Optional)</label>
+                <textarea id="bookNotes" class="form-control" rows="2" placeholder="Mention any past injuries, current maxes, or specific goals for this session..."></textarea>
+              </div>
+
+              <div style="background: rgba(204, 255, 0, 0.08); border: 1px dashed rgba(204, 255, 0, 0.3); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 12px; color: var(--text-muted); display:flex; align-items:center; gap:8px;">
+                <span>📧</span>
+                <span>An automated confirmation email with schedule details will be sent to your inbox upon booking.</span>
+              </div>
+            </div>
+            <div class="modal-footer" style="padding: 16px 24px; display:flex; justify-content: flex-end; gap: 10px;">
+              <button type="button" class="btn btn-secondary" onclick="closeModal('modalBookSession')">Cancel</button>
+              <button type="submit" class="btn btn-primary" id="btnSubmitBooking">
+                Confirm &amp; Reserve Session 🚀
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Log Body Transformation & Fitness Progress Modal -->
+      <div class="modal-backdrop" id="modalLogProgress">
+        <div class="modal-box" style="max-width: 600px;">
+          <div class="modal-header">
+            <div>
+              <h3 style="margin:0; font-size:18px;">Log Body Transformation Check-In 📈</h3>
+              <p style="margin:4px 0 0; font-size:12px; color:var(--text-muted);">Record your weigh-in and body composition metrics to track your progress curve.</p>
+            </div>
+            <button class="modal-close" onclick="closeModal('modalLogProgress')">&times;</button>
+          </div>
+          <form id="formLogProgress">
+            <div class="modal-body" style="padding: 22px 24px; display: flex; flex-direction: column; gap: 16px;">
+              <div class="form-row" style="display:grid; grid-template-columns: 1fr 1fr; gap:14px;">
+                <div class="form-group">
+                  <label class="form-label">Check-In Date <span style="color:var(--lime);">*</span></label>
+                  <input type="date" id="progLogDate" class="form-control" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Current Weight (kg) <span style="color:var(--lime);">*</span></label>
+                  <input type="number" step="0.1" min="30" max="300" id="progLogWeight" class="form-control" placeholder="e.g. 72.5" required />
+                </div>
+              </div>
+
+              <div class="form-row" style="display:grid; grid-template-columns: 1fr 1fr; gap:14px;">
+                <div class="form-group">
+                  <label class="form-label">Body Fat % (Optional)</label>
+                  <input type="number" step="0.1" min="3" max="60" id="progLogFat" class="form-control" placeholder="e.g. 14.8" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Muscle Mass (kg) (Optional)</label>
+                  <input type="number" step="0.1" min="15" max="150" id="progLogMuscle" class="form-control" placeholder="e.g. 33.2" />
+                </div>
+              </div>
+
+              <div class="form-row" style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px;">
+                <div class="form-group">
+                  <label class="form-label">Waist (cm)</label>
+                  <input type="number" step="0.1" id="progLogWaist" class="form-control" placeholder="e.g. 80.5" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Chest (cm)</label>
+                  <input type="number" step="0.1" id="progLogChest" class="form-control" placeholder="e.g. 101.0" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Arms / Biceps (cm)</label>
+                  <input type="number" step="0.1" id="progLogArms" class="form-control" placeholder="e.g. 37.5" />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Check-In Notes / Workout Intensity</label>
+                <textarea id="progLogNotes" class="form-control" rows="2" placeholder="e.g. Completed week 4 of Hypertrophy split, energy high, nutrition on track..."></textarea>
+              </div>
+
+              <div style="background: rgba(0, 229, 255, 0.08); border: 1px dashed rgba(0, 229, 255, 0.3); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 12px; color: var(--text-muted); display:flex; align-items:center; gap:8px;">
+                <span>💡</span>
+                <span>Your BMI and milestone badges will be recalculated automatically upon saving.</span>
+              </div>
+            </div>
+            <div class="modal-footer" style="padding: 16px 24px; display:flex; justify-content: flex-end; gap: 10px;">
+              <button type="button" class="btn btn-secondary" onclick="closeModal('modalLogProgress')">Cancel</button>
+              <button type="submit" class="btn btn-primary" id="btnSubmitProgress">
+                Save Fitness Check-In 📈
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+
 
       <!-- view: account profile & credentials -->
       <section id="view-profile" class="dash-section">
@@ -551,6 +1099,9 @@
   <script src="JS/alerts.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="JS/api.js"></script>
+  <script src="JS/booking.js"></script>
+  <script src="JS/order.js"></script>
+  <script src="JS/progress.js"></script>
   <script src="JS/member-dashboard.js"></script>
 </body>
 </html>

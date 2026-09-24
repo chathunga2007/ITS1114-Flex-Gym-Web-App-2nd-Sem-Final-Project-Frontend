@@ -1,6 +1,9 @@
 window.flexCharts = window.flexCharts || {};
 
 $(document).ready(function () {
+    if (!checkAuth(['ROLE_MEMBER', 'MEMBER', 'ROLE_ADMIN', 'ADMIN'])) {
+        return;
+    }
     if ($(".dash-layout").length > 0) {
         syncUserProfile();
         initDashboardRouting();
@@ -8,6 +11,8 @@ $(document).ready(function () {
         initSearchAndFilters();
         initLogout();
         initMemberDashboard();
+        initMemberTrainingBookings();
+        initMemberProgressTracking();
     }
 });
 
@@ -50,6 +55,18 @@ function switchSection(sectionId, updateHash = true) {
                 chart.resize();
             }
         });
+    }
+
+    if (sectionId === 'orders') {
+        loadMemberOrders();
+    }
+
+    if (sectionId === 'training') {
+        loadMemberBookings();
+    }
+
+    if (sectionId === 'progress') {
+        loadMemberProgress();
     }
 
     $('.dash-sidebar').removeClass('open');
@@ -532,52 +549,7 @@ function initMemberDashboard() {
             }
         });
 
-        FlexAPI.ajax({
-            url: `/orders/getMemberOrders/${mId}`,
-            type: "GET",
-            success: function (orders) {
-                const tbody = $('#tableMemberOrders tbody, #view-orders table tbody');
-                tbody.empty();
-
-                if (Array.isArray(orders) && orders.length > 0) {
-                    orders.forEach(o => {
-                        const itemsStr = o.items && Array.isArray(o.items) && o.items.length > 0
-                            ? o.items.map(i => `${i.productName} (x${i.quantity})`).join(', ')
-                            : 'Fitness Store Order';
-                        const isCompleted = o.orderStatus === 'COMPLETED' || o.orderStatus === 'DELIVERED';
-                        const isCancelled = o.orderStatus === 'CANCELLED';
-
-                        let statusBadge = 'badge-warning';
-                        let statusText = 'PENDING (COD)';
-                        if (isCompleted) {
-                            statusBadge = 'badge-success';
-                            statusText = 'COMPLETED ✓';
-                        } else if (isCancelled) {
-                            statusBadge = 'badge-danger';
-                            statusText = 'CANCELLED';
-                        }
-
-                        tbody.append(`
-                            <tr>
-                                <td><strong>#ORD-${o.orderId}</strong></td>
-                                <td style="max-width:220px;white-space:normal;font-size:12px;">${itemsStr}</td>
-                                <td><strong>Rs. ${Number(o.totalAmount || 0).toLocaleString()}</strong></td>
-                                <td>${o.orderDate ? o.orderDate.substring(0,10) : 'Today'}</td>
-                                <td><span class="badge ${statusBadge}">${statusText}</span></td>
-                            </tr>
-                        `);
-                    });
-                } else {
-                    tbody.html(`
-                        <tr>
-                            <td colspan="5" style="text-align:center; padding:32px; color:var(--text-muted); font-size:13px;">
-                                You have not placed any orders yet. Visit our <a href="shop.html" style="color:var(--lime); text-decoration:underline;">Gym Store 🛒</a>!
-                            </td>
-                        </tr>
-                    `);
-                }
-            }
-        });
+        loadMemberOrders(mId);
 
         loadMemberWorkoutRoutine(mId);
     };
@@ -1518,3 +1490,786 @@ window.initMemberDashboard = initMemberDashboard;
 window.loadMemberDashboard = initMemberDashboard;
 window.loadMemberWorkoutRoutine = loadMemberWorkoutRoutine;
 window.openMemberDigitalCard = openMemberDigitalCard;
+
+let currentMemberOrders = [];
+
+function loadMemberOrders(specificId) {
+    const memberId = specificId || localStorage.getItem("memberId") || localStorage.getItem("userId") || localStorage.getItem("flexGymUserId") || "1";
+    const tbody = $('#memberOrdersTbody, #tableMemberOrders tbody');
+    if (!tbody.length) return;
+
+    tbody.html('<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:30px;">Loading your store orders...</td></tr>');
+
+    const fetchOrders = window.OrderService && typeof OrderService.getMemberOrders === 'function'
+        ? OrderService.getMemberOrders
+        : function(mId, cb, err) { ajaxRequest({ url: "/orders/getMemberOrders/" + mId, method: "GET", success: cb, error: err }); };
+
+    fetchOrders(memberId, function(response) {
+        const orders = (response && Array.isArray(response.body))
+            ? response.body
+            : ((response && Array.isArray(response.data))
+                ? response.data
+                : (Array.isArray(response) ? response : []));
+
+        currentMemberOrders = orders;
+        if (currentMemberOrders.length === 0) {
+            tbody.html(`
+                <tr>
+                    <td colspan="7" style="text-align:center; padding:40px; color:var(--text-muted);">
+                        <div style="font-size:32px; margin-bottom:8px;">🛒</div>
+                        <strong style="color:#fff; display:block; margin-bottom:4px;">No Store Orders Placed Yet</strong>
+                        <span>Browse our official gym store for supplements, gear, and apparel.</span><br>
+                        <a href="shop.html" class="btn btn-primary" style="margin-top:14px; display:inline-block; font-size:12px; padding:6px 14px;">Browse Store →</a>
+                    </td>
+                </tr>
+            `);
+            return;
+        }
+
+        tbody.empty();
+        currentMemberOrders.forEach(ord => {
+            const dateStr = ord.orderDate ? ord.orderDate.replace('T', ' ').substring(0, 16) : 'Recent';
+            const itemsText = ord.items && ord.items.length 
+                ? ord.items.map(i => `${i.productName} (×${i.quantity})`).join(', ') 
+                : 'Fitness Supplements';
+            
+            const isPaid = ord.paymentStatus === 'PAID';
+            const isCard = ord.paymentMethod === 'CREDIT_CARD';
+            const paymentBadge = isPaid
+                ? `<span class="badge badge-success" style="font-size:11px;">✓ ${isCard ? 'Card Paid' : 'Paid'}</span>`
+                : `<span class="badge badge-warning" style="font-size:11px;">⏳ COD Pending</span>`;
+
+            let statusBadge = '<span class="badge badge-info">PENDING</span>';
+            const st = (ord.orderStatus || 'PENDING').toUpperCase();
+            if (st === 'CONFIRMED') {
+                statusBadge = '<span class="badge badge-primary" style="background:#0284c7;color:#fff;">CONFIRMED</span>';
+            } else if (st === 'PROCESSING') {
+                statusBadge = '<span class="badge badge-warning" style="background:#d97706;color:#fff;">PACKING</span>';
+            } else if (st === 'SHIPPED') {
+                statusBadge = '<span class="badge badge-info" style="background:#7c3aed;color:#fff;">🚚 DISPATCHED</span>';
+            } else if (st === 'DELIVERED' || st === 'COMPLETED') {
+                statusBadge = '<span class="badge badge-success" style="background:#16a34a;color:#fff;">✓ DELIVERED</span>';
+            } else if (st === 'CANCELLED') {
+                statusBadge = '<span class="badge badge-danger">CANCELLED</span>';
+            }
+
+            tbody.append(`
+                <tr>
+                    <td><strong style="color:var(--lime); font-family:monospace;">#ORD-${ord.orderId}</strong></td>
+                    <td style="font-size:12px; color:var(--text-muted);">${dateStr}</td>
+                    <td style="max-width:240px; font-size:12px; color:#fff;" title="${itemsText}">${itemsText}</td>
+                    <td><strong>Rs. ${Number(ord.totalAmount || 0).toLocaleString()}</strong></td>
+                    <td>${paymentBadge}</td>
+                    <td>${statusBadge}</td>
+                    <td style="text-align:center; white-space:nowrap;">
+                        <button class="btn btn-secondary" style="font-size:11px; padding:4px 8px; margin-right:4px;" onclick="openOrderTracking(${ord.orderId})">🚚 Track</button>
+                        <button class="btn btn-outline" style="font-size:11px; padding:4px 8px;" onclick="openOrderInvoice(${ord.orderId})">📄 Invoice</button>
+                    </td>
+                </tr>
+            `);
+        });
+    }, function() {
+        tbody.html('<tr><td colspan="7" style="text-align:center; color:var(--danger); padding:30px;">Failed to load store orders. Please check your connection.</td></tr>');
+    });
+}
+
+function openOrderTracking(orderId) {
+    const ord = currentMemberOrders.find(o => o.orderId == orderId);
+    if (!ord) return;
+
+    if (typeof OrderService !== 'undefined' && OrderService.showTrackingModal) {
+        OrderService.showTrackingModal(ord);
+    } else {
+        openModal('modalOrderTracking');
+    }
+}
+
+function openOrderInvoice(orderId) {
+    const ord = currentMemberOrders.find(o => o.orderId == orderId);
+    if (!ord) return;
+
+    $('#invOrderRef').text('INVOICE #ORD-' + ord.orderId);
+    $('#invDate').text('Date: ' + (ord.orderDate ? ord.orderDate.replace('T', ' ').substring(0, 16) : '2026-09-24'));
+    $('#invCustomerName').text(ord.memberFullName || 'Flex Gym Member');
+    $('#invCustomerPhone').text(ord.contactPhone || '+94 77 123 4567');
+    $('#invAddress').text((ord.shippingAddress || 'Islandwide Delivery') + ', ' + (ord.deliveryCity || 'Colombo'));
+
+    const isPaid = ord.paymentStatus === 'PAID';
+    $('#invStatusBadge')
+        .text(isPaid ? 'PAID (' + (ord.paymentMethod || 'CARD') + ')' : 'PAYMENT PENDING (COD)')
+        .css({
+            background: isPaid ? '#dcfce7' : '#fef3c7',
+            color: isPaid ? '#166534' : '#92400e'
+        });
+
+    const tbody = $('#invItemsTbody');
+    tbody.empty();
+    let subtotal = 0;
+    if (ord.items && ord.items.length) {
+        ord.items.forEach(i => {
+            const lineTot = (i.unitPrice || 0) * (i.quantity || 1);
+            subtotal += lineTot;
+            tbody.append(`
+                <tr style="border-bottom:1px solid #f3f4f6;">
+                    <td style="padding:8px 12px; color:#111827;">${i.productName}</td>
+                    <td style="padding:8px 12px; text-align:center; color:#4b5563;">${i.quantity}</td>
+                    <td style="padding:8px 12px; text-align:right; color:#4b5563;">Rs. ${Number(i.unitPrice).toLocaleString()}</td>
+                    <td style="padding:8px 12px; text-align:right; font-weight:bold; color:#111827;">Rs. ${lineTot.toLocaleString()}</td>
+                </tr>
+            `);
+        });
+    }
+
+    const shipping = ord.totalAmount > subtotal ? (ord.totalAmount - subtotal) : 500;
+    $('#invShipping').text('Rs. ' + Number(shipping).toLocaleString());
+    $('#invTotal').text('Rs. ' + Number(ord.totalAmount || 0).toLocaleString());
+
+    openModal('modalOrderInvoice');
+}
+
+window.loadMemberOrders = loadMemberOrders;
+window.openOrderTracking = openOrderTracking;
+window.openOrderInvoice = openOrderInvoice;
+
+// ==========================================
+// 1-ON-1 PERSONAL TRAINING BOOKINGS LOGIC
+// ==========================================
+let currentMemberBookings = [];
+
+function loadMemberBookings(specificId) {
+    const memberId = specificId || localStorage.getItem("memberId") || localStorage.getItem("userId") || localStorage.getItem("flexGymUserId") || "1";
+    const container = $('#memberBookingsContainer');
+    if (!container.length) return;
+
+    container.html('<div style="grid-column: 1 / -1; text-align:center; padding:30px; color:var(--text-muted);">Loading your scheduled sessions...</div>');
+
+    if (typeof BookingService === 'undefined') {
+        container.html('<div style="grid-column: 1 / -1; text-align:center; color:var(--danger); padding:20px;">BookingService is not loaded.</div>');
+        return;
+    }
+
+    BookingService.getMemberBookings(memberId, function(bookings) {
+        currentMemberBookings = Array.isArray(bookings) ? bookings : [];
+
+        const upcoming = currentMemberBookings.filter(b => b.status === 'SCHEDULED' || b.status === 'CONFIRMED');
+        const completed = currentMemberBookings.filter(b => b.status === 'COMPLETED');
+
+        $('#countMemberUpcomingBookings').text(upcoming.length);
+        $('#countMemberCompletedBookings').text(completed.length);
+
+        if (upcoming.length > 0) {
+            $('#memberNavTrainingBadge').text(upcoming.length).show();
+            if (upcoming[0].trainerName) {
+                $('#memberPrimaryCoachName').text(upcoming[0].trainerName);
+            }
+        } else {
+            $('#memberNavTrainingBadge').hide();
+        }
+
+        if (currentMemberBookings.length === 0) {
+            container.html(`
+                <div style="grid-column: 1 / -1; text-align:center; padding:45px 20px; background:var(--bg-surface-2); border:1px dashed var(--border); border-radius:var(--radius-md);">
+                    <div style="font-size:36px; margin-bottom:10px;">🏋️</div>
+                    <h3 style="color:#fff; margin-bottom:6px;">No 1-on-1 Sessions Scheduled</h3>
+                    <p style="color:var(--text-muted); font-size:13px; max-width:420px; margin:0 auto 16px;">
+                        Accelerate your fitness transformation with customized form correction, strength progression, and dedicated coaching.
+                    </p>
+                    <button class="btn btn-primary" onclick="openBookSessionModal()">Book Your First Session →</button>
+                </div>
+            `);
+            return;
+        }
+
+        container.empty();
+        currentMemberBookings.forEach(b => {
+            let statusBadge = '<span class="badge badge-warning" style="background:rgba(234, 179, 8, 0.2); color:#facc15; border:1px solid rgba(234, 179, 8, 0.4);">⏳ SCHEDULED</span>';
+            if (b.status === 'CONFIRMED') {
+                statusBadge = '<span class="badge badge-lime" style="background:rgba(204, 255, 0, 0.15); color:var(--lime); border:1px solid rgba(204, 255, 0, 0.4);">✓ CONFIRMED</span>';
+            } else if (b.status === 'COMPLETED') {
+                statusBadge = '<span class="badge badge-success" style="background:rgba(34, 197, 94, 0.15); color:#4ade80; border:1px solid rgba(34, 197, 94, 0.4);">🎉 COMPLETED</span>';
+            } else if (b.status === 'CANCELLED') {
+                statusBadge = '<span class="badge badge-danger" style="background:rgba(239, 68, 68, 0.15); color:#f87171; border:1px solid rgba(239, 68, 68, 0.4);">✖ CANCELLED</span>';
+            }
+
+            const canCancel = (b.status === 'SCHEDULED' || b.status === 'CONFIRMED');
+
+            const feedbackHtml = b.trainerFeedback
+                ? `<div style="margin-top:12px; padding:10px 12px; background:rgba(255,255,255,0.04); border-left:3px solid var(--lime); border-radius:4px; font-size:12px; color:#e2e8f0;">
+                    <strong style="color:var(--lime); display:block; margin-bottom:2px;">Coach Feedback:</strong>
+                    ${b.trainerFeedback}
+                   </div>`
+                : '';
+
+            const notesHtml = b.memberNotes
+                ? `<div style="font-size:12px; color:var(--text-muted); margin-top:8px; line-height:1.4;">
+                    <span style="color:#94a3b8;">Focus Notes:</span> ${b.memberNotes}
+                   </div>`
+                : '';
+
+            container.append(`
+                <div class="dash-panel" style="background:var(--bg-surface-2); border:1px solid var(--border); border-radius:var(--radius-md); padding:18px; display:flex; flex-direction:column; justify-content:space-between; transition:transform 0.2s, border-color 0.2s; position:relative; overflow:hidden;">
+                    <div style="position:absolute; top:0; left:0; width:4px; height:100%; background:${b.status === 'CONFIRMED' ? 'var(--lime)' : (b.status === 'COMPLETED' ? '#22c55e' : (b.status === 'CANCELLED' ? '#ef4444' : '#eab308'))};"></div>
+                    <div>
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
+                            <div>
+                                <span style="font-size:11px; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted);">Personal Trainer</span>
+                                <h3 style="margin:2px 0 0; font-size:16px; color:#fff;">${b.trainerName || 'Flex Certified Coach'}</h3>
+                                <span style="font-size:11px; color:var(--lime);">${b.trainerSpecialization || 'Elite Strength & Conditioning'}</span>
+                            </div>
+                            ${statusBadge}
+                        </div>
+
+                        <div style="display:flex; gap:10px; margin:12px 0; font-size:12px; flex-wrap:wrap;">
+                            <div style="background:rgba(255,255,255,0.05); padding:6px 10px; border-radius:4px; display:flex; align-items:center; gap:6px;">
+                                <span>📅</span> <strong>${b.sessionDate}</strong>
+                            </div>
+                            <div style="background:rgba(255,255,255,0.05); padding:6px 10px; border-radius:4px; display:flex; align-items:center; gap:6px;">
+                                <span>⏰</span> <strong>${b.timeSlot}</strong>
+                            </div>
+                        </div>
+
+                        <div style="display:inline-block; font-size:11px; font-weight:600; padding:3px 10px; border-radius:20px; background:rgba(0, 229, 255, 0.12); color:#00e5ff; border:1px solid rgba(0, 229, 255, 0.25); margin-bottom:6px;">
+                            🎯 ${b.focusArea || 'General Fitness'}
+                        </div>
+
+                        ${notesHtml}
+                        ${feedbackHtml}
+                    </div>
+
+                    <div style="margin-top:16px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06); display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:11px; color:var(--text-muted); font-family:monospace;">#PT-${b.bookingId}</span>
+                        ${canCancel ? `
+                            <button class="btn btn-outline" style="font-size:11px; padding:4px 10px; color:#f87171; border-color:rgba(239,68,68,0.3);" onclick="cancelMemberBooking(${b.bookingId})">
+                                Cancel Session
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `);
+        });
+    }, function() {
+        container.html('<div style="grid-column: 1 / -1; text-align:center; color:var(--danger); padding:30px;">Failed to load personal training sessions. Please verify your connection.</div>');
+    });
+}
+
+function populateTrainersDropdown() {
+    const select = $('#bookTrainerSelect');
+    if (!select.length) return;
+
+    ajaxRequest({
+        url: "/trainers/getAllTrainers",
+        method: "GET",
+        success: function(res) {
+            const list = (res && Array.isArray(res.body)) ? res.body : ((res && Array.isArray(res.data)) ? res.data : (Array.isArray(res) ? res : []));
+            if (list.length > 0) {
+                select.empty();
+                select.append('<option value="" disabled selected>-- Choose your Personal Trainer --</option>');
+                list.forEach(t => {
+                    const spec = t.specialization ? ` (${t.specialization})` : '';
+                    select.append(`<option value="${t.trainerId}">${t.trainerName}${spec}</option>`);
+                });
+            } else {
+                useDefaultTrainersDropdown(select);
+            }
+        },
+        error: function() {
+            useDefaultTrainersDropdown(select);
+        }
+    });
+}
+
+function useDefaultTrainersDropdown(select) {
+    select.empty();
+    select.append('<option value="" disabled selected>-- Choose your Personal Trainer --</option>');
+    select.append('<option value="1">Kasun Perera (Bodybuilding & Hypertrophy)</option>');
+    select.append('<option value="2">Nisal Fernando (Strength & Conditioning)</option>');
+    select.append('<option value="3">Dilani Silva (Fat Loss & HIIT)</option>');
+}
+
+function openBookSessionModal() {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const dateInput = $('#bookSessionDate');
+    if (dateInput.length) {
+        const tomorrowStr = tomorrow.toISOString().split('T')[0];
+        dateInput.val(tomorrowStr);
+        dateInput.attr('min', today.toISOString().split('T')[0]);
+    }
+    populateTrainersDropdown();
+    openModal('modalBookSession');
+}
+
+function initMemberTrainingBookings() {
+    $(document).on('submit', '#formBookSession', function(e) {
+        e.preventDefault();
+
+        const memberId = localStorage.getItem("memberId") || localStorage.getItem("userId") || localStorage.getItem("flexGymUserId") || "1";
+        const trainerId = $('#bookTrainerSelect').val();
+        const sessionDate = $('#bookSessionDate').val();
+        const timeSlot = $('#bookTimeSlot').val();
+        const focusArea = $('#bookFocusArea').val();
+        const notes = $('#bookNotes').val();
+
+        if (!trainerId || !sessionDate || !timeSlot || !focusArea) {
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Incomplete Booking',
+                    text: 'Please select a coach, date, time slot, and focus area.',
+                    background: '#1f2937',
+                    color: '#fff',
+                    confirmButtonColor: '#ccff00'
+                });
+            } else {
+                alert('Please fill out all required fields.');
+            }
+            return;
+        }
+
+        const btn = $('#btnSubmitBooking');
+        btn.prop('disabled', true).text('Reserving Session... ⏳');
+
+        BookingService.createBooking({
+            memberId: parseInt(memberId),
+            trainerId: parseInt(trainerId),
+            sessionDate: sessionDate,
+            timeSlot: timeSlot,
+            focusArea: focusArea,
+            memberNotes: notes
+        }, function(res) {
+            btn.prop('disabled', false).text('Confirm & Reserve Session 🚀');
+            closeModal('modalBookSession');
+            $('#formBookSession')[0].reset();
+
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Session Reserved! 🏋️',
+                    html: `Your 1-on-1 private training session on <b>${sessionDate}</b> (${timeSlot}) has been reserved. Coach notification and confirmation email have been dispatched!`,
+                    background: '#111827',
+                    color: '#fff',
+                    confirmButtonColor: '#ccff00'
+                });
+            } else {
+                alert('Session Reserved successfully!');
+            }
+
+            loadMemberBookings();
+        }, function(xhr) {
+            btn.prop('disabled', false).text('Confirm & Reserve Session 🚀');
+            const errMsg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Failed to schedule booking. Please try again.';
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Booking Error',
+                    text: errMsg,
+                    background: '#111827',
+                    color: '#fff',
+                    confirmButtonColor: '#ef4444'
+                });
+            } else {
+                alert(errMsg);
+            }
+        });
+    });
+}
+
+function cancelMemberBooking(bookingId) {
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            title: 'Cancel Session?',
+            text: 'Are you sure you want to cancel this 1-on-1 personal training session?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#374151',
+            confirmButtonText: 'Yes, Cancel Session',
+            background: '#111827',
+            color: '#fff'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                BookingService.updateBookingStatus(bookingId, 'CANCELLED', 'Cancelled by member', function() {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Cancelled',
+                        text: 'Your training session has been cancelled.',
+                        background: '#111827',
+                        color: '#fff',
+                        confirmButtonColor: '#ccff00'
+                    });
+                    loadMemberBookings();
+                });
+            }
+        });
+    } else {
+        if (confirm('Are you sure you want to cancel this PT session?')) {
+            BookingService.updateBookingStatus(bookingId, 'CANCELLED', 'Cancelled by member', function() {
+                loadMemberBookings();
+            });
+        }
+    }
+}
+
+window.loadMemberBookings = loadMemberBookings;
+window.openBookSessionModal = openBookSessionModal;
+window.cancelMemberBooking = cancelMemberBooking;
+window.initMemberTrainingBookings = initMemberTrainingBookings;
+
+// ==========================================
+// BODY TRANSFORMATION & PROGRESS LOGIC
+// ==========================================
+let currentMemberProgressList = [];
+let chartBodyTransformationInstance = null;
+
+function loadMemberProgress(specificId) {
+    const memberId = specificId || localStorage.getItem("memberId") || localStorage.getItem("userId") || localStorage.getItem("flexGymUserId") || "1";
+    const tbody = $('#memberProgressTbody');
+    if (!tbody.length) return;
+
+    tbody.html('<tr><td colspan="9" style="text-align:center; padding:30px; color:var(--text-muted);">Loading your transformation records...</td></tr>');
+
+    if (typeof ProgressService === 'undefined') {
+        tbody.html('<tr><td colspan="9" style="text-align:center; color:var(--danger); padding:20px;">ProgressService not found.</td></tr>');
+        return;
+    }
+
+    ProgressService.getMemberProgressHistory(memberId, function(list) {
+        currentMemberProgressList = Array.isArray(list) ? list : [];
+
+        if (currentMemberProgressList.length === 0) {
+            tbody.html(`
+                <tr>
+                    <td colspan="9" style="text-align:center; padding:45px 20px; color:var(--text-muted);">
+                        <div style="font-size:36px; margin-bottom:10px;">📈</div>
+                        <strong style="color:#fff; display:block; margin-bottom:4px; font-size:15px;">No Check-Ins Logged Yet</strong>
+                        <span>Record your first weigh-in and body stats to kick off your visual transformation chart!</span><br/>
+                        <button class="btn btn-primary" onclick="openLogProgressModal()" style="margin-top:14px; font-size:12px; padding:6px 14px;">+ Log Initial Weigh-In</button>
+                    </td>
+                </tr>
+            `);
+
+            $('#metricCurrentWeight').text('-- kg');
+            $('#metricWeightDiff').text('Log your first check-in');
+            $('#metricCurrentBmi').text('--');
+            $('#metricBmiCategory').html('<span class="badge badge-muted">No Data</span>');
+            $('#metricBodyFatMuscle').text('-- % Fat • -- kg Muscle');
+            $('#metricMilestoneBadge').text('First Check-In 🎯');
+            renderTransformationChart([]);
+            return;
+        }
+
+        // Latest entry (first item since ordered desc)
+        const latest = currentMemberProgressList[0];
+        const earliest = currentMemberProgressList[currentMemberProgressList.length - 1];
+
+        // 1. Current Weight & Diff
+        $('#metricCurrentWeight').text(`${latest.weightKg} kg`);
+        if (earliest && earliest.weightKg && latest.weightKg) {
+            const diff = Number(latest.weightKg) - Number(earliest.weightKg);
+            const diffFixed = Math.abs(diff).toFixed(1);
+            if (diff < 0) {
+                $('#metricWeightDiff').html(`<span style="color:#22c55e; font-weight:700;">-${diffFixed} kg</span> since starting weigh-in`);
+            } else if (diff > 0) {
+                $('#metricWeightDiff').html(`<span style="color:#38bdf8; font-weight:700;">+${diffFixed} kg</span> mass gained`);
+            } else {
+                $('#metricWeightDiff').text('Baseline weigh-in');
+            }
+        }
+
+        // 2. BMI & Category
+        if (latest.bmi) {
+            $('#metricCurrentBmi').text(latest.bmi);
+            let badgeClass = 'badge-lime';
+            if (latest.bmiCategory === 'Underweight') badgeClass = 'badge-info';
+            else if (latest.bmiCategory === 'Overweight') badgeClass = 'badge-warning';
+            else if (latest.bmiCategory === 'Obese') badgeClass = 'badge-danger';
+
+            $('#metricBmiCategory').html(`<span class="badge ${badgeClass}" style="font-size:11px;">${latest.bmiCategory || 'Normal'}</span>`);
+        }
+
+        // 3. Body Fat & Muscle Mass
+        const fatText = latest.bodyFatPercentage ? `${latest.bodyFatPercentage}% Fat` : 'Body Fat N/A';
+        const muscleText = latest.muscleMassKg ? `${latest.muscleMassKg}kg Muscle` : 'Muscle N/A';
+        $('#metricBodyFatMuscle').text(`${fatText} • ${muscleText}`);
+
+        // 4. Milestone
+        $('#metricMilestoneBadge').text(latest.milestoneBadge || 'Active Trainee ⚡');
+
+        // Render Table Body
+        tbody.empty();
+        currentMemberProgressList.forEach(p => {
+            let changeHtml = '<span style="color:var(--text-muted);">Baseline</span>';
+            if (p.weightChangeKg !== undefined && p.weightChangeKg !== null) {
+                const num = Number(p.weightChangeKg);
+                if (num < 0) {
+                    changeHtml = `<span style="color:#22c55e; font-weight:700;">${num} kg 🔥</span>`;
+                } else if (num > 0) {
+                    changeHtml = `<span style="color:#38bdf8; font-weight:700;">+${num} kg 💪</span>`;
+                } else if (num === 0) {
+                    changeHtml = '<span style="color:var(--text-muted);">0.0 kg</span>';
+                }
+            }
+
+            const fatStr = p.bodyFatPercentage ? `${p.bodyFatPercentage}%` : '--';
+            const muscleStr = p.muscleMassKg ? `${p.muscleMassKg} kg` : '--';
+            const circumStr = `${p.waistCm ? 'W:'+p.waistCm : '-'} / ${p.chestCm ? 'C:'+p.chestCm : '-'} / ${p.armsCm ? 'A:'+p.armsCm : '-'}`;
+
+            let bmiBadge = '--';
+            if (p.bmi) {
+                let bClass = 'badge-lime';
+                if (p.bmiCategory === 'Underweight') bClass = 'badge-info';
+                else if (p.bmiCategory === 'Overweight') bClass = 'badge-warning';
+                else if (p.bmiCategory === 'Obese') bClass = 'badge-danger';
+                bmiBadge = `<span class="badge ${bClass}" style="font-size:10px;">${p.bmi} (${p.bmiCategory || 'Normal'})</span>`;
+            }
+
+            const badgeStr = p.milestoneBadge 
+                ? `<span style="background:rgba(204,255,0,0.12); color:var(--lime); padding:2px 8px; border-radius:12px; font-size:11px; font-weight:700; border:1px solid rgba(204,255,0,0.3);">${p.milestoneBadge}</span>`
+                : '--';
+
+            tbody.append(`
+                <tr>
+                    <td><strong style="color:#fff;">${p.recordDate}</strong></td>
+                    <td><strong style="color:var(--lime); font-size:14px;">${p.weightKg} kg</strong></td>
+                    <td>${changeHtml}</td>
+                    <td>${fatStr}</td>
+                    <td>${muscleStr}</td>
+                    <td style="font-size:12px; color:var(--text-muted);">${circumStr}</td>
+                    <td>${bmiBadge}</td>
+                    <td>${badgeStr}</td>
+                    <td style="text-align:center;">
+                        <button class="btn btn-outline" style="font-size:10px; padding:3px 7px; color:#f87171; border-color:rgba(239,68,68,0.3);" onclick="deleteMemberProgress(${p.progressId})" title="Delete Entry">🗑️</button>
+                    </td>
+                </tr>
+            `);
+        });
+
+        // Render Dynamic Line Chart
+        renderTransformationChart(currentMemberProgressList);
+    }, function() {
+        tbody.html('<tr><td colspan="9" style="text-align:center; color:var(--danger); padding:30px;">Failed to load transformation history. Please check connection.</td></tr>');
+    });
+}
+
+function renderTransformationChart(records) {
+    const canvas = document.getElementById('chartBodyTransformation');
+    if (!canvas || typeof Chart === 'undefined') return;
+
+    if (chartBodyTransformationInstance) {
+        chartBodyTransformationInstance.destroy();
+        chartBodyTransformationInstance = null;
+    }
+
+    if (!records || records.length === 0) {
+        // Draw empty guide
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        return;
+    }
+
+    // Chronological ascending order for timeline graph
+    const chronological = [...records].reverse();
+    const labels = chronological.map(r => r.recordDate);
+    const weights = chronological.map(r => Number(r.weightKg));
+
+    const ctx = canvas.getContext('2d');
+    const gradient = ctx.createLinearGradient(0, 0, 0, 240);
+    gradient.addColorStop(0, 'rgba(204, 255, 0, 0.35)');
+    gradient.addColorStop(1, 'rgba(204, 255, 0, 0.0)');
+
+    chartBodyTransformationInstance = new Chart(canvas, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Body Weight (kg)',
+                data: weights,
+                borderColor: '#ccff00',
+                borderWidth: 3,
+                backgroundColor: gradient,
+                fill: true,
+                tension: 0.35,
+                pointBackgroundColor: '#ccff00',
+                pointBorderColor: '#111827',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#1f2937',
+                    titleColor: '#ccff00',
+                    bodyColor: '#ffffff',
+                    borderColor: 'rgba(204, 255, 0, 0.3)',
+                    borderWidth: 1,
+                    padding: 10,
+                    callbacks: {
+                        label: function(context) {
+                            return ' Weight: ' + context.parsed.y + ' kg';
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                    ticks: { color: '#9ca3af', font: { size: 11 } }
+                },
+                y: {
+                    grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                    ticks: {
+                        color: '#9ca3af',
+                        font: { size: 11 },
+                        callback: function(val) { return val + ' kg'; }
+                    }
+                }
+            }
+        }
+    });
+}
+
+function openLogProgressModal() {
+    const today = new Date().toISOString().split('T')[0];
+    $('#progLogDate').val(today);
+    
+    // Pre-fill weight with last logged weight if available
+    if (currentMemberProgressList.length > 0 && currentMemberProgressList[0].weightKg) {
+        $('#progLogWeight').val(currentMemberProgressList[0].weightKg);
+    } else {
+        const storedWeight = $('#inputWeight').val();
+        if (storedWeight) $('#progLogWeight').val(storedWeight);
+    }
+
+    openModal('modalLogProgress');
+}
+
+function initMemberProgressTracking() {
+    $(document).on('submit', '#formLogProgress', function(e) {
+        e.preventDefault();
+
+        const memberId = localStorage.getItem("memberId") || localStorage.getItem("userId") || localStorage.getItem("flexGymUserId") || "1";
+        const recordDate = $('#progLogDate').val();
+        const weightKg = parseFloat($('#progLogWeight').val());
+        const bodyFat = $('#progLogFat').val() ? parseFloat($('#progLogFat').val()) : null;
+        const muscleMass = $('#progLogMuscle').val() ? parseFloat($('#progLogMuscle').val()) : null;
+        const waist = $('#progLogWaist').val() ? parseFloat($('#progLogWaist').val()) : null;
+        const chest = $('#progLogChest').val() ? parseFloat($('#progLogChest').val()) : null;
+        const arms = $('#progLogArms').val() ? parseFloat($('#progLogArms').val()) : null;
+        const notes = $('#progLogNotes').val();
+
+        if (isNaN(weightKg) || weightKg <= 0) {
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Invalid Weight',
+                    text: 'Please enter a valid body weight in kg.',
+                    background: '#111827',
+                    color: '#fff',
+                    confirmButtonColor: '#ccff00'
+                });
+            } else {
+                alert('Please enter a valid body weight in kg.');
+            }
+            return;
+        }
+
+        const btn = $('#btnSubmitProgress');
+        btn.prop('disabled', true).text('Recording Metrics... ⏳');
+
+        ProgressService.logProgress({
+            memberId: parseInt(memberId, 10),
+            recordDate: recordDate,
+            weightKg: weightKg,
+            bodyFatPercentage: bodyFat,
+            muscleMassKg: muscleMass,
+            waistCm: waist,
+            chestCm: chest,
+            armsCm: arms,
+            notes: notes
+        }, function(res) {
+            btn.prop('disabled', false).text('Save Fitness Check-In 📈');
+            closeModal('modalLogProgress');
+            $('#formLogProgress')[0].reset();
+
+            const bmiNote = res.bmi ? `Your BMI is <b>${res.bmi}</b> (${res.bmiCategory}). ` : '';
+            const badgeNote = res.milestoneBadge ? `Earned badge: <b>${res.milestoneBadge}</b>!` : '';
+
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Check-In Recorded! 📈',
+                    html: `Progress logged for <b>${recordDate}</b>.<br>${bmiNote}${badgeNote}`,
+                    background: '#111827',
+                    color: '#fff',
+                    confirmButtonColor: '#ccff00'
+                });
+            } else {
+                alert('Check-In Recorded Successfully!');
+            }
+
+            loadMemberProgress();
+        }, function(xhr) {
+            btn.prop('disabled', false).text('Save Fitness Check-In 📈');
+            const errMsg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Failed to save progress entry. Please try again.';
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Check-In Failed',
+                    text: errMsg,
+                    background: '#111827',
+                    color: '#fff',
+                    confirmButtonColor: '#ef4444'
+                });
+            } else {
+                alert(errMsg);
+            }
+        });
+    });
+}
+
+function deleteMemberProgress(progressId) {
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            title: 'Delete Check-In?',
+            text: 'Are you sure you want to delete this recorded measurement?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#374151',
+            confirmButtonText: 'Yes, Delete',
+            background: '#111827',
+            color: '#fff'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                ProgressService.deleteProgress(progressId, function() {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Deleted',
+                        text: 'Measurement entry removed.',
+                        background: '#111827',
+                        color: '#fff',
+                        confirmButtonColor: '#ccff00'
+                    });
+                    loadMemberProgress();
+                });
+            }
+        });
+    } else {
+        if (confirm('Are you sure you want to delete this check-in?')) {
+            ProgressService.deleteProgress(progressId, function() {
+                loadMemberProgress();
+            });
+        }
+    }
+}
+
+window.loadMemberProgress = loadMemberProgress;
+window.openLogProgressModal = openLogProgressModal;
+window.deleteMemberProgress = deleteMemberProgress;
+window.initMemberProgressTracking = initMemberProgressTracking;

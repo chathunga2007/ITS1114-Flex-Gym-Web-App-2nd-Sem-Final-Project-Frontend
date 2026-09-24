@@ -1,6 +1,9 @@
 window.flexCharts = window.flexCharts || {};
 
 $(document).ready(function () {
+    if (!checkAuth(['ROLE_ADMIN', 'ADMIN'])) {
+        return;
+    }
     if ($(".dash-layout").length > 0) {
         syncUserProfile();
         initDashboardRouting();
@@ -8,6 +11,7 @@ $(document).ready(function () {
         initSearchAndFilters();
         initLogout();
         initAdminDashboard();
+        loadAdminBookings();
     }
 });
 
@@ -50,6 +54,14 @@ function switchSection(sectionId, updateHash = true) {
                 chart.resize();
             }
         });
+    }
+
+    if (sectionId === 'orders') {
+        loadAdminOrders();
+    }
+
+    if (sectionId === 'pt-bookings') {
+        loadAdminBookings();
     }
 
     $('.dash-sidebar').removeClass('open');
@@ -2945,5 +2957,422 @@ window.loadPendingMembershipRequests = loadPendingMembershipRequests;
 window.loadAdminMemberships = loadAdminMemberships;
 window.syncAdminAnalytics = syncAdminAnalytics;
 window.openMemberDigitalCard = openMemberDigitalCard;
-window.markOrderCompleted = markOrderCompleted;
-window.viewOrderReceipt = viewOrderReceipt;
+
+let currentAdminOrders = [];
+let currentAdminOrderFilter = 'ALL';
+
+function loadAdminOrders(filter) {
+    if (filter) currentAdminOrderFilter = filter;
+    const tbody = $('#adminOrdersTableBody');
+    if (!tbody.length) return;
+
+    tbody.html('<tr><td colspan="8" style="text-align:center; color:var(--text-muted); padding:30px;">Loading customer orders...</td></tr>');
+
+    const fetchOrders = window.OrderService && typeof OrderService.getAllOrders === 'function'
+        ? OrderService.getAllOrders
+        : function(cb, err) { ajaxRequest({ url: "/orders/getAllOrders", method: "GET", success: cb, error: err }); };
+
+    fetchOrders(function(response) {
+        currentAdminOrders = (response && Array.isArray(response.body))
+            ? response.body
+            : ((response && Array.isArray(response.data))
+                ? response.data
+                : (Array.isArray(response) ? response : []));
+
+        // Count totals
+        const totalAll = currentAdminOrders.length;
+        const totalPending = currentAdminOrders.filter(o => (o.orderStatus || 'PENDING') === 'PENDING').length;
+        const totalConfirmed = currentAdminOrders.filter(o => o.orderStatus === 'CONFIRMED' || o.orderStatus === 'PROCESSING').length;
+        const totalShipped = currentAdminOrders.filter(o => o.orderStatus === 'SHIPPED').length;
+        const totalDelivered = currentAdminOrders.filter(o => o.orderStatus === 'DELIVERED' || o.orderStatus === 'COMPLETED').length;
+
+        $('#countOrdersAll').text(totalAll);
+        $('#countOrdersPending').text(totalPending);
+        $('#countOrdersConfirmed').text(totalConfirmed);
+        $('#countOrdersShipped').text(totalShipped);
+        $('#countOrdersDelivered').text(totalDelivered);
+
+        // Update sidebar orders badge
+        if (totalPending > 0) {
+            $('#adminNavOrdersBadge').text(totalPending).show();
+        } else {
+            $('#adminNavOrdersBadge').hide();
+        }
+
+        renderAdminOrdersTable();
+    }, function() {
+        tbody.html('<tr><td colspan="8" style="text-align:center; color:var(--danger); padding:30px;">Failed to load store orders. Please check your connection.</td></tr>');
+    });
+}
+
+function renderAdminOrdersTable() {
+    const tbody = $('#adminOrdersTableBody');
+    if (!tbody.length) return;
+
+    let filtered = currentAdminOrders;
+    if (currentAdminOrderFilter !== 'ALL') {
+        filtered = currentAdminOrders.filter(o => {
+            const st = (o.orderStatus || 'PENDING').toUpperCase();
+            if (currentAdminOrderFilter === 'CONFIRMED') {
+                return st === 'CONFIRMED' || st === 'PROCESSING';
+            }
+            if (currentAdminOrderFilter === 'DELIVERED') {
+                return st === 'DELIVERED' || st === 'COMPLETED';
+            }
+            return st === currentAdminOrderFilter;
+        });
+    }
+
+    const searchQuery = ($('#inputSearchAdminOrders').val() || '').toLowerCase().trim();
+    if (searchQuery) {
+        filtered = filtered.filter(o => {
+            const ordId = String(o.orderId || '');
+            const cust = String(o.memberFullName || '').toLowerCase();
+            const trk = String(o.trackingNumber || '').toLowerCase();
+            const city = String(o.deliveryCity || '').toLowerCase();
+            return ordId.includes(searchQuery) || cust.includes(searchQuery) || trk.includes(searchQuery) || city.includes(searchQuery);
+        });
+    }
+
+    if (filtered.length === 0) {
+        tbody.html(`
+            <tr>
+                <td colspan="8" style="text-align:center; padding:35px; color:var(--text-muted);">
+                    <div style="font-size:28px; margin-bottom:6px;">📦</div>
+                    <strong>No orders found matching the filter criteria.</strong>
+                </td>
+            </tr>
+        `);
+        return;
+    }
+
+    tbody.empty();
+    filtered.forEach(ord => {
+        const dateStr = ord.orderDate ? ord.orderDate.replace('T', ' ').substring(0, 16) : 'Recent';
+        const itemsText = ord.items && ord.items.length 
+            ? ord.items.map(i => `${i.productName} (×${i.quantity})`).join(', ') 
+            : 'Store Items';
+        const phone = ord.contactPhone || 'N/A';
+        const city = ord.deliveryCity || 'Colombo';
+
+        const isPaid = ord.paymentStatus === 'PAID';
+        const isCard = ord.paymentMethod === 'CREDIT_CARD';
+        const paymentBadge = isPaid
+            ? `<span class="badge badge-success" style="font-size:11px;">✓ ${isCard ? 'Card Paid' : 'Paid'}</span>`
+            : `<span class="badge badge-warning" style="font-size:11px;">⏳ COD Pending</span>`;
+
+        let statusBadge = '<span class="badge badge-info">PENDING</span>';
+        const st = (ord.orderStatus || 'PENDING').toUpperCase();
+        if (st === 'CONFIRMED') {
+            statusBadge = '<span class="badge badge-primary" style="background:#0284c7;color:#fff;">CONFIRMED</span>';
+        } else if (st === 'PROCESSING') {
+            statusBadge = '<span class="badge badge-warning" style="background:#d97706;color:#fff;">PACKING</span>';
+        } else if (st === 'SHIPPED') {
+            statusBadge = '<span class="badge badge-info" style="background:#7c3aed;color:#fff;">🚚 DISPATCHED</span>';
+        } else if (st === 'DELIVERED' || st === 'COMPLETED') {
+            statusBadge = '<span class="badge badge-success" style="background:#16a34a;color:#fff;">✓ DELIVERED</span>';
+        } else if (st === 'CANCELLED') {
+            statusBadge = '<span class="badge badge-danger">CANCELLED</span>';
+        }
+
+        const trackingNum = ord.trackingNumber || '--';
+
+        tbody.append(`
+            <tr>
+                <td><strong style="color:var(--lime); font-family:monospace;">#ORD-${ord.orderId}</strong></td>
+                <td style="font-size:12px; color:var(--text-muted);">${dateStr}</td>
+                <td>
+                    <strong style="color:#fff; display:block;">${ord.memberFullName || 'Customer'}</strong>
+                    <span style="font-size:11px; color:var(--text-muted);">${phone} • ${city}</span>
+                </td>
+                <td style="max-width:220px; font-size:12px; color:#fff;" title="${itemsText}">${itemsText}</td>
+                <td><strong>Rs. ${Number(ord.totalAmount || 0).toLocaleString()}</strong></td>
+                <td>${paymentBadge}</td>
+                <td>
+                    ${statusBadge}
+                    <div style="font-size:10px; font-family:monospace; color:var(--text-muted); margin-top:3px;">${trackingNum}</div>
+                </td>
+                <td style="text-align:center;">
+                    <button class="btn btn-primary" style="font-size:11px; padding:4px 10px;" onclick="openManageOrderModal(${ord.orderId})">⚡ Fulfill</button>
+                </td>
+            </tr>
+        `);
+    });
+}
+
+let activeManagingOrderId = null;
+
+function openManageOrderModal(orderId) {
+    const ord = currentAdminOrders.find(o => o.orderId == orderId);
+    if (!ord) return;
+
+    activeManagingOrderId = ord.orderId;
+    $('#manageModalOrderRef').text('#ORD-' + ord.orderId);
+    $('#manageCustomerName').text(ord.memberFullName || 'Customer');
+    $('#manageCustomerPhone').text(ord.contactPhone || 'N/A');
+    $('#manageShippingAddress').text((ord.shippingAddress || 'Address') + ', ' + (ord.deliveryCity || 'Colombo') + (ord.postalCode ? (' - ' + ord.postalCode) : ''));
+    $('#manageOrderNotes').text(ord.orderNotes || 'None');
+    $('#manageTotalAmount').text('Rs. ' + Number(ord.totalAmount || 0).toLocaleString() + (ord.paymentMethod ? (' (' + ord.paymentMethod + ')') : ''));
+
+    $('#manageOrderStatus').val((ord.orderStatus || 'PENDING').toUpperCase());
+    $('#managePaymentStatus').val((ord.paymentStatus || 'PENDING').toUpperCase());
+    $('#manageCourierName').val(ord.courierName || 'Flex Express Logistics');
+    $('#manageTrackingNumber').val(ord.trackingNumber || ('FLX-TRK-' + ord.orderId + '920'));
+
+    const itemsContainer = $('#manageItemsList');
+    itemsContainer.empty();
+    if (ord.items && ord.items.length) {
+        ord.items.forEach(i => {
+            itemsContainer.append(`
+                <div style="display:flex; justify-content:space-between; background:var(--bg-surface); padding:6px 10px; border-radius:4px; border:1px solid var(--border); font-size:12px;">
+                    <span>${i.productName} <strong>× ${i.quantity}</strong></span>
+                    <strong style="color:var(--lime);">Rs. ${(i.unitPrice * i.quantity).toLocaleString()}</strong>
+                </div>
+            `);
+        });
+    }
+
+    openModal('modalManageOrder');
+}
+
+$(document).on('submit', '#formManageOrder', function(e) {
+    e.preventDefault();
+    if (!activeManagingOrderId) return;
+
+    const newStatus = $('#manageOrderStatus').val();
+    const newPaymentStatus = $('#managePaymentStatus').val();
+    const newCourier = $('#manageCourierName').val().trim();
+    const newTracking = $('#manageTrackingNumber').val().trim();
+
+    const btn = $('#btnSaveOrderFulfillment');
+    btn.prop('disabled', true).text('UPDATING FULFILLMENT...');
+
+    const updatePayload = {
+        orderStatus: newStatus,
+        paymentStatus: newPaymentStatus,
+        courierName: newCourier,
+        trackingNumber: newTracking
+    };
+
+    const updateFn = window.OrderService && typeof OrderService.updateOrderStatus === 'function'
+        ? OrderService.updateOrderStatus
+        : function(id, data, cb, err) { ajaxRequest({ url: "/orders/updateOrderStatus/" + id, method: "PUT", data: data, success: cb, error: err }); };
+
+    updateFn(activeManagingOrderId, updatePayload, function(res) {
+        btn.prop('disabled', false).text('Save Fulfillment & Update ✓');
+        closeModal('modalManageOrder');
+
+        const isShipped = newStatus === 'SHIPPED';
+        const msg = isShipped
+            ? `Order #ORD-${activeManagingOrderId} marked as DISPATCHED! Automated shipping notification sent to customer.`
+            : `Order #ORD-${activeManagingOrderId} status updated to ${newStatus}.`;
+
+        if (window.FlexAlert) {
+            FlexAlert.success("Fulfillment Updated! 🚀", msg);
+        } else {
+            alert(msg);
+        }
+
+        loadAdminOrders();
+    }, function(err) {
+        btn.prop('disabled', false).text('Save Fulfillment & Update ✓');
+        const errMsg = err && err.responseJSON && err.responseJSON.message ? err.responseJSON.message : "Failed to update order status.";
+        if (window.FlexAlert) {
+            FlexAlert.error("Update Failed", errMsg);
+        } else {
+            alert(errMsg);
+        }
+    });
+});
+
+// Admin Filter Tabs
+$(document).on('click', '.admin-order-filter', function(e) {
+    e.preventDefault();
+    $('.admin-order-filter').removeClass('btn-primary active').addClass('btn-secondary');
+    $(this).removeClass('btn-secondary').addClass('btn-primary active');
+    const filter = $(this).attr('data-filter') || 'ALL';
+    currentAdminOrderFilter = filter;
+    renderAdminOrdersTable();
+});
+
+// Search input
+$(document).on('input', '#inputSearchAdminOrders', function() {
+    renderAdminOrdersTable();
+});
+
+window.loadAdminOrders = loadAdminOrders;
+window.openManageOrderModal = openManageOrderModal;
+
+let currentAdminBookingsList = [];
+
+function loadAdminBookings() {
+    const tbody = $('#adminBookingsTbody');
+    if (!tbody.length) return;
+
+    tbody.html('<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);">Loading 1-on-1 personal training reservations...</td></tr>');
+
+    if (typeof BookingService === 'undefined') {
+        tbody.html('<tr><td colspan="8" style="text-align:center; color:var(--danger); padding:20px;">BookingService is not loaded.</td></tr>');
+        return;
+    }
+
+    BookingService.getAllBookings(function(bookings) {
+        currentAdminBookingsList = Array.isArray(bookings) ? bookings : [];
+
+        // Update KPIs
+        const total = currentAdminBookingsList.length;
+        const active = currentAdminBookingsList.filter(b => b.status === 'SCHEDULED' || b.status === 'CONFIRMED').length;
+        const completed = currentAdminBookingsList.filter(b => b.status === 'COMPLETED').length;
+        const cancelled = currentAdminBookingsList.filter(b => b.status === 'CANCELLED').length;
+
+        $('#adminBookingsTotalCount').text(total);
+        $('#adminBookingsActiveCount').text(active);
+        $('#adminBookingsCompletedCount').text(completed);
+        $('#adminBookingsCancelledCount').text(cancelled);
+
+        if (active > 0) {
+            $('#adminNavBookingsBadge').text(active).show();
+        } else {
+            $('#adminNavBookingsBadge').hide();
+        }
+
+        renderAdminBookingsTable();
+    }, function() {
+        tbody.html('<tr><td colspan="8" style="text-align:center; color:var(--danger); padding:30px;">Failed to load booking reservations. Please check server connection.</td></tr>');
+    });
+}
+
+function filterAdminBookingsTable() {
+    renderAdminBookingsTable();
+}
+
+function renderAdminBookingsTable() {
+    const tbody = $('#adminBookingsTbody');
+    if (!tbody.length) return;
+
+    const query = ($('#adminBookingsSearchInput').val() || '').toLowerCase().trim();
+    const statusFilter = $('#adminBookingsStatusFilter').val() || 'ALL';
+
+    let list = currentAdminBookingsList;
+
+    if (statusFilter !== 'ALL') {
+        list = list.filter(b => b.status === statusFilter);
+    }
+
+    if (query) {
+        list = list.filter(b => {
+            const mName = (b.memberName || '').toLowerCase();
+            const tName = (b.trainerName || '').toLowerCase();
+            const focus = (b.focusArea || '').toLowerCase();
+            const idStr = String(b.bookingId || '');
+            return mName.includes(query) || tName.includes(query) || focus.includes(query) || idStr.includes(query);
+        });
+    }
+
+    if (list.length === 0) {
+        tbody.html('<tr><td colspan="8" style="text-align:center; padding:32px; color:var(--text-muted);">No personal training reservations match your filter criteria.</td></tr>');
+        return;
+    }
+
+    tbody.empty();
+    list.forEach(b => {
+        let statusBadge = '<span class="badge badge-warning" style="background:rgba(234, 179, 8, 0.2); color:#facc15; border:1px solid rgba(234, 179, 8, 0.4);">⏳ SCHEDULED</span>';
+        if (b.status === 'CONFIRMED') {
+            statusBadge = '<span class="badge badge-lime" style="background:rgba(204, 255, 0, 0.15); color:var(--lime); border:1px solid rgba(204, 255, 0, 0.4);">✓ CONFIRMED</span>';
+        } else if (b.status === 'COMPLETED') {
+            statusBadge = '<span class="badge badge-success" style="background:rgba(34, 197, 94, 0.15); color:#4ade80; border:1px solid rgba(34, 197, 94, 0.4);">🎉 COMPLETED</span>';
+        } else if (b.status === 'CANCELLED') {
+            statusBadge = '<span class="badge badge-danger" style="background:rgba(239, 68, 68, 0.15); color:#f87171; border:1px solid rgba(239, 68, 68, 0.4);">✖ CANCELLED</span>';
+        }
+
+        let actionsHtml = '';
+        if (b.status === 'SCHEDULED') {
+            actionsHtml = `
+                <button class="btn btn-sm btn-primary" style="font-size:11px; padding:3px 8px; margin-right:4px;" onclick="updateAdminBookingStatus(${b.bookingId}, 'CONFIRMED')">Confirm ✓</button>
+                <button class="btn btn-sm btn-outline" style="font-size:11px; padding:3px 8px; color:#f87171; border-color:rgba(239,68,68,0.3);" onclick="updateAdminBookingStatus(${b.bookingId}, 'CANCELLED')">Cancel</button>
+            `;
+        } else if (b.status === 'CONFIRMED') {
+            actionsHtml = `
+                <button class="btn btn-sm btn-success" style="font-size:11px; padding:3px 8px; margin-right:4px;" onclick="updateAdminBookingStatus(${b.bookingId}, 'COMPLETED')">Complete 🎉</button>
+                <button class="btn btn-sm btn-outline" style="font-size:11px; padding:3px 8px; color:#f87171; border-color:rgba(239,68,68,0.3);" onclick="updateAdminBookingStatus(${b.bookingId}, 'CANCELLED')">Cancel</button>
+            `;
+        } else {
+            actionsHtml = '<span style="font-size:11px; color:var(--text-muted);">Session Closed</span>';
+        }
+
+        const notesText = b.memberNotes ? `<span style="font-size:11px; color:var(--text-muted); display:block;">📝 ${b.memberNotes}</span>` : '';
+        const feedbackText = b.trainerFeedback ? `<span style="font-size:11px; color:var(--lime); display:block;">💬 Coach: ${b.trainerFeedback}</span>` : '';
+
+        tbody.append(`
+            <tr>
+                <td><strong style="color:var(--lime); font-family:monospace;">#PT-${b.bookingId}</strong></td>
+                <td>
+                    <strong style="color:#fff; font-size:13px;">${b.memberName || 'Member'}</strong>
+                    <div style="font-size:11px; color:var(--text-muted);">MEM-${b.memberId} • ${b.memberPhone || '--'}</div>
+                </td>
+                <td>
+                    <strong style="color:#fff; font-size:13px;">${b.trainerName || 'Coach'}</strong>
+                    <div style="font-size:11px; color:var(--lime);">${b.trainerSpecialization || 'Personal Trainer'}</div>
+                </td>
+                <td>
+                    <div style="font-size:12px; font-weight:600; color:#fff;">📅 ${b.sessionDate}</div>
+                    <div style="font-size:11px; color:var(--text-muted);">⏰ ${b.timeSlot}</div>
+                </td>
+                <td>
+                    <span style="display:inline-block; font-size:11px; font-weight:600; padding:2px 8px; border-radius:12px; background:rgba(0,229,255,0.1); color:#00e5ff; border:1px solid rgba(0,229,255,0.25);">
+                        🎯 ${b.focusArea || 'General Fitness'}
+                    </span>
+                </td>
+                <td style="max-width:200px;">
+                    ${notesText || feedbackText ? notesText + feedbackText : '<span style="color:var(--text-muted); font-size:11px;">--</span>'}
+                </td>
+                <td>${statusBadge}</td>
+                <td style="text-align:center; white-space:nowrap;">${actionsHtml}</td>
+            </tr>
+        `);
+    });
+}
+
+function updateAdminBookingStatus(bookingId, newStatus) {
+    let confirmMsg = `Are you sure you want to mark booking #PT-${bookingId} as ${newStatus}?`;
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            title: `Update to ${newStatus}?`,
+            text: confirmMsg,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Update',
+            cancelButtonText: 'Cancel',
+            confirmButtonColor: newStatus === 'CANCELLED' ? '#ef4444' : '#ccff00',
+            cancelButtonColor: '#374151',
+            background: '#111827',
+            color: '#fff'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                BookingService.updateBookingStatus(bookingId, newStatus, 'Status updated by Admin', function() {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Updated',
+                        text: `Booking #PT-${bookingId} is now ${newStatus}.`,
+                        background: '#111827',
+                        color: '#fff',
+                        confirmButtonColor: '#ccff00'
+                    });
+                    loadAdminBookings();
+                });
+            }
+        });
+    } else {
+        if (confirm(confirmMsg)) {
+            BookingService.updateBookingStatus(bookingId, newStatus, 'Status updated by Admin', function() {
+                loadAdminBookings();
+            });
+        }
+    }
+}
+
+window.loadAdminBookings = loadAdminBookings;
+window.filterAdminBookingsTable = filterAdminBookingsTable;
+window.renderAdminBookingsTable = renderAdminBookingsTable;
+window.updateAdminBookingStatus = updateAdminBookingStatus;
+

@@ -12,6 +12,9 @@ window.currentScheduleDayFilter = 'ALL';
 window.currentScheduleStatusFilter = 'ALL';
 
 $(document).ready(function () {
+    if (!checkAuth(['ROLE_TRAINER', 'TRAINER', 'ROLE_ADMIN', 'ADMIN'])) {
+        return;
+    }
     if ($(".dash-layout").length > 0) {
         syncUserProfile();
         initDashboardRouting();
@@ -759,6 +762,27 @@ window.openClientProgressModal = function (memberId) {
     $('#cpfBmiCategory').attr('class', `badge ${bmiBadgeClass}`).text(bmiCat);
     $('#cpfGoalDesc').text(goalDesc);
 
+    // Synchronize latest verified progress check-in from backend
+    if (typeof ajaxRequest === 'function') {
+        ajaxRequest({
+            url: "/progress/member/" + memberId + "/latest",
+            method: "GET",
+            success: function(res) {
+                const prog = (res && res.body !== undefined) ? res.body : res;
+                if (prog && prog.weightKg) {
+                    $('#cpfWeight').text(`${prog.weightKg} kg`);
+                    if (prog.bmi) {
+                        $('#cpfBmi').text(prog.bmi);
+                        if (prog.bmiCategory) $('#cpfBmiCategory').text(prog.bmiCategory);
+                    }
+                    if (prog.milestoneBadge) {
+                        $('#cpfGoalDesc').html(`${goalDesc} <br><span class="badge badge-lime" style="font-size:10px; margin-top:4px; display:inline-block;">${prog.milestoneBadge}</span>`);
+                    }
+                }
+            }
+        });
+    }
+
     if (activePlan) {
         const diffBadge = activePlan.difficultyLevelStatus === 'BEGINNER' ? 'badge-info' :
                          (activePlan.difficultyLevelStatus === 'ADVANCED' ? 'badge-danger' : 'badge-lime');
@@ -810,7 +834,7 @@ function syncTrainerAnalytics() {
                             window.flexTrainerClientsCache.assignments = Array.isArray(assignments) ? assignments : [];
 
                             FlexAPI.ajax({
-                                url: "/attendance/getAllAttendance",
+                                url: "/attendance/getAllLogs",
                                 type: "GET",
                                 success: function (attendance) {
                                     window.flexTrainerClientsCache.attendance = Array.isArray(attendance) ? attendance : [];
@@ -952,35 +976,11 @@ function renderTrainerViews() {
         }
     }
 
-    const tbodyOverview = $('#view-overview table tbody, #trainerTodaySessionsBody');
-    if (tbodyOverview.length) {
-        tbodyOverview.empty();
-        const scheduleList = getTrainerScheduleList();
-        const sampleSessions = scheduleList.slice(0, 4);
-
-        if (sampleSessions.length === 0) {
-            tbodyOverview.html(`
-                <tr>
-                    <td colspan="4" style="text-align:center; padding:24px; color:var(--text-muted);">
-                        No personal training sessions scheduled for today.
-                    </td>
-                </tr>
-            `);
-        } else {
-            sampleSessions.forEach(s => {
-                tbodyOverview.append(`
-                    <tr>
-                        <td><span class="badge badge-lime" style="font-size:10px; margin-right:4px;">${s.day}</span> <strong>${s.time}</strong></td>
-                        <td><strong>${s.memberName}</strong> <span style="font-size:11px; color:var(--text-dim);">(MEM-${s.memberId})</span></td>
-                        <td>${s.focus}</td>
-                        <td><span class="badge ${s.status === 'COMPLETED' ? 'badge-success' : 'badge-warning'}">${s.status === 'COMPLETED' ? 'Completed ✓' : 'Upcoming'}</span></td>
-                    </tr>
-                `);
-            });
-        }
+    if (typeof loadTrainerBookingsFromBackend === 'function') {
+        loadTrainerBookingsFromBackend();
+    } else {
+        renderTrainerScheduleViews();
     }
-
-    renderTrainerScheduleViews();
 
     const tbodyWorkouts = $('#tableTrainerWorkouts tbody, #view-workouts table tbody');
     if (tbodyWorkouts.length) {
@@ -1143,3 +1143,160 @@ window.initTrainerDashboard = initTrainerDashboard;
 window.syncTrainerAnalytics = syncTrainerAnalytics;
 window.populateWorkoutAssignModals = populateWorkoutAssignModals;
 window.loadTrainerProfileData = loadTrainerProfileData;
+
+// ==========================================
+// 1-ON-1 PERSONAL TRAINING LIVE BACKEND LOGIC
+// ==========================================
+function loadTrainerBookingsFromBackend() {
+    const trainerId = localStorage.getItem("trainerId") || "1";
+    if (typeof BookingService === 'undefined') {
+        renderTrainerScheduleViews();
+        return;
+    }
+
+    BookingService.getTrainerBookings(trainerId, function(bookings) {
+        const list = Array.isArray(bookings) ? bookings : [];
+        window.currentTrainerBookings = list;
+
+        // Render Today's Sessions on Coach Overview
+        const todayStr = new Date().toISOString().slice(0, 10);
+        const todayBookings = list.filter(b => b.sessionDate === todayStr || b.status === 'SCHEDULED' || b.status === 'CONFIRMED');
+        const tbodyToday = $('#trainerTodaySessionsBody');
+
+        if (tbodyToday.length) {
+            tbodyToday.empty();
+            if (todayBookings.length === 0) {
+                tbodyToday.html('<tr><td colspan="5" style="text-align:center; padding:24px; color:var(--text-muted);">No 1-on-1 personal training sessions booked for today.</td></tr>');
+            } else {
+                todayBookings.slice(0, 6).forEach(b => {
+                    let stBadge = '<span class="badge badge-warning">⏳ Scheduled</span>';
+                    if (b.status === 'CONFIRMED') stBadge = '<span class="badge badge-lime">✓ Confirmed</span>';
+                    else if (b.status === 'COMPLETED') stBadge = '<span class="badge badge-success">🎉 Completed</span>';
+                    else if (b.status === 'CANCELLED') stBadge = '<span class="badge badge-danger">✖ Cancelled</span>';
+
+                    let actionsHtml = '';
+                    if (b.status === 'SCHEDULED') {
+                        actionsHtml = `<button class="btn btn-sm btn-primary" style="font-size:11px; padding:3px 8px;" onclick="updateBookingByTrainer(${b.bookingId}, 'CONFIRMED')">Confirm ✓</button>`;
+                    } else if (b.status === 'CONFIRMED') {
+                        actionsHtml = `<button class="btn btn-sm btn-success" style="font-size:11px; padding:3px 8px;" onclick="promptCompleteBookingByTrainer(${b.bookingId})">Complete 🎉</button>`;
+                    } else {
+                        actionsHtml = `<span style="font-size:11px; color:var(--text-muted);">Closed</span>`;
+                    }
+
+                    tbodyToday.append(`
+                        <tr>
+                            <td><span class="badge badge-lime" style="font-size:10px; margin-right:4px;">${b.sessionDate}</span> <strong>${b.timeSlot}</strong></td>
+                            <td><strong>${b.memberName || 'Member'}</strong> <span style="font-size:11px; color:var(--text-dim);">(MEM-${b.memberId})</span></td>
+                            <td><strong>${b.focusArea}</strong></td>
+                            <td>${stBadge}</td>
+                            <td style="text-align:center;">${actionsHtml}</td>
+                        </tr>
+                    `);
+                });
+            }
+        }
+
+        // Render in Schedule view
+        const tbodySchedule = $('#tableTrainerSchedule tbody');
+        if (tbodySchedule.length) {
+            if (list.length === 0) {
+                renderTrainerScheduleViews();
+            } else {
+                tbodySchedule.empty();
+                list.forEach(b => {
+                    let stBadge = '<span class="badge badge-warning">Scheduled</span>';
+                    if (b.status === 'CONFIRMED') stBadge = '<span class="badge badge-lime">Confirmed</span>';
+                    else if (b.status === 'COMPLETED') stBadge = '<span class="badge badge-success">Completed</span>';
+                    else if (b.status === 'CANCELLED') stBadge = '<span class="badge badge-danger">Cancelled</span>';
+
+                    let actionBtn = '';
+                    if (b.status === 'SCHEDULED') {
+                        actionBtn = `<button class="btn btn-sm btn-primary" style="padding:3px 8px; font-size:11px;" onclick="updateBookingByTrainer(${b.bookingId}, 'CONFIRMED')">Confirm ✓</button>`;
+                    } else if (b.status === 'CONFIRMED') {
+                        actionBtn = `<button class="btn btn-sm btn-success" style="padding:3px 8px; font-size:11px;" onclick="promptCompleteBookingByTrainer(${b.bookingId})">Finish 🎉</button>`;
+                    }
+
+                    tbodySchedule.append(`
+                        <tr>
+                            <td>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <span class="badge badge-lime" style="font-size:11px; font-weight:700;">${b.sessionDate}</span>
+                                    <strong style="color:#fff; font-size:13px;">${b.timeSlot}</strong>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="cell-member">
+                                    <div class="member-avatar" style="width:32px; height:32px; font-size:11px;">${(b.memberName || 'M').substring(0,2).toUpperCase()}</div>
+                                    <div class="member-meta">
+                                        <strong style="font-size:13px;">${b.memberName || 'Member'}</strong>
+                                        <span style="font-size:11px;">MEM-${b.memberId} • ${b.memberPhone || ''}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="font-weight:600; color:#fff; font-size:13px;">${b.focusArea}</div>
+                                ${b.memberNotes ? `<div style="font-size:11px; color:var(--text-dim); margin-top:2px;">📝 Member Note: ${b.memberNotes}</div>` : ''}
+                                ${b.trainerFeedback ? `<div style="font-size:11px; color:var(--lime); margin-top:2px;">💬 Coach: ${b.trainerFeedback}</div>` : ''}
+                            </td>
+                            <td><span style="color:var(--text-dim); font-size:12px;">📍 Main Fitness Floor</span></td>
+                            <td>${stBadge}</td>
+                            <td style="text-align:center;">
+                                <div class="action-btns" style="justify-content:center; gap:6px;">
+                                    ${actionBtn}
+                                    <button class="btn-icon danger" onclick="updateBookingByTrainer(${b.bookingId}, 'CANCELLED')" title="Cancel">✖</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `);
+                });
+
+                $('#statScheduleTotal').text(list.length);
+                const activeUpcoming = list.filter(b => b.status === 'SCHEDULED' || b.status === 'CONFIRMED');
+                const completedCount = list.filter(b => b.status === 'COMPLETED');
+                $('#statScheduleToday').text(activeUpcoming.length);
+                $('#statScheduleCompleted').text(completedCount.length);
+                $('#trainerNavSessionsBadge').text(activeUpcoming.length).toggle(activeUpcoming.length > 0);
+            }
+        }
+    }, function() {
+        renderTrainerScheduleViews();
+    });
+}
+
+function updateBookingByTrainer(bookingId, newStatus, feedback) {
+    if (typeof BookingService === 'undefined') return;
+    BookingService.updateBookingStatus(bookingId, newStatus, feedback || '', function() {
+        if (typeof showToast === 'function') {
+            showToast(`Session updated to ${newStatus} ✓`, 'success');
+        }
+        loadTrainerBookingsFromBackend();
+    });
+}
+
+function promptCompleteBookingByTrainer(bookingId) {
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            title: 'Complete Training Session 🎉',
+            text: 'Add coaching remarks, progressive overload notes, or trainee feedback:',
+            input: 'textarea',
+            inputPlaceholder: 'e.g. Great intensity on squats! Advised 3000 kcal diet and extra hamstring mobility work...',
+            showCancelButton: true,
+            confirmButtonText: 'Mark Completed ✓',
+            confirmButtonColor: '#22c55e',
+            cancelButtonColor: '#374151',
+            background: '#111827',
+            color: '#fff'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                updateBookingByTrainer(bookingId, 'COMPLETED', result.value || 'Completed with coach.');
+            }
+        });
+    } else {
+        const feedback = prompt('Enter coaching feedback / notes for member:');
+        updateBookingByTrainer(bookingId, 'COMPLETED', feedback || 'Session completed.');
+    }
+}
+
+window.loadTrainerBookingsFromBackend = loadTrainerBookingsFromBackend;
+window.updateBookingByTrainer = updateBookingByTrainer;
+window.promptCompleteBookingByTrainer = promptCompleteBookingByTrainer;

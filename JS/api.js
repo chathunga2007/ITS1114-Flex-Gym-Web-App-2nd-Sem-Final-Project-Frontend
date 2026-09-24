@@ -46,8 +46,21 @@ function ajaxRequest(options) {
         error: function(xhr, textStatus, errorThrown) {
             console.error(`[API Error] ${method} ${url}:`, xhr.status);
 
-            if (xhr.status === 401 || xhr.status === 403) {
-                console.warn("Unauthorized access or token expired");
+            if (xhr.status === 403) {
+                console.warn("[Access Denied] 403 Forbidden received from server for:", url);
+                const msg = (xhr.responseJSON && xhr.responseJSON.message) 
+                    ? xhr.responseJSON.message 
+                    : "You do not have permission to execute this operation.";
+                if (!options.silent && typeof window.showToast === 'function') {
+                    window.showToast("Permission Denied (403): " + msg, "error");
+                }
+            } else if (xhr.status === 401) {
+                console.warn("[Unauthorized] 401 Unauthorized received for:", url);
+                if (!options.silent && window.FlexAlert) {
+                    FlexAlert.warning("Session Expired", "Your login session has expired or is invalid. Please sign in again.").then(() => {
+                        logout();
+                    });
+                }
             }
 
             if (typeof options.error === "function") {
@@ -84,6 +97,13 @@ function getUserEmail() {
 }
 
 function getUserRole() {
+    const token = getAuthToken();
+    if (token) {
+        const claims = parseJwt(token);
+        if (claims && claims.role) {
+            return String(claims.role);
+        }
+    }
     return localStorage.getItem("userRole") || localStorage.getItem("flexGymRole") || "";
 }
 
@@ -122,7 +142,7 @@ function logout() {
     ];
     keys.forEach(key => localStorage.removeItem(key));
     sessionStorage.clear();
-    window.location.href = "login.html";
+    window.location.replace("login.html");
 }
 
 // navigate user to proper portal based on role
@@ -136,17 +156,19 @@ function redirectByRole(role) {
 
     switch (cleanRole) {
         case "ADMIN":
-            window.location.href = "admin-dashboard.html";
+            window.location.replace("admin-dashboard.html");
             break;
         case "RECEPTIONIST":
-            window.location.href = "receptionist-dashboard.html";
+            window.location.replace("receptionist-dashboard.html");
             break;
         case "TRAINER":
-            window.location.href = "trainer-dashboard.html";
+            window.location.replace("trainer-dashboard.html");
             break;
         case "MEMBER":
+            window.location.replace("member-dashboard.html");
+            break;
         default:
-            window.location.href = "member-dashboard.html";
+            window.location.replace("login.html");
             break;
     }
 }
@@ -154,20 +176,36 @@ function redirectByRole(role) {
 // route protection helper for dashboard pages
 function checkAuth(allowedRoles) {
     if (!isLoggedIn()) {
+        $('body').css('display', 'none');
         if (window.FlexAlert) {
             FlexAlert.warning("Access Required", "Please sign in to access this portal.").then(() => {
-                window.location.href = "login.html";
+                window.location.replace("login.html");
             });
         } else {
             alert("Please sign in to access this portal.");
-            window.location.href = "login.html";
+            window.location.replace("login.html");
         }
         return false;
     }
 
     const currentRole = getUserRole();
-    if (allowedRoles && Array.isArray(allowedRoles) && !allowedRoles.includes(currentRole)) {
-        console.warn(`Role ${currentRole} not permitted here.`);
+    const cleanCurrentRole = String(currentRole || "").toUpperCase().replace("ROLE_", "");
+
+    if (allowedRoles && Array.isArray(allowedRoles) && allowedRoles.length > 0) {
+        const normalizedAllowed = allowedRoles.map(r => String(r).toUpperCase().replace("ROLE_", ""));
+        if (!normalizedAllowed.includes(cleanCurrentRole)) {
+            $('body').css('display', 'none');
+            console.warn(`[Security Guard] Access Denied: User role '${currentRole}' is not authorized to access this dashboard.`);
+            if (window.FlexAlert) {
+                FlexAlert.error("Access Denied (403)", "You do not have administrative permission to access this portal.").then(() => {
+                    redirectByRole(currentRole);
+                });
+            } else {
+                alert("Access Denied: You do not have permission to access this portal.");
+                redirectByRole(currentRole);
+            }
+            return false;
+        }
     }
     return true;
 }

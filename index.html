@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flex Gym | Train Hard. Live Strong.</title>
+    <link rel="icon" type="image/png" href="assets/flex-gym-logo.png">
     <meta name="description" content="Flex Gym Management System - Premium fitness, training, memberships and gym services.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +15,9 @@
     <header class="navbar" id="navbar">
         <div class="nav-container">
             <a href="index.html" class="brand">
-                <div class="brand-icon">F</div>
+                <div class="brand-icon" style="padding:0;overflow:hidden;border:none;background:transparent;">
+                    <img src="assets/flex-gym-logo.png" alt="Flex Gym" style="width:36px;height:36px;object-fit:cover;border-radius:8px;">
+                </div>
                 <div class="brand-text">
                     <span class="brand-name">FLEX</span>
                     <span class="brand-subtitle">FITNESS CLUB</span>
@@ -282,7 +285,8 @@
                         <span class="shop-icon">03</span>
                         <div>
                             <h3>Order Tracking</h3>
-                            <p>Members can view their previous orders from their dashboard.</p>
+                            <p>Track your orders in real-time with courier dispatch updates &amp; live stepper.</p>
+                            <a href="shop.html" style="color:var(--lime); font-size:12px; font-weight:700; text-decoration:none; margin-top:4px; display:inline-block;">Track in Store →</a>
                         </div>
                     </div>
                 </div>
@@ -310,7 +314,7 @@
             <div class="footer-grid">
                 <div class="footer-brand">
                     <a href="index.html" class="brand">
-                        <div class="brand-icon">F</div>
+                        <img src="assets/flex-gym-logo.png" alt="Flex Gym Logo" style="height:36px; width:auto; border-radius:6px; object-fit:contain;">
                         <div class="brand-text">
                             <span class="brand-name">FLEX</span>
                             <span class="brand-subtitle">FITNESS CLUB</span>
@@ -422,6 +426,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="JS/alerts.js"></script>
     <script src="JS/api.js"></script>
+    <script src="JS/order.js"></script>
     <script src="JS/cart.js"></script>
     <script src="JS/index.js"></script>
     <script src="JS/chatbot.js"></script>

@@ -4,6 +4,27 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Receptionist Desk | Flex Gym</title>
+  <link rel="icon" type="image/png" href="assets/flex-gym-logo.png">
+
+  <!-- Immediate Head Security Guard -->
+  <script>
+    (function () {
+      try {
+        var token = localStorage.getItem("JWT") || localStorage.getItem("flexGymToken");
+        var role = localStorage.getItem("userRole") || localStorage.getItem("flexGymRole") || "";
+        if (!token) {
+          window.location.replace("login.html");
+          return;
+        }
+        var cleanRole = String(role).toUpperCase().replace("ROLE_", "");
+        if (cleanRole !== "RECEPTIONIST" && cleanRole !== "ADMIN") {
+          window.location.replace(
+            cleanRole === "TRAINER" ? "trainer-dashboard.html" : "member-dashboard.html"
+          );
+        }
+      } catch (e) {}
+    })();
+  </script>
 
   <!-- typography & desk styles -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,7 +37,9 @@
     <!-- front desk sidebar -->
     <aside class="dash-sidebar">
       <a href="index.html" class="dash-brand">
-        <div class="brand-icon">F</div>
+        <div class="brand-icon" style="padding:0;overflow:hidden;border:none;background:transparent;">
+          <img src="assets/flex-gym-logo.png" alt="Flex Gym" style="width:36px;height:36px;object-fit:cover;border-radius:8px;">
+        </div>
         <div class="brand-title">FLEX<span>GYM</span></div>
       </a>
 

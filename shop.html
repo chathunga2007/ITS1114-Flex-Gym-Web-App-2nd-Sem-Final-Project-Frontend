@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flex Store | Flex Gym</title>
+  <link rel="icon" type="image/png" href="assets/flex-gym-logo.png">
 
   <!-- fonts & shop stylesheet -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,7 +18,9 @@
     <header class="navbar" id="navbar">
       <div class="nav-container">
         <a href="index.html" class="brand">
-          <div class="brand-icon">F</div>
+          <div class="brand-icon" style="padding:0;overflow:hidden;border:none;background:transparent;">
+            <img src="assets/flex-gym-logo.png" alt="Flex Gym" style="width:36px;height:36px;object-fit:cover;border-radius:8px;">
+          </div>
           <div class="brand-text">
             <span class="brand-name">FLEX</span>
             <span class="brand-subtitle">FITNESS CLUB</span>
@@ -68,6 +71,23 @@
             <div class="category-item">Supplements</div>
             <div class="category-item">Gear &amp; Straps</div>
             <div class="category-item">Apparel &amp; Accessories</div>
+          </div>
+
+          <!-- Quick Order Tracking Card -->
+          <div class="order-track-box" style="margin-top: 28px; background: var(--bg-surface-2); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 18px 16px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+              <span style="font-size:18px;">📦</span>
+              <strong style="font-size:13px; color:#fff; text-transform:uppercase; letter-spacing:1px;">Live Order Tracking</strong>
+            </div>
+            <p style="font-size:11px; color:var(--text-muted); line-height:1.4; margin-bottom:12px;">
+              Track courier dispatch, fulfillment steps &amp; estimated delivery in real-time.
+            </p>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <input type="text" id="quickTrackInput" placeholder="e.g. FLX-TRK-784920" style="padding:9px 12px; font-size:12px; font-family:monospace; background:var(--bg-surface); border:1px solid var(--border); border-radius:6px; color:#fff; width:100%; outline:none;" />
+              <button type="button" id="btnQuickTrack" class="btn btn-primary" style="width:100%; padding:9px; font-size:12px; justify-content:center;">
+                Track Status →
+              </button>
+            </div>
           </div>
         </aside>
 
@@ -222,6 +242,7 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="JS/alerts.js"></script>
   <script src="JS/api.js"></script>
+  <script src="JS/order.js"></script>
   <script src="JS/product.js"></script>
   <script src="JS/cart.js"></script>
   <script src="JS/index.js"></script>
